@@ -1,98 +1,85 @@
+﻿<div align="center">
+
 # 🧠 SystemIQ
 
-An AI-powered system design mock interviewer. SystemIQ pairs you with a multi-agent LLM "interviewer" that asks questions, evaluates your answers in real time, watches the architecture diagram you draw, and generates a detailed performance report at the end — like practicing a system design round with an interview panel that never gets tired.
+### AI-Powered System Design Interview Simulator
+
+*Practice system design interviews with a smart AI interviewer that listens, evaluates your architecture diagrams, and gives you real feedback.*
+
+![Node.js](https://img.shields.io/badge/Node.js-18+-339933?style=for-the-badge&logo=node.js&logoColor=white)
+![React](https://img.shields.io/badge/React-19-61DAFB?style=for-the-badge&logo=react&logoColor=black)
+![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
+![LangGraph](https://img.shields.io/badge/LangGraph-Multi--Agent-FF6B35?style=for-the-badge)
+![Supabase](https://img.shields.io/badge/Supabase-Auth%20%26%20DB-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white)
+
+</div>
 
 ---
 
-## 📖 Overview
+## 💡 What is SystemIQ?
 
-SystemIQ simulates a real system design interview end-to-end:
+SystemIQ is a full-stack web app that puts you in a **real-feeling system design interview** — driven by AI. You pick a problem, talk or type your way through the solution, draw your architecture on a live whiteboard, and get scored at every step.
 
-1. Pick a problem (e.g. *Design TinyURL*, *Design Instagram*, *Design Uber*) and a difficulty level.
-2. Talk or type through requirements, high-level design, and deep dives while an **interviewer agent** drives the conversation stage by stage (Requirements → High-Level Design → Deep Dive → Wrap-up).
-3. Draw your architecture live on a **React Flow** whiteboard (load balancers, caches, queues, DBs, CDNs...) — the backend cross-checks what you *say* against what you *draw*.
-4. An **evaluator agent** scores each answer against a per-problem rubric, tracks strengths/weaknesses and concept coverage.
-5. At the end, a **report generator** produces a stage-by-stage breakdown, strengths/weaknesses, and recommendations, all viewable on a dashboard with history and progress tracking.
+Think of it as a mock interview panel in your browser, available 24/7.
 
----
-
-## 🏗️ Tech Stack
-
-### Backend (`/backend`)
-- **Node.js** (ESM) + **Express 5**
-- **LangGraph** (`@langchain/langgraph`) — orchestrates the interview as a stateful agent graph
-- **LangChain** (`langchain`, `@langchain/core`, `@langchain/openai`) — LLM orchestration layer
-- **Multi-LLM support**: OpenAI SDK, Google Gemini (`@google/genai`, `@google/generative-ai`), Groq SDK
-- **Groq Whisper (`whisper-large-v3-turbo`)** — audio transcription for voice-based interviews
-- **Supabase** (`@supabase/supabase-js`) — auth, Postgres persistence (interview history, reports)
-- **Upstash Redis** (`@upstash/redis`) + **ioredis** — session/state caching
-- **Zod** — schema validation for structured agent outputs
-
-### Frontend (`/frontend`)
-- **React 19** + **TypeScript** + **Vite 8**
-- **React Flow (`reactflow`)** — interactive drag-and-drop system design canvas (API, CDN, Cache, DB, Load Balancer, Queue nodes)
-- **Recharts** — analytics/score-trend charts
-- **Framer Motion** — animations (landing page effects, reveals, floating particles)
-- **Tailwind CSS 3** — styling
-- **react-resizable-panels** — resizable interview layout (chat + diagram panels)
-- **Supabase JS client** — auth session on the client
-- Deployed on **Vercel** (`vercel.json` SPA rewrite config)
+**How a session works:**
+1. **Choose a problem** — TinyURL, Instagram, Uber, Google Drive, Chat App, and more
+2. **Interview begins** — an AI interviewer walks you through stages: Requirements → High-Level Design → Deep Dive → Wrap-up
+3. **Draw your architecture** — drag-and-drop a live diagram with load balancers, caches, queues, databases, CDNs, and APIs
+4. **AI checks everything** — your spoken answers are compared against your drawn diagram for consistency
+5. **Get your report** — a full breakdown of strengths, weaknesses, concept coverage, and recommendations
 
 ---
 
-## 🤖 Agent Architecture
+## ⚙️ Tech Stack
 
-The core of SystemIQ is a **LangGraph state machine** (`backend/agent.js`) wiring together eight nodes around a shared, strongly-typed `State` object (`backend/src/state.js`):
+### Backend — `/backend`
+| Technology | Role |
+|---|---|
+| **Node.js** (ESM) + **Express 5** | API server |
+| **LangGraph** (`@langchain/langgraph`) | Multi-agent state machine for the interview flow |
+| **LangChain** + **OpenAI / Gemini / Groq** | LLM orchestration with multi-provider support |
+| **Groq Whisper** (`whisper-large-v3-turbo`) | Real-time audio transcription for voice interviews |
+| **Supabase** | Auth + Postgres (interview history, reports) |
+| **Upstash Redis** | Fast session/state caching between agent steps |
+| **Zod** | Structured output validation for agent responses |
+
+### Frontend — `/frontend`
+| Technology | Role |
+|---|---|
+| **React 19** + **TypeScript** + **Vite** | Core UI framework |
+| **React Flow** | Interactive drag-and-drop architecture whiteboard |
+| **Recharts** | Score trend analytics and charts |
+| **Framer Motion** | Animations and transitions |
+| **Tailwind CSS 3** | Styling |
+| **react-resizable-panels** | Split-pane interview layout (chat + diagram) |
+| **Supabase JS** | Client-side auth and session management |
+
+---
+
+## 🤖 How the AI Works
+
+The interview is powered by a **LangGraph state machine** — a graph of AI agents that each do one job and pass control forward:
 
 ```
 START → greeting → input → intent → orchestrator ──▶ evaluator ──▶ conversationManager
                                     └──────────────▶ conversationManager
                                                               ↓
-                                                         interviewer / graphAnalyzer
+                                                     interviewer / graphAnalyzer
 ```
 
-| Node | Responsibility |
+| Agent Node | What it does |
 |---|---|
-| **greeting** | Kicks off the interview / welcomes the candidate |
-| **input** | Ingests the candidate's latest message |
-| **intent** | Classifies the message: `ANSWER`, `QUESTION`, `CLARIFICATION`, `SMALL_TALK`, `WRAP_UP`, `ACKNOWLEDGEMENT`, `UNKNOWN` |
-| **orchestrator** | Routes based on intent — answers go to the evaluator, everything else to the conversation manager |
-| **evaluator** | Grades the candidate's answer against the problem's rubric; updates strengths, weaknesses, covered concepts |
-| **conversationManager** | Decides tone, hint level, whether to acknowledge, and what topic/concept to steer toward next |
-| **interviewer** | Asks the next interview question based on current stage & objective |
-| **graphAnalyzer** | Compares the whiteboard diagram (nodes/edges drawn by the candidate) against what was verbally mentioned, to check architecture-diagram consistency |
+| `greeting` | Welcomes the candidate and kicks off the session |
+| `input` | Receives the candidate's latest message |
+| `intent` | Classifies it: `ANSWER`, `QUESTION`, `CLARIFICATION`, `SMALL_TALK`, `WRAP_UP`, etc. |
+| `orchestrator` | Routes to evaluator (for answers) or conversation manager (for everything else) |
+| `evaluator` | Scores the answer against a per-problem rubric; tracks strengths, weaknesses, concept coverage |
+| `conversationManager` | Decides tone, hint level, and what to focus on next |
+| `interviewer` | Asks the next question based on current stage and objectives |
+| `graphAnalyzer` | Compares the live whiteboard diagram against spoken concepts — flags mismatches |
 
-Shared `State` tracks: conversation messages, interview stage/progress/difficulty, candidate evaluation (strengths, weaknesses, covered concepts, architecture choices, assumptions), conversation-manager decisions, rolling memory/summary, and the live whiteboard graph + its consistency analysis against spoken concepts.
-
-Each agent (`src/agents/{conversation,evaluator,intent,interviewer}`) has its own **prompt**, **schema** (Zod-validated structured output), and **agent** wrapper — a clean separation between prompt engineering, output contracts, and orchestration logic.
-
----
-
-## 📚 Knowledge Base
-
-Interview content is data-driven, not hardcoded. `backend/src/knowledge/` ships structured JSON per problem:
-
-- `problem.json` — title, difficulty, functional/non-functional requirements, constraints
-- `interview.json` — stage objectives & completion criteria
-- `evaluation.json` — rubric used by the evaluator agent
-- `architecture.json` — reference/expected architecture
-- `graph.json` — expected whiteboard graph shape, used for diagram-consistency checks
-
-Problems currently included: **URL Shortener (TinyURL)**, **Instagram**, **Uber**, **Google Drive**, **Chat App**. New problems can be added by dropping in a new folder with the same five files — `knowledgeLoader.js` loads them dynamically.
-
----
-
-## ✨ Features
-
-- 🗣️ **Text or voice interviews** — speak your answers; Groq Whisper transcribes them in real time
-- 🧩 **Live architecture whiteboard** — drag-and-drop system design nodes (LB, cache, queue, DB, CDN, API) on a React Flow canvas
-- 🔍 **Diagram-to-speech consistency checking** — flags concepts you mentioned but didn't draw (or vice versa)
-- 📊 **Stage-based progression** — Requirements → High-Level Design → Deep Dive → Wrap-up, each with its own objective & completion criteria
-- 🧠 **Adaptive conversation manager** — controls tone, hint level, and follow-up direction based on how the interview is going
-- 📈 **Post-interview report** — hero summary, stage breakdown, strengths/weaknesses, recommendations
-- 🗂️ **Interview history & progress dashboard** — score trends over time, recent interviews, popular problems
-- 🔐 **Supabase auth** — protected routes on both frontend and backend
-- ⚡ **Redis-backed session state** (Upstash) for fast, ephemeral interview state
+Each agent has its own **prompt**, **Zod schema** for structured output, and **agent wrapper** — keeping prompt engineering, output contracts, and orchestration cleanly separated.
 
 ---
 
@@ -101,114 +88,139 @@ Problems currently included: **URL Shortener (TinyURL)**, **Instagram**, **Uber*
 ```
 SystemIQ/
 ├── backend/
-│   ├── agent.js                    # LangGraph StateGraph wiring (the core agent)
+│   ├── agent.js                    # LangGraph StateGraph — the core interview engine
 │   ├── server.js                   # Express app entrypoint
 │   └── src/
 │       ├── agents/                 # conversation / evaluator / intent / interviewer
-│       │   └── <agent>/{agent,prompt,schema}.js
 │       ├── nodes/                  # LangGraph node implementations
-│       ├── config/                 # Redis (Upstash) & Supabase clients
-│       ├── controllers/            # Route handlers (interview, graph, transcribe, reports...)
+│       ├── config/                 # Redis (Upstash) & Supabase client setup
+│       ├── controllers/            # Route handlers (interview, graph, transcribe, reports)
 │       ├── knowledge/              # Per-problem JSON knowledge base
-│       ├── middleware/auth.js      # Auth guard
+│       ├── middleware/auth.js      # Supabase auth guard
 │       ├── models/                 # Interview session model & enums
 │       ├── routes/                 # interview / history / problem / report / voice
-│       ├── services/
-│       │   ├── interview/          # session, persistence, interview orchestration
-│       │   ├── graph/              # whiteboard graph service + context builder
-│       │   ├── report/             # report generation
-│       │   ├── transcriber.js      # Groq Whisper wrapper
-│       │   ├── llm.js              # LLM client(s)
-│       │   └── memory.js           # rolling interview memory/summary
-│       ├── sockets/                # real-time interview messaging
-│       └── state.js                # shared LangGraph State schema
+│       ├── services/               # Session, graph, report, LLM, memory, transcriber
+│       ├── sockets/                # Real-time interview messaging (WebSockets)
+│       └── state.js                # Shared LangGraph State schema
+│
 └── frontend/
     └── src/
-        ├── architecture/           # React Flow canvas: Flow, Inspector, Sidebar, node/edge types
-        ├── nodes/                  # Diagram node components (Api, CDN, Cache, Db, Lb, Queue)
-        ├── components/
-        │   ├── landing/            # Marketing/landing page sections
-        │   ├── dashboard/          # Dashboard widgets
-        │   ├── history/            # Interview history table & stats
-        │   ├── report/             # Report page sections
-        │   ├── analytics/          # Score trend charts
-        │   └── ui/                 # Buttons, cards, inputs, badges
-        ├── pages/                  # Landing, Login, Signup, Dashboard, Interview, ProblemPage, ReportPage...
-        ├── services/                # Axios-based API clients mirroring backend routes
-        └── lib/supabase.ts          # Supabase client
+        ├── architecture/           # React Flow canvas, Inspector, Sidebar, node/edge types
+        ├── nodes/                  # Diagram node components (API, CDN, Cache, DB, LB, Queue)
+        ├── components/             # Landing, Dashboard, History, Report, Analytics, UI
+        ├── pages/                  # Landing, Login, Signup, Dashboard, Interview, Report...
+        ├── services/               # Axios-based API clients mirroring backend routes
+        └── lib/supabase.ts         # Supabase client init
 ```
 
 ---
 
-## 🔌 API Overview
+## 🔌 API Reference
 
-| Route | Description |
-|---|---|
-| `POST /api/interview/start` | Start a new interview session for a chosen problem & difficulty |
-| `POST /api/interview/initialize` | Initialize interview state/greeting |
-| `POST /api/interview/message` | Send a candidate message through the agent graph |
-| `POST /api/interview/graph` | Save the candidate's whiteboard diagram state |
-| `POST /api/interview/end` | End the interview & trigger report generation |
-| `GET  /api/interview/state/:interviewId` | Fetch current interview state |
-| `GET  /api/problems` / `GET /api/problems/:id` | List problems / fetch a single problem |
-| `GET  /api/history` | Get the authenticated user's interview history (Supabase) |
-| `GET  /api/report/:interviewId` | Fetch the generated report for an interview |
-| `POST /api/voice/transcribe` | Upload audio, get back a transcription (Groq Whisper) |
+All interview and history routes are protected by Supabase auth middleware.
 
-All interview/history routes are protected by an auth middleware backed by Supabase.
+| Method | Route | Description |
+|---|---|---|
+| `POST` | `/api/interview/start` | Start a new session for a chosen problem & difficulty |
+| `POST` | `/api/interview/initialize` | Initialize interview state and trigger greeting |
+| `POST` | `/api/interview/message` | Send a candidate message through the agent graph |
+| `POST` | `/api/interview/graph` | Save the current whiteboard diagram state |
+| `POST` | `/api/interview/end` | End the session and trigger report generation |
+| `GET` | `/api/interview/state/:interviewId` | Fetch current interview state |
+| `GET` | `/api/problems` | List all available problems |
+| `GET` | `/api/problems/:id` | Fetch a single problem |
+| `GET` | `/api/history` | Get the user's interview history |
+| `GET` | `/api/report/:interviewId` | Fetch the generated report |
+| `POST` | `/api/voice/transcribe` | Upload audio and get back a transcription (Groq Whisper) |
 
 ---
 
 ## 🚀 Getting Started
 
 ### Prerequisites
-- Node.js 18+
-- A Supabase project (URL + service role key)
-- An Upstash Redis database (REST URL + token)
-- API keys for whichever LLM providers you use (OpenAI / Gemini / Groq)
+- **Node.js 18+**
+- A **Supabase** project (URL + service role key)
+- An **Upstash Redis** database (REST URL + token)
+- API keys for your LLM providers: **OpenAI**, **Gemini**, and/or **Groq**
 
-### Backend
+---
+
+### 1. Clone the repo
+
+```bash
+git clone https://github.com/YOUR_USERNAME/SystemIQ.git
+cd SystemIQ
+```
+
+### 2. Set up the Backend
 
 ```bash
 cd backend
 npm install
 ```
 
-Create a `.env` file:
+Create a `.env` file in `/backend`:
 
 ```env
 PORT=5000
+
 SUPABASE_URL=your-supabase-url
 SUPABASE_SERVICE_ROLE_KEY=your-supabase-service-role-key
-UPSTASH_REDIS_REST_URL=your-upstash-redis-url
-UPSTASH_REDIS_REST_TOKEN=your-upstash-redis-token
-OPENAI_API_KEY=your-openai-key
-GROQ_API_KEY=your-groq-key
-GEMINI_API_KEY=your-gemini-key
+
+UPSTASH_REDIS_REST_URL=your-upstash-redis-rest-url
+UPSTASH_REDIS_REST_TOKEN=your-upstash-redis-rest-token
+
+OPENAI_API_KEY=your-openai-api-key
+GROQ_API_KEY=your-groq-api-key
+GEMINI_API_KEY=your-gemini-api-key
 ```
 
 ```bash
 npm run dev
+# Runs on http://localhost:5000
 ```
 
-Runs on `http://localhost:5000` (via `nodemon server.js`).
-
-### Frontend
+### 3. Set up the Frontend
 
 ```bash
 cd frontend
 npm install
 npm run dev
+# Runs on http://localhost:5173
 ```
 
-Runs on Vite's default dev server (`http://localhost:5173`), CORS-whitelisted by the backend alongside the production deployment at `system-iq.vercel.app`.
+---
+
+## ✨ Features at a Glance
+
+- 🎙️ **Voice or text input** — speak your answers; Groq Whisper handles transcription
+- 🖼️ **Live architecture whiteboard** — React Flow canvas with drag-and-drop system design components
+- 🔍 **Diagram consistency check** — flags concepts you said but did not draw (and vice versa)
+- 📊 **Stage-based progression** — structured interview flow with clear objectives at every stage
+- 🧠 **Adaptive AI interviewer** — adjusts tone, hints, and focus based on how you are doing
+- 📋 **Detailed post-interview report** — stage-by-stage scores, strengths, weaknesses, recommendations
+- 📈 **Progress dashboard** — track your improvement across sessions over time
+- 🔐 **Auth-protected** — secure login via Supabase on both frontend and backend
+- ⚡ **Redis-backed state** — fast, low-latency session management between agent steps
 
 ---
 
-## 🧭 Roadmap Ideas
+## 🗺️ Roadmap
 
-- Add more problems to the knowledge base (payments systems, ride-matching internals, distributed rate limiters, etc.)
-- Multiplayer / peer mock-interview mode
-- Richer graph-consistency scoring (weighted by architectural significance, not just presence/absence)
+- [ ] Add more problems (payment systems, rate limiters, distributed messaging, etc.)
+- [ ] Peer / multiplayer mock interview mode
+- [ ] Weighted diagram scoring (by architectural significance, not just presence)
+- [ ] Exportable PDF interview reports
+- [ ] Mobile-responsive whiteboard
 
 ---
+
+## 📄 License
+
+This project is open source under the [MIT License](LICENSE).
+
+---
+
+<div align="center">
+  Built with ❤️ | SystemIQ — Practice Smarter, Interview Better
+</div>
