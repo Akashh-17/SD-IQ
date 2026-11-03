@@ -1,0 +1,206 @@
+{
+  "topics": [
+    {
+      "name": "Requirement Gathering",
+      "weight": 10,
+      "minimumCoverage": 0.75,
+      "concepts": [
+        {
+          "name": "DAU",
+          "importance": "critical",
+          "probe": false
+        },
+        {
+          "name": "Functional Requirements",
+          "importance": "critical",
+          "probe": false
+        },
+        {
+          "name": "Non Functional Requirements",
+          "importance": "critical",
+          "probe": false
+        },
+        {
+          "name": "Media",
+          "importance": "important",
+          "probe": false
+        },
+        {
+          "name": "Groups",
+          "importance": "important",
+          "probe": false
+        },
+        {
+          "name": "Encryption",
+          "importance": "optional",
+          "probe": false
+        }
+      ]
+    },
+
+    {
+      "name": "High Level Design",
+      "weight": 10,
+      "minimumCoverage": 0.8,
+      "concepts": [
+        {
+          "name": "Load Balancer",
+          "importance": "critical",
+          "probe": false
+        },
+        {
+          "name": "WebSocket",
+          "importance": "critical",
+          "probe": true
+        },
+        {
+          "name": "Message Service",
+          "importance": "critical",
+          "probe": true
+        },
+        {
+          "name": "Database",
+          "importance": "critical",
+          "probe": false
+        },
+        {
+          "name": "Redis",
+          "importance": "important",
+          "probe": true
+        },
+        {
+          "name": "Kafka",
+          "importance": "important",
+          "probe": true
+        },
+        {
+          "name": "Notification Service",
+          "importance": "optional",
+          "probe": false
+        },
+        {
+          "name": "API Gateway",
+          "importance": "optional",
+          "probe": false
+        }
+      ]
+    },
+
+    {
+      "name": "Realtime Communication",
+      "weight": 10,
+      "minimumCoverage": 0.75,
+      "concepts": [
+        {
+          "name": "Heartbeat",
+          "importance": "important",
+          "probe": true
+        },
+        {
+          "name": "Reconnect",
+          "importance": "important",
+          "probe": true
+        },
+        {
+          "name": "PubSub",
+          "importance": "critical",
+          "probe": true
+        },
+        {
+          "name": "Ordering",
+          "importance": "critical",
+          "probe": true
+        },
+        {
+          "name": "Offline Messaging",
+          "importance": "critical",
+          "probe": false
+        }
+      ]
+    },
+
+    {
+      "name": "Database",
+      "weight": 10,
+      "minimumCoverage": 0.8,
+      "concepts": [
+        {
+          "name": "Schema",
+          "importance": "critical",
+          "probe": true
+        },
+        {
+          "name": "Indexes",
+          "importance": "important",
+          "probe": true
+        },
+        {
+          "name": "Pagination",
+          "importance": "important",
+          "probe": true
+        },
+        {
+          "name": "Partitioning",
+          "importance": "critical",
+          "probe": true
+        },
+        {
+          "name": "Replication",
+          "importance": "important",
+          "probe": true
+        }
+      ]
+    },
+
+    {
+      "name": "Scaling",
+      "weight": 10,
+      "minimumCoverage": 0.8,
+      "concepts": [
+        {
+          "name": "Sharding",
+          "importance": "critical",
+          "probe": true
+        },
+        {
+          "name": "Caching",
+          "importance": "important",
+          "probe": false
+        },
+        {
+          "name": "Kafka",
+          "importance": "important",
+          "probe": false
+        },
+        {
+          "name": "Replication",
+          "importance": "important",
+          "probe": false
+        }
+      ]
+    },
+
+    {
+      "name": "Tradeoffs",
+      "weight": 8,
+      "minimumCoverage": 0.6,
+      "concepts": [
+        {
+          "name": "CAP",
+          "importance": "important",
+          "probe": true
+        },
+        {
+          "name": "Consistency",
+          "importance": "critical",
+          "probe": true
+        },
+        {
+          "name": "Availability",
+          "importance": "critical",
+          "probe": true
+        }
+      ]
+    }
+  ]
+}

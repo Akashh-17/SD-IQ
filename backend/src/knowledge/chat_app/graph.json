@@ -1,0 +1,12 @@
+{
+  "nodeMapping": {
+    "api": "API Gateway",
+    "lb": "Load Balancer",
+    "websocket_server": "WebSocket Server",
+    "cache": "Redis",
+    "queue": "Kafka",
+    "db": "Database",
+    "notification_service": "Notification Service",
+    "cdn": "CDN"
+  }
+}

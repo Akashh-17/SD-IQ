@@ -1,0 +1,34 @@
+{
+  "id": "url_shortener",
+
+  "title": "Design TinyURL",
+
+  "problemDifficulty": "Easy",
+
+  "description": "Design a scalable URL shortening service like TinyURL that converts long URLs into short aliases and redirects users with minimal latency.",
+
+  "functionalRequirements": [
+    "Shorten long URLs",
+    "Redirect short URLs",
+    "Custom aliases",
+    "URL expiration",
+    "Analytics (click count)",
+    "Duplicate URL handling"
+  ],
+
+  "nonFunctionalRequirements": [
+    "Low latency redirects",
+    "High availability",
+    "Scalability to billions of URLs",
+    "High read throughput",
+    "Fault tolerance",
+    "Durable storage"
+  ],
+
+  "constraints": [
+    "Billions of URLs",
+    "High read-to-write ratio",
+    "Unique short codes",
+    "Prevent collisions"
+  ]
+}

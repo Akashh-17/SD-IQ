@@ -1,0 +1,42 @@
+{
+  "id": "uber",
+
+  "title": "Design Uber",
+
+  "problemDifficulty": "Hard",
+
+  "description": "Design a globally distributed ride-hailing platform like Uber that matches riders with nearby drivers in real time while supporting trip tracking, payments and notifications.",
+
+  "functionalRequirements": [
+    "User registration and login",
+    "Driver registration",
+    "Request a ride",
+    "Match rider with nearest driver",
+    "Real-time driver location updates",
+    "Trip tracking",
+    "Trip cancellation",
+    "Fare estimation",
+    "Payments",
+    "Ride history",
+    "Push notifications"
+  ],
+
+  "nonFunctionalRequirements": [
+    "100 Million Daily Active Users",
+    "Real-time location updates",
+    "Low matching latency",
+    "High availability",
+    "Horizontal scalability",
+    "Fault tolerance",
+    "Accurate geospatial search"
+  ],
+
+  "constraints": [
+    "Millions of moving drivers",
+    "GPS inaccuracies",
+    "Peak traffic surges",
+    "Global deployment",
+    "Network interruptions",
+    "High write throughput"
+  ]
+}

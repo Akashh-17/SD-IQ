@@ -1,0 +1,321 @@
+{
+  "estimatedDuration": 45,
+
+  "difficultyLevels": [
+    "Junior",
+    "SDE1",
+    "SDE2",
+    "Senior"
+  ],
+
+  "stages": [
+    {
+      "name": "Requirements",
+
+      "objective": "Gather all functional and non-functional requirements before starting the design.",
+
+      "entryQuestion": "Before we begin the design, do you have any requirement clarification questions?",
+
+      "completionCriteria": [
+        {
+          "name": "Functional Requirements",
+          "required": true,
+          "concepts": [
+            "File Upload",
+            "File Download",
+            "Folder Management",
+            "File Sharing",
+            "Version History",
+            "File Synchronization"
+          ]
+        },
+        {
+          "name": "Non Functional Requirements",
+          "required": true,
+          "concepts": [
+            "Availability",
+            "Durability",
+            "Scalability",
+            "Latency"
+          ]
+        },
+        {
+          "name": "Constraints",
+          "required": true,
+          "concepts": [
+            "100 Million DAU",
+            "Large Files",
+            "Global Users",
+            "Multiple Devices"
+          ]
+        }
+      ]
+    },
+
+    {
+      "name": "High Level Design",
+
+      "objective": "Understand the overall architecture and major components.",
+
+      "entryQuestion": "Great. Walk me through your high-level architecture.",
+
+      "completionCriteria": [
+        {
+          "name": "Client",
+
+          "required": true,
+
+          "concepts": [
+            "Desktop Client",
+            "Mobile Client"
+          ]
+        },
+        {
+          "name": "Gateway",
+
+          "required": true,
+
+          "concepts": [
+            "API Gateway"
+          ]
+        },
+        {
+          "name": "Metadata Service",
+
+          "required": true,
+
+          "concepts": [
+            "Metadata Service"
+          ]
+        },
+        {
+          "name": "Storage",
+
+          "required": true,
+
+          "concepts": [
+            "Object Storage"
+          ]
+        },
+        {
+          "name": "Database",
+
+          "required": true,
+
+          "concepts": [
+            "Metadata Database"
+          ]
+        }
+      ]
+    },
+
+    {
+      "name": "Upload Flow",
+
+      "objective": "Evaluate how files are uploaded efficiently.",
+
+      "entryQuestion": "Walk me through the complete upload flow.",
+
+      "completionCriteria": [
+        {
+          "name": "Chunk Upload",
+
+          "required": true,
+
+          "concepts": [
+            "Chunking",
+            "Parallel Upload"
+          ]
+        },
+        {
+          "name": "Deduplication",
+
+          "required": true,
+
+          "concepts": [
+            "Hashing",
+            "Duplicate Detection"
+          ]
+        },
+        {
+          "name": "Resume Upload",
+
+          "required": false,
+
+          "concepts": [
+            "Checkpoint",
+            "Retry"
+          ]
+        }
+      ]
+    },
+
+    {
+      "name": "Synchronization",
+
+      "objective": "Evaluate synchronization across devices.",
+
+      "entryQuestion": "How would you synchronize files across multiple devices?",
+
+      "completionCriteria": [
+        {
+          "name": "Change Detection",
+
+          "required": true,
+
+          "concepts": [
+            "File Metadata",
+            "Version Number"
+          ]
+        },
+        {
+          "name": "Conflict Resolution",
+
+          "required": true,
+
+          "concepts": [
+            "Last Writer Wins",
+            "Merge"
+          ]
+        },
+        {
+          "name": "Notifications",
+
+          "required": true,
+
+          "concepts": [
+            "Push Sync",
+            "Polling"
+          ]
+        }
+      ]
+    },
+
+    {
+      "name": "Database",
+
+      "objective": "Evaluate metadata storage design.",
+
+      "entryQuestion": "How would you design the metadata database?",
+
+      "completionCriteria": [
+        {
+          "name": "Schema",
+
+          "required": true,
+
+          "concepts": [
+            "Users",
+            "Files",
+            "Folders",
+            "Permissions"
+          ]
+        },
+        {
+          "name": "Indexes",
+
+          "required": true,
+
+          "concepts": [
+            "user_id",
+            "parent_folder"
+          ]
+        },
+        {
+          "name": "Versioning",
+
+          "required": true,
+
+          "concepts": [
+            "Version Table"
+          ]
+        }
+      ]
+    },
+
+    {
+      "name": "Scaling",
+
+      "objective": "Evaluate scalability of the architecture.",
+
+      "entryQuestion": "How would this system scale to hundreds of millions of users?",
+
+      "completionCriteria": [
+        {
+          "name": "Caching",
+
+          "required": true,
+
+          "concepts": [
+            "Redis"
+          ]
+        },
+        {
+          "name": "CDN",
+
+          "required": true,
+
+          "concepts": [
+            "CDN"
+          ]
+        },
+        {
+          "name": "Partitioning",
+
+          "required": true,
+
+          "concepts": [
+            "Metadata Sharding"
+          ]
+        },
+        {
+          "name": "Replication",
+
+          "required": true,
+
+          "concepts": [
+            "Replication"
+          ]
+        }
+      ]
+    },
+
+    {
+      "name": "Tradeoffs",
+
+      "objective": "Assess architectural reasoning and tradeoffs.",
+
+      "entryQuestion": "Let's discuss some tradeoffs in your design.",
+
+      "completionCriteria": [
+        {
+          "name": "Consistency",
+
+          "required": true,
+
+          "concepts": [
+            "Metadata Consistency"
+          ]
+        },
+        {
+          "name": "Availability",
+
+          "required": true,
+
+          "concepts": [
+            "Availability"
+          ]
+        },
+        {
+          "name": "Storage",
+
+          "required": true,
+
+          "concepts": [
+            "Object Storage vs Block Storage"
+          ]
+        }
+      ]
+    }
+  ]
+}

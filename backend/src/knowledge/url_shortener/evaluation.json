@@ -1,0 +1,262 @@
+{
+  "topics": [
+    {
+      "name": "Requirement Gathering",
+      "weight": 10,
+      "minimumCoverage": 0.8,
+      "concepts": [
+        {
+          "name": "Functional Requirements",
+          "importance": "critical",
+          "probe": false
+        },
+        {
+          "name": "Non Functional Requirements",
+          "importance": "critical",
+          "probe": false
+        },
+        {
+          "name": "Read Heavy",
+          "importance": "important",
+          "probe": false
+        },
+        {
+          "name": "Billions of URLs",
+          "importance": "critical",
+          "probe": false
+        },
+        {
+          "name": "Analytics",
+          "importance": "optional",
+          "probe": false
+        },
+        {
+          "name": "Custom Alias",
+          "importance": "optional",
+          "probe": false
+        }
+      ]
+    },
+
+    {
+      "name": "High Level Design",
+      "weight": 10,
+      "minimumCoverage": 0.8,
+      "concepts": [
+        {
+          "name": "Load Balancer",
+          "importance": "critical",
+          "probe": false
+        },
+        {
+          "name": "API Server",
+          "importance": "critical",
+          "probe": false
+        },
+        {
+          "name": "Database",
+          "importance": "critical",
+          "probe": true
+        },
+        {
+          "name": "Redis",
+          "importance": "important",
+          "probe": true
+        },
+        {
+          "name": "CDN",
+          "importance": "optional",
+          "probe": true
+        }
+      ]
+    },
+
+    {
+      "name": "Short Code Generation",
+      "weight": 10,
+      "minimumCoverage": 0.85,
+      "concepts": [
+        {
+          "name": "Base62",
+          "importance": "critical",
+          "probe": true
+        },
+        {
+          "name": "Auto Increment",
+          "importance": "important",
+          "probe": true
+        },
+        {
+          "name": "Snowflake",
+          "importance": "important",
+          "probe": true
+        },
+        {
+          "name": "UUID",
+          "importance": "optional",
+          "probe": true
+        },
+        {
+          "name": "Collision",
+          "importance": "critical",
+          "probe": true
+        },
+        {
+          "name": "Unique IDs",
+          "importance": "critical",
+          "probe": false
+        }
+      ]
+    },
+
+    {
+      "name": "Database Design",
+      "weight": 10,
+      "minimumCoverage": 0.8,
+      "concepts": [
+        {
+          "name": "Schema",
+          "importance": "critical",
+          "probe": true
+        },
+        {
+          "name": "Primary Key",
+          "importance": "critical",
+          "probe": false
+        },
+        {
+          "name": "Index",
+          "importance": "important",
+          "probe": true
+        },
+        {
+          "name": "Read Replica",
+          "importance": "important",
+          "probe": true
+        },
+        {
+          "name": "TTL",
+          "importance": "optional",
+          "probe": true
+        }
+      ]
+    },
+
+    {
+      "name": "Caching",
+      "weight": 8,
+      "minimumCoverage": 0.75,
+      "concepts": [
+        {
+          "name": "Redis",
+          "importance": "critical",
+          "probe": false
+        },
+        {
+          "name": "Cache Aside",
+          "importance": "critical",
+          "probe": true
+        },
+        {
+          "name": "Cache Miss",
+          "importance": "important",
+          "probe": true
+        },
+        {
+          "name": "TTL",
+          "importance": "important",
+          "probe": false
+        }
+      ]
+    },
+
+    {
+      "name": "Scaling",
+      "weight": 10,
+      "minimumCoverage": 0.8,
+      "concepts": [
+        {
+          "name": "Sharding",
+          "importance": "critical",
+          "probe": true
+        },
+        {
+          "name": "Replication",
+          "importance": "critical",
+          "probe": true
+        },
+        {
+          "name": "Horizontal Scaling",
+          "importance": "critical",
+          "probe": false
+        },
+        {
+          "name": "Load Balancer",
+          "importance": "important",
+          "probe": false
+        },
+        {
+          "name": "CDN",
+          "importance": "optional",
+          "probe": true
+        }
+      ]
+    },
+
+    {
+      "name": "Analytics",
+      "weight": 6,
+      "minimumCoverage": 0.5,
+      "concepts": [
+        {
+          "name": "Message Queue",
+          "importance": "important",
+          "probe": true
+        },
+        {
+          "name": "Async Processing",
+          "importance": "important",
+          "probe": true
+        },
+        {
+          "name": "Click Tracking",
+          "importance": "optional",
+          "probe": false
+        }
+      ]
+    },
+
+    {
+      "name": "Tradeoffs",
+      "weight": 10,
+      "minimumCoverage": 0.7,
+      "concepts": [
+        {
+          "name": "Consistency",
+          "importance": "critical",
+          "probe": true
+        },
+        {
+          "name": "Availability",
+          "importance": "critical",
+          "probe": true
+        },
+        {
+          "name": "CAP Theorem",
+          "importance": "important",
+          "probe": true
+        },
+        {
+          "name": "Base62 vs Hashing",
+          "importance": "important",
+          "probe": true
+        },
+        {
+          "name": "SQL vs NoSQL",
+          "importance": "important",
+          "probe": true
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,110 @@
+{
+  "components": [
+    {
+      "name": "API Gateway",
+      "purpose": "Entry point for all client requests."
+    },
+    {
+      "name": "Load Balancer",
+      "purpose": "Distributes traffic across backend services."
+    },
+    {
+      "name": "Auth Service",
+      "purpose": "Handles user authentication and authorization."
+    },
+    {
+      "name": "User Service",
+      "purpose": "Manages user profiles and follower relationships."
+    },
+    {
+      "name": "Post Service",
+      "purpose": "Handles post creation, metadata and retrieval."
+    },
+    {
+      "name": "Feed Service",
+      "purpose": "Generates personalized user feeds."
+    },
+    {
+      "name": "Media Service",
+      "purpose": "Processes uploaded images and videos."
+    },
+    {
+      "name": "Object Storage",
+      "purpose": "Stores photos and videos."
+    },
+    {
+      "name": "CDN",
+      "purpose": "Delivers media with low latency worldwide."
+    },
+    {
+      "name": "Redis",
+      "purpose": "Caches feeds, profiles and popular posts."
+    },
+    {
+      "name": "Kafka",
+      "purpose": "Processes asynchronous events such as notifications and feed generation."
+    },
+    {
+      "name": "Notification Service",
+      "purpose": "Sends push notifications for likes, comments and follows."
+    },
+    {
+      "name": "Recommendation Service",
+      "purpose": "Ranks and personalizes user feeds."
+    },
+    {
+      "name": "Search Service",
+      "purpose": "Supports user and hashtag search."
+    }
+  ],
+
+  "tradeoffs": [
+    {
+      "topic": "Feed Generation",
+      "alternatives": [
+        "Fan-out on Write",
+        "Fan-out on Read",
+        "Hybrid Feed"
+      ]
+    },
+    {
+      "topic": "Media Storage",
+      "alternatives": [
+        "Amazon S3",
+        "Google Cloud Storage",
+        "Azure Blob Storage"
+      ]
+    },
+    {
+      "topic": "Caching",
+      "alternatives": [
+        "Redis",
+        "Memcached"
+      ]
+    },
+    {
+      "topic": "Messaging",
+      "alternatives": [
+        "Kafka",
+        "RabbitMQ",
+        "Amazon SQS"
+      ]
+    },
+    {
+      "topic": "Database",
+      "alternatives": [
+        "MySQL",
+        "PostgreSQL",
+        "Cassandra",
+        "DynamoDB"
+      ]
+    },
+    {
+      "topic": "Search",
+      "alternatives": [
+        "Elasticsearch",
+        "OpenSearch"
+      ]
+    }
+  ]
+}

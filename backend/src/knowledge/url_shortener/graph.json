@@ -1,0 +1,45 @@
+{
+  "nodeMapping": {
+    "api": "API Server",
+    "lb": "Load Balancer",
+    "cache": "Redis",
+    "db": "Database",
+    "queue": "Message Queue",
+    "cdn": "CDN"
+  },
+
+  "recommendedNodes": [
+    "Load Balancer",
+    "API Server",
+    "Redis",
+    "Database"
+  ],
+
+  "optionalNodes": [
+    "Message Queue",
+    "CDN"
+  ],
+
+  "recommendedConnections": [
+    {
+      "from": "Load Balancer",
+      "to": "API Server"
+    },
+    {
+      "from": "API Server",
+      "to": "Redis"
+    },
+    {
+      "from": "API Server",
+      "to": "Database"
+    },
+    {
+      "from": "API Server",
+      "to": "Message Queue"
+    },
+    {
+      "from": "Message Queue",
+      "to": "Database"
+    }
+  ]
+}

@@ -1,0 +1,122 @@
+{
+  "nodeMapping": {
+    "api": "API Gateway",
+    "lb": "Load Balancer",
+    "cache": "Redis",
+    "db": "Database",
+    "queue": "Kafka",
+    "cdn": "Notification Service"
+  },
+
+  "recommendedNodes": [
+    "Load Balancer",
+    "API Gateway",
+    "Redis",
+    "Database",
+    "Kafka"
+  ],
+
+  "optionalNodes": [
+    "Location Service",
+    "Matching Service",
+    "Pricing Service",
+    "ETA Service",
+    "Notification Service",
+    "Payment Service",
+    "Geospatial Index"
+  ],
+
+  "recommendedConnections": [
+    {
+      "from": "Load Balancer",
+      "to": "API Gateway"
+    },
+    {
+      "from": "API Gateway",
+      "to": "Redis"
+    },
+    {
+      "from": "API Gateway",
+      "to": "Database"
+    },
+    {
+      "from": "API Gateway",
+      "to": "Kafka"
+    },
+    {
+      "from": "API Gateway",
+      "to": "Location Service"
+    },
+    {
+      "from": "Location Service",
+      "to": "Geospatial Index"
+    },
+    {
+      "from": "Matching Service",
+      "to": "Geospatial Index"
+    },
+    {
+      "from": "Matching Service",
+      "to": "Trip Service"
+    },
+    {
+      "from": "Trip Service",
+      "to": "Payment Service"
+    },
+    {
+      "from": "Kafka",
+      "to": "Notification Service"
+    }
+  ],
+
+  "graphChecks": [
+    {
+      "name": "Load Balancer Present",
+      "required": true
+    },
+    {
+      "name": "API Gateway Present",
+      "required": true
+    },
+    {
+      "name": "Database Present",
+      "required": true
+    },
+    {
+      "name": "Redis Present",
+      "required": true
+    },
+    {
+      "name": "Kafka Present",
+      "required": true
+    },
+    {
+      "name": "Location Service Present",
+      "required": false
+    },
+    {
+      "name": "Matching Service Present",
+      "required": false
+    },
+    {
+      "name": "API Connected to Database",
+      "required": true
+    },
+    {
+      "name": "API Connected to Redis",
+      "required": true
+    },
+    {
+      "name": "API Connected to Kafka",
+      "required": true
+    },
+    {
+      "name": "Location Connected to Geo Index",
+      "required": false
+    },
+    {
+      "name": "Matching Uses Geo Index",
+      "required": false
+    }
+  ]
+}

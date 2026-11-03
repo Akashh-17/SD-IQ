@@ -1,0 +1,289 @@
+{
+  "estimatedDuration": 45,
+
+  "difficultyLevels": [
+    "Junior",
+    "SDE1",
+    "SDE2",
+    "Senior"
+  ],
+
+  "stages": [
+    {
+      "name": "Requirements",
+
+      "objective": "Gather all functional and non-functional requirements before starting the design.",
+
+      "entryQuestion": "Before we begin the design, do you have any requirement clarification questions?",
+
+      "completionCriteria": [
+        {
+          "name": "Functional Requirements",
+          "required": true,
+          "concepts": [
+            "One-to-one messaging",
+            "Group messaging",
+            "Media sharing",
+            "Read receipts",
+            "Typing indicator",
+            "Push notifications"
+          ]
+        },
+        {
+          "name": "Non Functional Requirements",
+          "required": true,
+          "concepts": [
+            "Latency",
+            "Availability",
+            "Scalability",
+            "Durability"
+          ]
+        },
+        {
+          "name": "Constraints",
+          "required": true,
+          "concepts": [
+            "500 Million DAU",
+            "Large media",
+            "Global users",
+            "Network failures"
+          ]
+        }
+      ]
+    },
+
+    {
+      "name": "High Level Design",
+
+      "objective": "Understand the overall architecture and major components.",
+
+      "entryQuestion": "Great. Walk me through your high-level architecture.",
+
+      "completionCriteria": [
+        {
+          "name": "Client",
+
+          "required": true,
+
+          "concepts": [
+            "Mobile Client"
+          ]
+        },
+        {
+          "name": "Load Balancer",
+
+          "required": true,
+
+          "concepts": [
+            "Load Balancer"
+          ]
+        },
+        {
+          "name": "Gateway",
+
+          "required": true,
+
+          "concepts": [
+            "API Gateway"
+          ]
+        },
+        {
+          "name": "Realtime",
+
+          "required": true,
+
+          "concepts": [
+            "WebSocket"
+          ]
+        },
+        {
+          "name": "Messaging",
+
+          "required": true,
+
+          "concepts": [
+            "Message Service"
+          ]
+        },
+        {
+          "name": "Storage",
+
+          "required": true,
+
+          "concepts": [
+            "Database"
+          ]
+        }
+      ]
+    },
+
+    {
+      "name": "Realtime Communication",
+
+      "objective": "Evaluate the realtime messaging flow.",
+
+      "entryQuestion": "Let's discuss how messages flow through the system.",
+
+      "completionCriteria": [
+        {
+          "name": "Connection",
+
+          "required": true,
+
+          "concepts": [
+            "Persistent Connection",
+            "WebSocket"
+          ]
+        },
+        {
+          "name": "Delivery",
+
+          "required": true,
+
+          "concepts": [
+            "ACK",
+            "Retry",
+            "Offline Messages"
+          ]
+        },
+        {
+          "name": "Presence",
+
+          "required": false,
+
+          "concepts": [
+            "Heartbeat",
+            "Online Status"
+          ]
+        }
+      ]
+    },
+
+    {
+      "name": "Database",
+
+      "objective": "Evaluate schema design and data modelling.",
+
+      "entryQuestion": "How would you design the database schema?",
+
+      "completionCriteria": [
+        {
+          "name": "Schema",
+
+          "required": true,
+
+          "concepts": [
+            "Users",
+            "Chats",
+            "Messages",
+            "GroupMembers"
+          ]
+        },
+        {
+          "name": "Indexes",
+
+          "required": true,
+
+          "concepts": [
+            "chat_id",
+            "timestamp"
+          ]
+        },
+        {
+          "name": "Pagination",
+
+          "required": true,
+
+          "concepts": [
+            "Cursor Pagination"
+          ]
+        }
+      ]
+    },
+
+    {
+      "name": "Scaling",
+
+      "objective": "Evaluate scalability of the architecture.",
+
+      "entryQuestion": "How would this system scale to hundreds of millions of users?",
+
+      "completionCriteria": [
+        {
+          "name": "Caching",
+
+          "required": true,
+
+          "concepts": [
+            "Redis"
+          ]
+        },
+        {
+          "name": "Queue",
+
+          "required": true,
+
+          "concepts": [
+            "Kafka"
+          ]
+        },
+        {
+          "name": "Partitioning",
+
+          "required": true,
+
+          "concepts": [
+            "Sharding"
+          ]
+        },
+        {
+          "name": "Replication",
+
+          "required": true,
+
+          "concepts": [
+            "Replication"
+          ]
+        }
+      ]
+    },
+
+    {
+      "name": "Tradeoffs",
+
+      "objective": "Assess architectural reasoning and tradeoffs.",
+
+      "entryQuestion": "Let's discuss some tradeoffs in your design.",
+
+      "completionCriteria": [
+        {
+          "name": "Consistency",
+
+          "required": true,
+
+          "concepts": [
+            "Consistency"
+          ]
+        },
+        {
+          "name": "Availability",
+
+          "required": true,
+
+          "concepts": [
+            "Availability"
+          ]
+        },
+        {
+          "name": "CAP",
+
+          "required": true,
+
+          "concepts": [
+            "CAP Theorem"
+          ]
+        }
+      ]
+    }
+  ]
+}

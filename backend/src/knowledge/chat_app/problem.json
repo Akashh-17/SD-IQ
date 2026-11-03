@@ -1,0 +1,35 @@
+{
+  "id": "chat_app",
+
+  "title": "Design WhatsApp",
+
+  "problemDifficulty": "Medium",
+
+  "description": "Design a globally distributed real-time messaging platform like WhatsApp supporting one-to-one chat, group chat and media sharing.",
+
+  "functionalRequirements": [
+    "One-to-one messaging",
+    "Group messaging",
+    "Online / Offline messaging",
+    "Media sharing",
+    "Read receipts",
+    "Typing indicator",
+    "Push notifications"
+  ],
+
+  "nonFunctionalRequirements": [
+    "500 Million Daily Active Users",
+    "Very low latency",
+    "High availability",
+    "Fault tolerance",
+    "Horizontal scalability",
+    "Strong durability"
+  ],
+
+  "constraints": [
+    "Global users",
+    "Large media files",
+    "Network failures",
+    "Mobile devices"
+  ]
+}

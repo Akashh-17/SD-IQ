@@ -1,0 +1,37 @@
+{
+  "id": "instagram",
+
+  "title": "Design Instagram",
+
+  "problemDifficulty": "Medium",
+
+  "description": "Design a scalable photo and video sharing platform like Instagram supporting media uploads, news feed generation, likes, comments and following users.",
+
+  "functionalRequirements": [
+    "User registration and login",
+    "Upload photos and videos",
+    "View personalized news feed",
+    "Like posts",
+    "Comment on posts",
+    "Follow and unfollow users",
+    "Search users",
+    "Push notifications"
+  ],
+
+  "nonFunctionalRequirements": [
+    "500 Million Daily Active Users",
+    "Low feed latency",
+    "High availability",
+    "Horizontal scalability",
+    "Fault tolerance",
+    "Durable media storage"
+  ],
+
+  "constraints": [
+    "Large media files",
+    "High read-to-write ratio",
+    "Global users",
+    "Millions of concurrent uploads",
+    "Feed freshness"
+  ]
+}

@@ -1,0 +1,289 @@
+{
+  "topics": [
+    {
+      "name": "Requirement Gathering",
+      "weight": 10,
+      "minimumCoverage": 0.75,
+      "concepts": [
+        {
+          "name": "DAU",
+          "importance": "critical",
+          "probe": false
+        },
+        {
+          "name": "Functional Requirements",
+          "importance": "critical",
+          "probe": false
+        },
+        {
+          "name": "Non Functional Requirements",
+          "importance": "critical",
+          "probe": false
+        },
+        {
+          "name": "Large Files",
+          "importance": "important",
+          "probe": false
+        },
+        {
+          "name": "Version History",
+          "importance": "important",
+          "probe": false
+        },
+        {
+          "name": "File Sharing",
+          "importance": "important",
+          "probe": false
+        },
+        {
+          "name": "Offline Access",
+          "importance": "optional",
+          "probe": false
+        }
+      ]
+    },
+
+    {
+      "name": "High Level Design",
+      "weight": 10,
+      "minimumCoverage": 0.80,
+      "concepts": [
+        {
+          "name": "Load Balancer",
+          "importance": "critical",
+          "probe": false
+        },
+        {
+          "name": "API Gateway",
+          "importance": "critical",
+          "probe": false
+        },
+        {
+          "name": "Metadata Service",
+          "importance": "critical",
+          "probe": true
+        },
+        {
+          "name": "Upload Service",
+          "importance": "critical",
+          "probe": true
+        },
+        {
+          "name": "Object Storage",
+          "importance": "critical",
+          "probe": true
+        },
+        {
+          "name": "Metadata Database",
+          "importance": "critical",
+          "probe": true
+        },
+        {
+          "name": "Authentication Service",
+          "importance": "important",
+          "probe": false
+        },
+        {
+          "name": "Redis",
+          "importance": "important",
+          "probe": true
+        },
+        {
+          "name": "Message Queue",
+          "importance": "important",
+          "probe": true
+        },
+        {
+          "name": "CDN",
+          "importance": "important",
+          "probe": false
+        }
+      ]
+    },
+
+    {
+      "name": "Upload Flow",
+      "weight": 10,
+      "minimumCoverage": 0.75,
+      "concepts": [
+        {
+          "name": "Chunking",
+          "importance": "critical",
+          "probe": true
+        },
+        {
+          "name": "Parallel Upload",
+          "importance": "important",
+          "probe": true
+        },
+        {
+          "name": "Hashing",
+          "importance": "critical",
+          "probe": true
+        },
+        {
+          "name": "Deduplication",
+          "importance": "critical",
+          "probe": true
+        },
+        {
+          "name": "Resume Upload",
+          "importance": "important",
+          "probe": true
+        },
+        {
+          "name": "Retry",
+          "importance": "important",
+          "probe": false
+        }
+      ]
+    },
+
+    {
+      "name": "Synchronization",
+      "weight": 10,
+      "minimumCoverage": 0.75,
+      "concepts": [
+        {
+          "name": "Version Number",
+          "importance": "critical",
+          "probe": true
+        },
+        {
+          "name": "Conflict Resolution",
+          "importance": "critical",
+          "probe": true
+        },
+        {
+          "name": "Push Sync",
+          "importance": "important",
+          "probe": true
+        },
+        {
+          "name": "Polling",
+          "importance": "important",
+          "probe": true
+        },
+        {
+          "name": "Delta Sync",
+          "importance": "important",
+          "probe": true
+        },
+        {
+          "name": "File Watcher",
+          "importance": "optional",
+          "probe": false
+        }
+      ]
+    },
+
+    {
+      "name": "Database",
+      "weight": 10,
+      "minimumCoverage": 0.80,
+      "concepts": [
+        {
+          "name": "Schema",
+          "importance": "critical",
+          "probe": true
+        },
+        {
+          "name": "Indexes",
+          "importance": "important",
+          "probe": true
+        },
+        {
+          "name": "Metadata",
+          "importance": "critical",
+          "probe": true
+        },
+        {
+          "name": "Permissions",
+          "importance": "important",
+          "probe": true
+        },
+        {
+          "name": "Version Table",
+          "importance": "important",
+          "probe": true
+        },
+        {
+          "name": "Replication",
+          "importance": "important",
+          "probe": true
+        },
+        {
+          "name": "Partitioning",
+          "importance": "critical",
+          "probe": true
+        }
+      ]
+    },
+
+    {
+      "name": "Scaling",
+      "weight": 10,
+      "minimumCoverage": 0.80,
+      "concepts": [
+        {
+          "name": "Metadata Sharding",
+          "importance": "critical",
+          "probe": true
+        },
+        {
+          "name": "Caching",
+          "importance": "important",
+          "probe": false
+        },
+        {
+          "name": "CDN",
+          "importance": "important",
+          "probe": false
+        },
+        {
+          "name": "Replication",
+          "importance": "important",
+          "probe": false
+        },
+        {
+          "name": "Load Balancing",
+          "importance": "important",
+          "probe": false
+        }
+      ]
+    },
+
+    {
+      "name": "Tradeoffs",
+      "weight": 8,
+      "minimumCoverage": 0.60,
+      "concepts": [
+        {
+          "name": "Consistency",
+          "importance": "critical",
+          "probe": true
+        },
+        {
+          "name": "Availability",
+          "importance": "critical",
+          "probe": true
+        },
+        {
+          "name": "Object Storage vs Block Storage",
+          "importance": "important",
+          "probe": true
+        },
+        {
+          "name": "Polling vs Push",
+          "importance": "important",
+          "probe": true
+        },
+        {
+          "name": "CAP",
+          "importance": "important",
+          "probe": true
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,265 @@
+{
+  "estimatedDuration": 35,
+
+  "difficultyLevels": [
+    "Junior",
+    "SDE1",
+    "SDE2",
+    "Senior"
+  ],
+
+  "stages": [
+
+    {
+      "name": "Requirements",
+
+      "objective": "Gather functional and non-functional requirements before beginning the design.",
+
+      "entryQuestion": "Before designing the system, what clarification questions would you ask?",
+
+      "completionCriteria": [
+        {
+          "name": "Functional Requirements",
+          "required": true,
+          "concepts": [
+            "Shorten URLs",
+            "Redirect URLs",
+            "Custom Alias",
+            "Expiration",
+            "Analytics"
+          ]
+        },
+        {
+          "name": "Non Functional Requirements",
+          "required": true,
+          "concepts": [
+            "Latency",
+            "Availability",
+            "Scalability",
+            "Durability"
+          ]
+        },
+        {
+          "name": "Constraints",
+          "required": true,
+          "concepts": [
+            "Billions of URLs",
+            "Collision",
+            "Read Heavy"
+          ]
+        }
+      ]
+    },
+
+    {
+      "name": "High Level Design",
+
+      "objective": "Understand the overall architecture and major components.",
+
+      "entryQuestion": "Walk me through your high-level design.",
+
+      "completionCriteria": [
+        {
+          "name": "Client",
+          "required": true,
+          "concepts": [
+            "Web Client"
+          ]
+        },
+        {
+          "name": "Load Balancer",
+          "required": true,
+          "concepts": [
+            "Load Balancer"
+          ]
+        },
+        {
+          "name": "API Service",
+          "required": true,
+          "concepts": [
+            "API Server"
+          ]
+        },
+        {
+          "name": "Database",
+          "required": true,
+          "concepts": [
+            "Database"
+          ]
+        },
+        {
+          "name": "Cache",
+          "required": false,
+          "concepts": [
+            "Redis"
+          ]
+        }
+      ]
+    },
+
+    {
+      "name": "Short Code Generation",
+
+      "objective": "Evaluate the strategy used to generate unique short URLs.",
+
+      "entryQuestion": "How will your service generate unique short URLs?",
+
+      "completionCriteria": [
+        {
+          "name": "ID Generation",
+          "required": true,
+          "concepts": [
+            "Auto Increment",
+            "UUID",
+            "Snowflake"
+          ]
+        },
+        {
+          "name": "Encoding",
+          "required": true,
+          "concepts": [
+            "Base62"
+          ]
+        },
+        {
+          "name": "Collision Handling",
+          "required": true,
+          "concepts": [
+            "Collision Detection",
+            "Uniqueness"
+          ]
+        }
+      ]
+    },
+
+    {
+      "name": "Database",
+
+      "objective": "Evaluate schema design and storage strategy.",
+
+      "entryQuestion": "How would you store URLs and retrieve them efficiently?",
+
+      "completionCriteria": [
+        {
+          "name": "Schema",
+          "required": true,
+          "concepts": [
+            "Short Code",
+            "Original URL",
+            "Created At",
+            "Expiry"
+          ]
+        },
+        {
+          "name": "Indexes",
+          "required": true,
+          "concepts": [
+            "Primary Key",
+            "Unique Index"
+          ]
+        },
+        {
+          "name": "Storage",
+          "required": true,
+          "concepts": [
+            "SQL",
+            "NoSQL"
+          ]
+        }
+      ]
+    },
+
+    {
+      "name": "Caching",
+
+      "objective": "Evaluate how redirects are optimized.",
+
+      "entryQuestion": "How would you reduce database lookups during redirects?",
+
+      "completionCriteria": [
+        {
+          "name": "Cache",
+          "required": true,
+          "concepts": [
+            "Redis"
+          ]
+        },
+        {
+          "name": "Cache Strategy",
+          "required": true,
+          "concepts": [
+            "Cache Aside",
+            "TTL"
+          ]
+        }
+      ]
+    },
+
+    {
+      "name": "Scaling",
+
+      "objective": "Evaluate scalability under heavy traffic.",
+
+      "entryQuestion": "How would your service scale to billions of redirects every day?",
+
+      "completionCriteria": [
+        {
+          "name": "Replication",
+          "required": true,
+          "concepts": [
+            "Read Replica"
+          ]
+        },
+        {
+          "name": "Partitioning",
+          "required": true,
+          "concepts": [
+            "Sharding"
+          ]
+        },
+        {
+          "name": "CDN",
+          "required": false,
+          "concepts": [
+            "CDN"
+          ]
+        }
+      ]
+    },
+
+    {
+      "name": "Tradeoffs",
+
+      "objective": "Assess architectural reasoning.",
+
+      "entryQuestion": "Let's discuss the tradeoffs in your design.",
+
+      "completionCriteria": [
+        {
+          "name": "Consistency",
+          "required": true,
+          "concepts": [
+            "Consistency"
+          ]
+        },
+        {
+          "name": "Availability",
+          "required": true,
+          "concepts": [
+            "Availability"
+          ]
+        },
+        {
+          "name": "Code Generation",
+          "required": true,
+          "concepts": [
+            "Hashing",
+            "Base62",
+            "Snowflake"
+          ]
+        }
+      ]
+    }
+
+  ]
+}

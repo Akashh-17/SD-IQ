@@ -1,0 +1,79 @@
+{
+  "components": [
+    {
+      "name": "API Gateway",
+      "purpose": "Entry point for all client requests."
+    },
+    {
+      "name": "Load Balancer",
+      "purpose": "Distribute incoming traffic."
+    },
+    {
+      "name": "Authentication Service",
+      "purpose": "Authenticate users and authorize access."
+    },
+    {
+      "name": "Metadata Service",
+      "purpose": "Manage file metadata, folders and permissions."
+    },
+    {
+      "name": "Upload Service",
+      "purpose": "Handle chunked uploads and file assembly."
+    },
+    {
+      "name": "Object Storage",
+      "purpose": "Store file contents."
+    },
+    {
+      "name": "Metadata Database",
+      "purpose": "Store metadata about files, folders and versions."
+    },
+    {
+      "name": "Redis",
+      "purpose": "Cache metadata and frequently accessed information."
+    },
+    {
+      "name": "Message Queue",
+      "purpose": "Asynchronous processing of background tasks."
+    },
+    {
+      "name": "Notification Service",
+      "purpose": "Notify clients about file changes."
+    },
+    {
+      "name": "CDN",
+      "purpose": "Accelerate file downloads globally."
+    }
+  ],
+
+  "tradeoffs": [
+    {
+      "topic": "Object Storage",
+      "alternatives": [
+        "Block Storage",
+        "Distributed File System"
+      ]
+    },
+    {
+      "topic": "Synchronization",
+      "alternatives": [
+        "Polling",
+        "Push Notifications"
+      ]
+    },
+    {
+      "topic": "Metadata Database",
+      "alternatives": [
+        "PostgreSQL",
+        "Cassandra"
+      ]
+    },
+    {
+      "topic": "Message Queue",
+      "alternatives": [
+        "Kafka",
+        "RabbitMQ"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,42 @@
+{
+  "id": "google_drive",
+
+  "title": "Design Google Drive",
+
+  "problemDifficulty": "Medium",
+
+  "description": "Design a globally distributed cloud storage platform like Google Drive supporting file storage, synchronization, sharing and version history across multiple devices.",
+
+  "functionalRequirements": [
+    "Upload files",
+    "Download files",
+    "Delete files",
+    "Create folders",
+    "Move and rename files",
+    "File synchronization",
+    "File sharing",
+    "Access permissions",
+    "File version history",
+    "Search files"
+  ],
+
+  "nonFunctionalRequirements": [
+    "100 Million DAU",
+    "High availability",
+    "Horizontal scalability",
+    "High durability",
+    "Low latency metadata operations",
+    "Fault tolerance",
+    "Strong consistency for metadata"
+  ],
+
+  "constraints": [
+    "Files up to several GB",
+    "Billions of stored files",
+    "Global users",
+    "Duplicate uploads",
+    "Multiple devices per user",
+    "Concurrent updates",
+    "Network interruptions"
+  ]
+}

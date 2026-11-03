@@ -1,0 +1,322 @@
+{
+  "estimatedDuration": 55,
+
+  "difficultyLevels": [
+    "Junior",
+    "SDE1",
+    "SDE2",
+    "Senior"
+  ],
+
+  "stages": [
+    {
+      "name": "Requirements",
+
+      "objective": "Gather all functional and non-functional requirements before beginning the design.",
+
+      "entryQuestion": "Before designing Uber, what clarification questions would you ask?",
+
+      "completionCriteria": [
+        {
+          "name": "Functional Requirements",
+          "required": true,
+          "concepts": [
+            "Ride Request",
+            "Ride Matching",
+            "Live Tracking",
+            "Payments",
+            "Notifications",
+            "Ride History"
+          ]
+        },
+        {
+          "name": "Non Functional Requirements",
+          "required": true,
+          "concepts": [
+            "Low Latency",
+            "Availability",
+            "Scalability",
+            "Fault Tolerance"
+          ]
+        },
+        {
+          "name": "Constraints",
+          "required": true,
+          "concepts": [
+            "Millions of Drivers",
+            "Real-time GPS",
+            "Peak Traffic",
+            "Global Users"
+          ]
+        }
+      ]
+    },
+
+    {
+      "name": "High Level Design",
+
+      "objective": "Evaluate the overall architecture.",
+
+      "entryQuestion": "Walk me through your high-level design.",
+
+      "completionCriteria": [
+        {
+          "name": "Client",
+          "required": true,
+          "concepts": [
+            "Driver App",
+            "Rider App"
+          ]
+        },
+        {
+          "name": "Gateway",
+          "required": true,
+          "concepts": [
+            "API Gateway"
+          ]
+        },
+        {
+          "name": "Trip Service",
+          "required": true,
+          "concepts": [
+            "Trip Service"
+          ]
+        },
+        {
+          "name": "Matching Service",
+          "required": true,
+          "concepts": [
+            "Matching Service"
+          ]
+        },
+        {
+          "name": "Location Service",
+          "required": true,
+          "concepts": [
+            "Location Service"
+          ]
+        }
+      ]
+    },
+
+    {
+      "name": "Location Tracking",
+
+      "objective": "Evaluate real-time driver location updates.",
+
+      "entryQuestion": "How would drivers continuously update their location?",
+
+      "completionCriteria": [
+        {
+          "name": "Realtime",
+          "required": true,
+          "concepts": [
+            "WebSocket",
+            "gRPC",
+            "Streaming"
+          ]
+        },
+        {
+          "name": "Geo Index",
+          "required": true,
+          "concepts": [
+            "Geohash",
+            "H3",
+            "QuadTree"
+          ]
+        },
+        {
+          "name": "Frequency",
+          "required": true,
+          "concepts": [
+            "GPS Updates"
+          ]
+        }
+      ]
+    },
+
+    {
+      "name": "Ride Matching",
+
+      "objective": "Evaluate driver dispatch algorithms.",
+
+      "entryQuestion": "How would you find the best driver for a rider?",
+
+      "completionCriteria": [
+        {
+          "name": "Nearest Driver",
+          "required": true,
+          "concepts": [
+            "Geospatial Search"
+          ]
+        },
+        {
+          "name": "Dispatch",
+          "required": true,
+          "concepts": [
+            "Dispatch Algorithm"
+          ]
+        },
+        {
+          "name": "ETA",
+          "required": true,
+          "concepts": [
+            "ETA"
+          ]
+        }
+      ]
+    },
+
+    {
+      "name": "Trip Lifecycle",
+
+      "objective": "Evaluate complete trip management.",
+
+      "entryQuestion": "Walk me through the lifecycle of a trip.",
+
+      "completionCriteria": [
+        {
+          "name": "States",
+          "required": true,
+          "concepts": [
+            "Requested",
+            "Accepted",
+            "In Progress",
+            "Completed"
+          ]
+        },
+        {
+          "name": "Cancellation",
+          "required": true,
+          "concepts": [
+            "Driver Cancel",
+            "Rider Cancel"
+          ]
+        },
+        {
+          "name": "Payments",
+          "required": true,
+          "concepts": [
+            "Payment Service"
+          ]
+        }
+      ]
+    },
+
+    {
+      "name": "Database",
+
+      "objective": "Evaluate data modelling.",
+
+      "entryQuestion": "How would you design the database schema?",
+
+      "completionCriteria": [
+        {
+          "name": "Entities",
+          "required": true,
+          "concepts": [
+            "Users",
+            "Drivers",
+            "Trips",
+            "Payments"
+          ]
+        },
+        {
+          "name": "Indexes",
+          "required": true,
+          "concepts": [
+            "Driver Location",
+            "Trip ID"
+          ]
+        },
+        {
+          "name": "History",
+          "required": true,
+          "concepts": [
+            "Trip History"
+          ]
+        }
+      ]
+    },
+
+    {
+      "name": "Scaling",
+
+      "objective": "Evaluate scalability.",
+
+      "entryQuestion": "How would Uber scale globally?",
+
+      "completionCriteria": [
+        {
+          "name": "Cache",
+          "required": true,
+          "concepts": [
+            "Redis"
+          ]
+        },
+        {
+          "name": "Queue",
+          "required": true,
+          "concepts": [
+            "Kafka"
+          ]
+        },
+        {
+          "name": "Partitioning",
+          "required": true,
+          "concepts": [
+            "Sharding"
+          ]
+        },
+        {
+          "name": "Replication",
+          "required": true,
+          "concepts": [
+            "Replication"
+          ]
+        }
+      ]
+    },
+
+    {
+      "name": "Tradeoffs",
+
+      "objective": "Assess architectural reasoning.",
+
+      "entryQuestion": "Let's discuss the tradeoffs in your design.",
+
+      "completionCriteria": [
+        {
+          "name": "Consistency",
+          "required": true,
+          "concepts": [
+            "Consistency"
+          ]
+        },
+        {
+          "name": "Availability",
+          "required": true,
+          "concepts": [
+            "Availability"
+          ]
+        },
+        {
+          "name": "Geo Index",
+          "required": true,
+          "concepts": [
+            "Geohash",
+            "H3"
+          ]
+        },
+        {
+          "name": "Dispatch",
+          "required": true,
+          "concepts": [
+            "Nearest Driver",
+            "ETA"
+          ]
+        }
+      ]
+    }
+  ]
+}

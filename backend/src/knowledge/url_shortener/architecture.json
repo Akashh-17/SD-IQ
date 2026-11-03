@@ -1,0 +1,87 @@
+{
+  "components": [
+    {
+      "name": "Load Balancer",
+      "purpose": "Distributes incoming requests across API servers."
+    },
+    {
+      "name": "API Server",
+      "purpose": "Handles URL shortening and redirect requests."
+    },
+    {
+      "name": "URL Service",
+      "purpose": "Generates short URLs and manages URL mappings."
+    },
+    {
+      "name": "ID Generator",
+      "purpose": "Generates globally unique IDs for new URLs."
+    },
+    {
+      "name": "Base62 Encoder",
+      "purpose": "Encodes unique IDs into compact Base62 short codes."
+    },
+    {
+      "name": "Redis",
+      "purpose": "Caches frequently accessed short URL mappings."
+    },
+    {
+      "name": "Database",
+      "purpose": "Stores short URL mappings and metadata."
+    },
+    {
+      "name": "Analytics Service",
+      "purpose": "Processes click events and usage statistics asynchronously."
+    },
+    {
+      "name": "Message Queue",
+      "purpose": "Buffers analytics events without impacting redirect latency."
+    },
+    {
+      "name": "CDN",
+      "purpose": "Caches redirect responses closer to users."
+    }
+  ],
+
+  "tradeoffs": [
+    {
+      "topic": "ID Generation",
+      "alternatives": [
+        "Auto Increment",
+        "Snowflake ID",
+        "UUID"
+      ]
+    },
+    {
+      "topic": "Short Code",
+      "alternatives": [
+        "Base62",
+        "Hashing",
+        "Random String"
+      ]
+    },
+    {
+      "topic": "Database",
+      "alternatives": [
+        "MySQL",
+        "PostgreSQL",
+        "Cassandra",
+        "DynamoDB"
+      ]
+    },
+    {
+      "topic": "Caching",
+      "alternatives": [
+        "Redis",
+        "Memcached"
+      ]
+    },
+    {
+      "topic": "Queue",
+      "alternatives": [
+        "Kafka",
+        "RabbitMQ",
+        "Amazon SQS"
+      ]
+    }
+  ]
+}

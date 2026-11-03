@@ -1,0 +1,290 @@
+{
+  "estimatedDuration": 50,
+
+  "difficultyLevels": [
+    "Junior",
+    "SDE1",
+    "SDE2",
+    "Senior"
+  ],
+
+  "stages": [
+    {
+      "name": "Requirements",
+
+      "objective": "Gather all functional and non-functional requirements before beginning the design.",
+
+      "entryQuestion": "Before we design Instagram, what clarification questions would you ask?",
+
+      "completionCriteria": [
+        {
+          "name": "Functional Requirements",
+          "required": true,
+          "concepts": [
+            "Upload Posts",
+            "News Feed",
+            "Likes",
+            "Comments",
+            "Follow Users",
+            "Notifications"
+          ]
+        },
+        {
+          "name": "Non Functional Requirements",
+          "required": true,
+          "concepts": [
+            "Latency",
+            "Availability",
+            "Scalability",
+            "Durability"
+          ]
+        },
+        {
+          "name": "Constraints",
+          "required": true,
+          "concepts": [
+            "Large Media",
+            "Global Users",
+            "Feed Freshness"
+          ]
+        }
+      ]
+    },
+
+    {
+      "name": "High Level Design",
+
+      "objective": "Evaluate the overall architecture.",
+
+      "entryQuestion": "Walk me through your high-level architecture.",
+
+      "completionCriteria": [
+        {
+          "name": "Client",
+          "required": true,
+          "concepts": [
+            "Mobile Client"
+          ]
+        },
+        {
+          "name": "Load Balancer",
+          "required": true,
+          "concepts": [
+            "Load Balancer"
+          ]
+        },
+        {
+          "name": "API Gateway",
+          "required": true,
+          "concepts": [
+            "API Gateway"
+          ]
+        },
+        {
+          "name": "Post Service",
+          "required": true,
+          "concepts": [
+            "Post Service"
+          ]
+        },
+        {
+          "name": "Feed Service",
+          "required": true,
+          "concepts": [
+            "Feed Service"
+          ]
+        },
+        {
+          "name": "Object Storage",
+          "required": true,
+          "concepts": [
+            "Object Storage"
+          ]
+        }
+      ]
+    },
+
+    {
+      "name": "Feed Generation",
+
+      "objective": "Evaluate how personalized feeds are generated.",
+
+      "entryQuestion": "How would you generate a user's home feed?",
+
+      "completionCriteria": [
+        {
+          "name": "Feed Strategy",
+          "required": true,
+          "concepts": [
+            "Fan-out on Write",
+            "Fan-out on Read"
+          ]
+        },
+        {
+          "name": "Ranking",
+          "required": true,
+          "concepts": [
+            "Ranking",
+            "Personalization"
+          ]
+        },
+        {
+          "name": "Followers",
+          "required": true,
+          "concepts": [
+            "Follower Graph"
+          ]
+        }
+      ]
+    },
+
+    {
+      "name": "Media Storage",
+
+      "objective": "Evaluate media upload and storage pipeline.",
+
+      "entryQuestion": "How would you store and serve millions of photos and videos?",
+
+      "completionCriteria": [
+        {
+          "name": "Storage",
+          "required": true,
+          "concepts": [
+            "Object Storage"
+          ]
+        },
+        {
+          "name": "CDN",
+          "required": true,
+          "concepts": [
+            "CDN"
+          ]
+        },
+        {
+          "name": "Compression",
+          "required": true,
+          "concepts": [
+            "Image Compression",
+            "Video Transcoding"
+          ]
+        }
+      ]
+    },
+
+    {
+      "name": "Database",
+
+      "objective": "Evaluate database design.",
+
+      "entryQuestion": "How would you design the database schema?",
+
+      "completionCriteria": [
+        {
+          "name": "Schema",
+          "required": true,
+          "concepts": [
+            "Users",
+            "Posts",
+            "Comments",
+            "Likes",
+            "Followers"
+          ]
+        },
+        {
+          "name": "Indexes",
+          "required": true,
+          "concepts": [
+            "User ID",
+            "Timestamp"
+          ]
+        },
+        {
+          "name": "Pagination",
+          "required": true,
+          "concepts": [
+            "Cursor Pagination"
+          ]
+        }
+      ]
+    },
+
+    {
+      "name": "Scaling",
+
+      "objective": "Evaluate scalability.",
+
+      "entryQuestion": "How would Instagram scale to hundreds of millions of users?",
+
+      "completionCriteria": [
+        {
+          "name": "Caching",
+          "required": true,
+          "concepts": [
+            "Redis"
+          ]
+        },
+        {
+          "name": "Queue",
+          "required": true,
+          "concepts": [
+            "Kafka"
+          ]
+        },
+        {
+          "name": "Partitioning",
+          "required": true,
+          "concepts": [
+            "Sharding"
+          ]
+        },
+        {
+          "name": "Replication",
+          "required": true,
+          "concepts": [
+            "Replication"
+          ]
+        }
+      ]
+    },
+
+    {
+      "name": "Tradeoffs",
+
+      "objective": "Assess architectural decisions.",
+
+      "entryQuestion": "Let's discuss the tradeoffs in your design.",
+
+      "completionCriteria": [
+        {
+          "name": "Feed Strategy",
+          "required": true,
+          "concepts": [
+            "Fan-out on Write",
+            "Fan-out on Read"
+          ]
+        },
+        {
+          "name": "Consistency",
+          "required": true,
+          "concepts": [
+            "Consistency"
+          ]
+        },
+        {
+          "name": "Availability",
+          "required": true,
+          "concepts": [
+            "Availability"
+          ]
+        },
+        {
+          "name": "CAP",
+          "required": true,
+          "concepts": [
+            "CAP Theorem"
+          ]
+        }
+      ]
+    }
+  ]
+}

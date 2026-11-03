@@ -1,0 +1,386 @@
+{
+  "topics": [
+    {
+      "name": "Requirement Gathering",
+      "weight": 10,
+      "minimumCoverage": 0.75,
+      "concepts": [
+        {
+          "name": "Functional Requirements",
+          "importance": "critical",
+          "probe": false
+        },
+        {
+          "name": "Non Functional Requirements",
+          "importance": "critical",
+          "probe": false
+        },
+        {
+          "name": "Ride Request",
+          "importance": "critical",
+          "probe": false
+        },
+        {
+          "name": "Ride Matching",
+          "importance": "critical",
+          "probe": false
+        },
+        {
+          "name": "Live Tracking",
+          "importance": "important",
+          "probe": false
+        },
+        {
+          "name": "Payments",
+          "importance": "important",
+          "probe": false
+        },
+        {
+          "name": "Notifications",
+          "importance": "optional",
+          "probe": false
+        }
+      ]
+    },
+
+    {
+      "name": "High Level Design",
+      "weight": 12,
+      "minimumCoverage": 0.80,
+      "concepts": [
+        {
+          "name": "Load Balancer",
+          "importance": "critical",
+          "probe": false
+        },
+        {
+          "name": "API Gateway",
+          "importance": "critical",
+          "probe": false
+        },
+        {
+          "name": "Trip Service",
+          "importance": "critical",
+          "probe": true
+        },
+        {
+          "name": "Location Service",
+          "importance": "critical",
+          "probe": true
+        },
+        {
+          "name": "Matching Service",
+          "importance": "critical",
+          "probe": true
+        },
+        {
+          "name": "Database",
+          "importance": "critical",
+          "probe": false
+        },
+        {
+          "name": "Redis",
+          "importance": "important",
+          "probe": true
+        }
+      ]
+    },
+
+    {
+      "name": "Location Tracking",
+      "weight": 15,
+      "minimumCoverage": 0.85,
+      "concepts": [
+        {
+          "name": "GPS Updates",
+          "importance": "critical",
+          "probe": true
+        },
+        {
+          "name": "Driver Heartbeat",
+          "importance": "important",
+          "probe": true
+        },
+        {
+          "name": "WebSocket",
+          "importance": "important",
+          "probe": true
+        },
+        {
+          "name": "gRPC Streaming",
+          "importance": "important",
+          "probe": true
+        },
+        {
+          "name": "Location Service",
+          "importance": "critical",
+          "probe": false
+        },
+        {
+          "name": "Redis",
+          "importance": "important",
+          "probe": false
+        }
+      ]
+    },
+
+    {
+      "name": "Geospatial Search",
+      "weight": 12,
+      "minimumCoverage": 0.80,
+      "concepts": [
+        {
+          "name": "Geohash",
+          "importance": "critical",
+          "probe": true
+        },
+        {
+          "name": "Uber H3",
+          "importance": "critical",
+          "probe": true
+        },
+        {
+          "name": "QuadTree",
+          "importance": "important",
+          "probe": true
+        },
+        {
+          "name": "Nearest Driver Search",
+          "importance": "critical",
+          "probe": true
+        },
+        {
+          "name": "Radius Search",
+          "importance": "important",
+          "probe": true
+        }
+      ]
+    },
+
+    {
+      "name": "Ride Matching",
+      "weight": 12,
+      "minimumCoverage": 0.80,
+      "concepts": [
+        {
+          "name": "Dispatch Algorithm",
+          "importance": "critical",
+          "probe": true
+        },
+        {
+          "name": "ETA",
+          "importance": "critical",
+          "probe": true
+        },
+        {
+          "name": "Driver Selection",
+          "importance": "critical",
+          "probe": true
+        },
+        {
+          "name": "Driver Acceptance",
+          "importance": "important",
+          "probe": true
+        },
+        {
+          "name": "Retry Logic",
+          "importance": "important",
+          "probe": true
+        }
+      ]
+    },
+
+    {
+      "name": "Trip Lifecycle",
+      "weight": 10,
+      "minimumCoverage": 0.80,
+      "concepts": [
+        {
+          "name": "Requested",
+          "importance": "critical",
+          "probe": false
+        },
+        {
+          "name": "Accepted",
+          "importance": "critical",
+          "probe": false
+        },
+        {
+          "name": "In Progress",
+          "importance": "critical",
+          "probe": false
+        },
+        {
+          "name": "Completed",
+          "importance": "critical",
+          "probe": false
+        },
+        {
+          "name": "Cancelled",
+          "importance": "important",
+          "probe": true
+        }
+      ]
+    },
+
+    {
+      "name": "Pricing & Payments",
+      "weight": 8,
+      "minimumCoverage": 0.70,
+      "concepts": [
+        {
+          "name": "Fare Estimation",
+          "importance": "critical",
+          "probe": true
+        },
+        {
+          "name": "Surge Pricing",
+          "importance": "critical",
+          "probe": true
+        },
+        {
+          "name": "Payment Service",
+          "importance": "important",
+          "probe": false
+        },
+        {
+          "name": "Refunds",
+          "importance": "optional",
+          "probe": true
+        }
+      ]
+    },
+
+    {
+      "name": "Database",
+      "weight": 8,
+      "minimumCoverage": 0.75,
+      "concepts": [
+        {
+          "name": "Users",
+          "importance": "critical",
+          "probe": false
+        },
+        {
+          "name": "Drivers",
+          "importance": "critical",
+          "probe": false
+        },
+        {
+          "name": "Trips",
+          "importance": "critical",
+          "probe": false
+        },
+        {
+          "name": "Payments",
+          "importance": "important",
+          "probe": false
+        },
+        {
+          "name": "Indexes",
+          "importance": "important",
+          "probe": true
+        }
+      ]
+    },
+
+    {
+      "name": "Caching & Messaging",
+      "weight": 6,
+      "minimumCoverage": 0.70,
+      "concepts": [
+        {
+          "name": "Redis",
+          "importance": "critical",
+          "probe": false
+        },
+        {
+          "name": "Kafka",
+          "importance": "critical",
+          "probe": true
+        },
+        {
+          "name": "Notification Queue",
+          "importance": "important",
+          "probe": true
+        },
+        {
+          "name": "Async Processing",
+          "importance": "important",
+          "probe": true
+        }
+      ]
+    },
+
+    {
+      "name": "Scaling",
+      "weight": 10,
+      "minimumCoverage": 0.80,
+      "concepts": [
+        {
+          "name": "Horizontal Scaling",
+          "importance": "critical",
+          "probe": false
+        },
+        {
+          "name": "Sharding",
+          "importance": "critical",
+          "probe": true
+        },
+        {
+          "name": "Replication",
+          "importance": "critical",
+          "probe": true
+        },
+        {
+          "name": "Load Balancer",
+          "importance": "important",
+          "probe": false
+        },
+        {
+          "name": "Geo Partitioning",
+          "importance": "important",
+          "probe": true
+        }
+      ]
+    },
+
+    {
+      "name": "Tradeoffs",
+      "weight": 12,
+      "minimumCoverage": 0.75,
+      "concepts": [
+        {
+          "name": "Consistency",
+          "importance": "critical",
+          "probe": true
+        },
+        {
+          "name": "Availability",
+          "importance": "critical",
+          "probe": true
+        },
+        {
+          "name": "Geohash vs H3",
+          "importance": "critical",
+          "probe": true
+        },
+        {
+          "name": "WebSocket vs gRPC",
+          "importance": "important",
+          "probe": true
+        },
+        {
+          "name": "SQL vs NoSQL",
+          "importance": "important",
+          "probe": true
+        },
+        {
+          "name": "Static vs Surge Pricing",
+          "importance": "important",
+          "probe": true
+        }
+      ]
+    }
+  ]
+}

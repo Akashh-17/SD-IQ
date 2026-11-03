@@ -1,0 +1,114 @@
+{
+  "components": [
+    {
+      "name": "API Gateway",
+      "purpose": "Entry point for all rider and driver requests."
+    },
+    {
+      "name": "Load Balancer",
+      "purpose": "Distributes requests across backend services."
+    },
+    {
+      "name": "Auth Service",
+      "purpose": "Authenticates riders and drivers."
+    },
+    {
+      "name": "User Service",
+      "purpose": "Manages rider and driver profiles."
+    },
+    {
+      "name": "Trip Service",
+      "purpose": "Manages the complete lifecycle of a trip."
+    },
+    {
+      "name": "Location Service",
+      "purpose": "Receives and stores real-time driver GPS updates."
+    },
+    {
+      "name": "Matching Service",
+      "purpose": "Finds the most suitable nearby driver."
+    },
+    {
+      "name": "Pricing Service",
+      "purpose": "Calculates fares and surge pricing."
+    },
+    {
+      "name": "ETA Service",
+      "purpose": "Calculates estimated pickup and travel times."
+    },
+    {
+      "name": "Payment Service",
+      "purpose": "Processes ride payments and refunds."
+    },
+    {
+      "name": "Notification Service",
+      "purpose": "Sends trip updates and push notifications."
+    },
+    {
+      "name": "Redis",
+      "purpose": "Caches active driver locations and frequently accessed trip data."
+    },
+    {
+      "name": "Kafka",
+      "purpose": "Processes asynchronous trip events and notifications."
+    },
+    {
+      "name": "Geospatial Index",
+      "purpose": "Indexes driver locations using Geohash or H3."
+    },
+    {
+      "name": "Database",
+      "purpose": "Stores users, drivers, trips and payment records."
+    }
+  ],
+
+  "tradeoffs": [
+    {
+      "topic": "Realtime Communication",
+      "alternatives": [
+        "WebSocket",
+        "gRPC Streaming",
+        "Long Polling"
+      ]
+    },
+    {
+      "topic": "Geospatial Index",
+      "alternatives": [
+        "Geohash",
+        "Uber H3",
+        "QuadTree"
+      ]
+    },
+    {
+      "topic": "Caching",
+      "alternatives": [
+        "Redis",
+        "Memcached"
+      ]
+    },
+    {
+      "topic": "Messaging",
+      "alternatives": [
+        "Kafka",
+        "RabbitMQ",
+        "Amazon SQS"
+      ]
+    },
+    {
+      "topic": "Database",
+      "alternatives": [
+        "PostgreSQL",
+        "MySQL",
+        "Cassandra",
+        "DynamoDB"
+      ]
+    },
+    {
+      "topic": "Pricing",
+      "alternatives": [
+        "Static Pricing",
+        "Dynamic Surge Pricing"
+      ]
+    }
+  ]
+}

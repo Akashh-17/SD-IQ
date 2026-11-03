@@ -1,0 +1,15 @@
+{
+  "nodeMapping": {
+    "api": "API Gateway",
+    "lb": "Load Balancer",
+    "auth_service": "Authentication Service",
+    "metadata_service": "Metadata Service",
+    "upload_service": "Upload Service",
+    "object_storage": "Object Storage",
+    "db": "Metadata Database",
+    "cache": "Redis",
+    "queue": "Message Queue",
+    "notification_service": "Notification Service",
+    "cdn": "CDN"
+  }
+}

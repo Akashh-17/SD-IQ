@@ -1,0 +1,62 @@
+{
+  "components": [
+    {
+      "name": "API Gateway",
+      "purpose": "Entry point for all client requests."
+    },
+    {
+      "name": "Load Balancer",
+      "purpose": "Distribute incoming traffic."
+    },
+    {
+      "name": "WebSocket Server",
+      "purpose": "Persistent real-time connections."
+    },
+    {
+      "name": "Redis",
+      "purpose": "Caching and Pub/Sub."
+    },
+    {
+      "name": "Kafka",
+      "purpose": "Reliable asynchronous messaging."
+    },
+    {
+      "name": "Message Service",
+      "purpose": "Stores and processes chat messages."
+    },
+    {
+      "name": "Notification Service",
+      "purpose": "Push notifications."
+    },
+    {
+      "name": "Object Storage",
+      "purpose": "Media storage."
+    },
+    {
+      "name": "CDN",
+      "purpose": "Fast media delivery."
+    }
+  ],
+
+  "tradeoffs": [
+    {
+      "topic": "WebSocket",
+      "alternatives": [
+        "Server Sent Events",
+        "Long Polling"
+      ]
+    },
+    {
+      "topic": "Redis",
+      "alternatives": [
+        "Memcached"
+      ]
+    },
+    {
+      "topic": "Kafka",
+      "alternatives": [
+        "RabbitMQ"
+      ]
+    }
+  ]
+}

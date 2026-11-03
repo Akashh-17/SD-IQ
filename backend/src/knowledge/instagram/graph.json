@@ -1,0 +1,92 @@
+{
+  "nodeMapping": {
+    "api": "API Gateway",
+    "lb": "Load Balancer",
+    "cache": "Redis",
+    "db": "Database",
+    "queue": "Kafka",
+    "cdn": "CDN"
+  },
+
+  "recommendedNodes": [
+    "Load Balancer",
+    "API Gateway",
+    "Redis",
+    "Database",
+    "CDN"
+  ],
+
+  "optionalNodes": [
+    "Kafka",
+    "Notification Service",
+    "Recommendation Service",
+    "Search Service",
+    "Object Storage"
+  ],
+
+  "recommendedConnections": [
+    {
+      "from": "Load Balancer",
+      "to": "API Gateway"
+    },
+    {
+      "from": "API Gateway",
+      "to": "Redis"
+    },
+    {
+      "from": "API Gateway",
+      "to": "Database"
+    },
+    {
+      "from": "API Gateway",
+      "to": "Kafka"
+    },
+    {
+      "from": "Kafka",
+      "to": "Notification Service"
+    },
+    {
+      "from": "API Gateway",
+      "to": "CDN"
+    }
+  ],
+
+  "graphChecks": [
+    {
+      "name": "Load Balancer Present",
+      "required": true
+    },
+    {
+      "name": "API Gateway Present",
+      "required": true
+    },
+    {
+      "name": "Database Present",
+      "required": true
+    },
+    {
+      "name": "Redis Present",
+      "required": true
+    },
+    {
+      "name": "CDN Present",
+      "required": true
+    },
+    {
+      "name": "Queue Present",
+      "required": false
+    },
+    {
+      "name": "API Connected to Database",
+      "required": true
+    },
+    {
+      "name": "API Connected to Redis",
+      "required": true
+    },
+    {
+      "name": "API Connected to CDN",
+      "required": true
+    }
+  ]
+}
