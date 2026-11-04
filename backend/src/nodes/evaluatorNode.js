@@ -9,13 +9,6 @@ export async function evaluatorNode(state) {
 
         const context = buildEvaluatorContext(state);
 
-        console.log("\n========== GRAPH ANALYSIS IN EVALUATOR ==========");
-        console.dir(context.graphAnalysis, {
-            depth: null,
-            colors: true
-        });
-        console.log("=================================================\n");
-
         const evaluation = await evaluateAnswer(context);
 
         log("EVALUATION", {
@@ -72,7 +65,8 @@ export async function evaluatorNode(state) {
 
             architectureChoices: [],
 
-            reasoning: err.message
+            reasoning: err.message,
+            failed: true
 
         });
 

@@ -2,6 +2,11 @@ import { supabase } from "../../config/supabase.js";
 
 export class PersistenceService {
 
+    // Safe to retry after a partial failure:
+    // - the interview row is upserted on interview_id
+    // - graph and report rows are replaced, not duplicated
+    // - the report row is written LAST, so "report exists" means
+    //   everything was saved (ReportService relies on this)
     static async save(session) {
 
         // =====================================================
@@ -18,7 +23,7 @@ export class PersistenceService {
 
             .from("interviews")
 
-            .insert({
+            .upsert({
 
                 interview_id: session.interview.interviewId,
 
@@ -39,6 +44,10 @@ export class PersistenceService {
                 completed_at: new Date().toISOString()
 
 
+            }, {
+
+                onConflict: "interview_id"
+
             })
 
             .select()
@@ -50,89 +59,84 @@ export class PersistenceService {
 
         session.interview.status = "COMPLETED";
 
-        // =====================================================
-        // Report
-        // =====================================================
+        await this.replaceChild("graphs", interview.id, {
 
-        const {
+            interview_id: interview.id,
 
-            error: reportError
+            graph: {
 
-        } = await supabase
+                nodes:
 
-            .from("reports")
+                    session.graph?.nodes ?? [],
 
-            .insert({
+                edges:
 
-                interview_id: interview.id,
+                    session.graph?.edges ?? []
 
-                summary: session.report?.summary ?? "",
+            },
 
-                strengths: session.report?.strengths ?? [],
+            analysis:
 
-                weaknesses: session.report?.weaknesses ?? [],
+                session.graph?.analysis ?? {}
 
-                recommendations:
+        });
 
-                    session.report?.recommendations ?? [],
+        await this.replaceChild("reports", interview.id, {
 
-                stage_breakdown:
+            interview_id: interview.id,
 
-                    session.report?.stageBreakdown ?? {},
+            summary: session.report?.summary ?? "",
 
-                transcript:
+            strengths: session.report?.strengths ?? [],
 
-                    session.transcript ?? [],
+            weaknesses: session.report?.weaknesses ?? [],
 
-                report:
+            recommendations:
 
-                    session.report ?? {}
+                session.report?.recommendations ?? [],
 
-            });
+            stage_breakdown:
 
-        if (reportError)
+                session.report?.stageBreakdown ?? {},
 
-            throw reportError;
+            transcript:
 
-        // =====================================================
-        // Graph
-        // =====================================================
+                session.transcript ?? [],
 
-        const {
+            report:
 
-            error: graphError
+                session.report ?? {}
 
-        } = await supabase
-
-            .from("graphs")
-
-            .insert({
-
-                interview_id: interview.id,
-
-                graph: {
-
-                    nodes:
-
-                        session.graph?.nodes ?? [],
-
-                    edges:
-
-                        session.graph?.edges ?? []
-
-                },
-
-                analysis:
-
-                    session.graph?.analysis ?? {}
-
-            });
-
-        if (graphError)
-
-            throw graphError;
+        });
 
         return interview;
+
+    }
+
+    // Deletes any rows from an earlier attempt, then inserts
+    static async replaceChild(table, interviewRowId, row) {
+
+        const { error: deleteError } = await supabase
+
+            .from(table)
+
+            .delete()
+
+            .eq("interview_id", interviewRowId);
+
+        if (deleteError)
+
+            throw deleteError;
+
+        const { error: insertError } = await supabase
+
+            .from(table)
+
+            .insert(row);
+
+        if (insertError)
+
+            throw insertError;
 
     }
 
@@ -166,11 +170,16 @@ export class PersistenceService {
 
             )
 
-            .single();
+            .maybeSingle();
 
         if (interviewError)
 
             throw interviewError;
+
+        // Not finished yet, or no such interview
+        if (!interview)
+
+            return null;
 
         // =====================================================
         // Report
@@ -196,11 +205,15 @@ export class PersistenceService {
 
             )
 
-            .single();
+            .maybeSingle();
 
         if (reportError)
 
             throw reportError;
+
+        if (!report)
+
+            return null;
 
         // =====================================================
         // Flatten Response

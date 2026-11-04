@@ -1,28 +1,43 @@
 import { SessionService } from "../interview/session.service.js";
+import { graphSignature } from "../../utils/graphSignature.js";
 
 const pendingAnalysis = new Map();
 
 export class GraphService {
 
+    // Saves the diagram. Returns { graph, changed } where `changed`
+    // is true when the structure differs from the last analyzed graph.
     static async update(interviewId, graph) {
 
         const session = await SessionService.get(interviewId);
 
         if (!session) return null;
 
-        session.graph = graph;
+        // Writes only the graph key; the stored analysis (own key)
+        // stays valid until the structure changes (checked via signature)
+        await SessionService.setGraph(interviewId, graph);
 
-        session.graphDirty = true;
+        const saved = {
 
-        await SessionService.save(
+            nodes: graph?.nodes ?? [],
 
-            interviewId,
+            edges: graph?.edges ?? [],
 
-            session
+            analysis: session.graph.analysis,
 
-        );
+            analysisSignature: session.graph.analysisSignature
 
-        return session.graph;
+        };
+
+        return {
+
+            graph: saved,
+
+            changed:
+                graphSignature(saved) !==
+                saved.analysisSignature
+
+        };
 
     }
 
@@ -40,6 +55,38 @@ export class GraphService {
 
     }
 
+    // Stores an analysis together with the signature of the graph
+    // it was produced from. Written to its own key, so a diagram
+    // save happening at the same time is never overwritten.
+    static async setAnalysis(interviewId, graph, analysis, signature) {
+
+        if (!(await SessionService.exists(interviewId))) return null;
+
+        await SessionService.setGraphAnalysis(
+
+            interviewId,
+
+            analysis,
+
+            signature
+
+        );
+
+        return {
+
+            ...graph,
+
+            analysis,
+
+            analysisSignature: signature
+
+        };
+
+    }
+
+    // In-process debounce. With several server instances each one
+    // debounces its own requests; the signature check still prevents
+    // re-analyzing an unchanged graph.
     static scheduleAnalysis(interviewId, callback) {
 
         if (pendingAnalysis.has(interviewId)) {
@@ -56,7 +103,17 @@ export class GraphService {
 
             pendingAnalysis.delete(interviewId);
 
-            await callback();
+            try {
+
+                await callback();
+
+            }
+
+            catch (err) {
+
+                console.error("[Graph Analysis]", err);
+
+            }
 
         }, 2000);
 

@@ -10,6 +10,7 @@ import StageBreakdown from "../components/report/StageBreakdown";
 import Recommendations from "../components/report/Recommendations";
 import ReportSummary from "../components/report/ReportSummary";
 import { API_URL } from "../config";
+import { getSession } from "../services/auth.service";
 
 export default function ReportPage() {
 
@@ -25,11 +26,33 @@ export default function ReportPage() {
 
             try {
 
+                const session = await getSession();
+
                 const res = await fetch(
 
-                    `${API_URL}/api/report/${interviewId}`
+                    `${API_URL}/api/report/${interviewId}`,
+
+                    {
+
+                        headers: {
+
+                            Authorization:
+
+                                `Bearer ${session?.access_token}`
+
+                        }
+
+                    }
 
                 );
+
+                // Leave data empty on 404 / 401 so the page shows
+                // its "not found" state instead of an error object
+                if (!res.ok) {
+
+                    throw new Error(`Report request failed (${res.status})`);
+
+                }
 
                 const json = await res.json();
 

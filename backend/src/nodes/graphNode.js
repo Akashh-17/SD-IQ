@@ -1,11 +1,89 @@
 import { llm } from "../services/llm.js";
+import { graphSignature } from "../utils/graphSignature.js";
+import { GraphAnalysisSchema } from "../agents/graph/schema.js";
+import { log } from "../utils/logger.js";
+
+// Structured output: the response is validated against the schema
+// instead of hand-parsing raw JSON (which broke on ```json fences)
+const structured = llm.withStructuredOutput(GraphAnalysisSchema);
+
+// =====================================================
+// LLM analysis of a whiteboard graph
+// Used by the graph node and by graph-only analysis
+// when the candidate edits the diagram.
+// =====================================================
+
+export async function analyzeGraph(graph) {
+
+  if (!graph?.nodes?.length) {
+    return null;
+  }
+
+  // Edges reference node ids; resolve them to labels so the model
+  // sees "API Gateway -> Redis" rather than "3 -> 7"
+  const labelOf = new Map(
+
+    graph.nodes.map(n => [n.id, n.data?.label || n.type || n.id])
+
+  );
+
+  const simplified = {
+    nodes: graph.nodes.map(n => ({
+      type: n.type,
+      label: n.data?.label ?? ""
+    })),
+    edges: (graph.edges ?? []).map(e => ({
+      from: labelOf.get(e.source) ?? e.source,
+      to: labelOf.get(e.target) ?? e.target
+    }))
+  };
+
+  const prompt = `
+You are a Staff Software Engineer.
+
+Analyze this system design whiteboard: list its components and
+connections, its strengths, its issues, and any missing components,
+then summarize it in two or three sentences.
+
+Graph:
+
+${JSON.stringify(simplified, null, 2)}
+`;
+
+  try {
+
+    const analysis = await structured.invoke(prompt);
+
+    log("GRAPH ANALYSIS", analysis);
+
+    return analysis;
+
+  }
+
+  catch (e) {
+
+    console.error("[Graph Analysis]", e.message);
+
+    // null = "no analysis" (not cached, so the next edit or message
+    // retries instead of keeping an empty result for this graph)
+    return null;
+
+  }
+
+}
+
+// =====================================================
+// Graph node
+// Reuses the stored analysis when the diagram has not
+// structurally changed since it was produced.
+// =====================================================
 
 export async function graphNode(state) {
 
-  console.log("\n========== GRAPH NODE ==========");
-  console.log("Nodes:", state.graph?.nodes?.length ?? 0);
-  console.log("Edges:", state.graph?.edges?.length ?? 0);
-  console.log("================================\n");
+  log("GRAPH NODE", {
+    nodes: state.graph?.nodes?.length ?? 0,
+    edges: state.graph?.edges?.length ?? 0
+  });
 
   if (!state.graph?.nodes?.length) {
 
@@ -17,102 +95,23 @@ export async function graphNode(state) {
 
   }
 
-  const simplified = {
-    nodes: state.graph.nodes.map(n => ({
-      type: n.type,
-      label: n.data.label
-    })),
-    edges: state.graph.edges.map(e => ({
-      from: e.source,
-      to: e.target
-    }))
+  if (
+    state.graph.analysis &&
+    state.graph.analysisSignature === graphSignature(state.graph)
+  ) {
+
+    return {
+
+      graphAnalysis: state.graph.analysis
+
+    };
+
+  }
+
+  return {
+
+    graphAnalysis: await analyzeGraph(state.graph)
+
   };
-
-  const prompt = `
-You are a Staff Software Engineer.
-
-Analyze this system design whiteboard.
-
-Graph:
-
-${JSON.stringify(simplified, null, 2)}
-
-Return ONLY JSON.
-
-{
-    "components":[
-        {
-            "name":"",
-            "type":"",
-            "purpose":""
-        }
-    ],
-    "connections":[
-        {
-            "from":"",
-            "to":""
-        }
-    ],
-    "strengths":[],
-    "issues":[],
-    "missingComponents":[],
-    "summary":""
-}
-`;
-
-  try {
-
-    const res = await llm.invoke(prompt);
-
-    console.log("\n========== GRAPH LLM ==========");
-    console.log(res.content);
-    console.log("================================\n");
-
-    const analysis = JSON.parse(res.content);
-
-    console.log("\n========== GRAPH ANALYSIS ==========");
-    console.dir(analysis, {
-      depth: null,
-      colors: true
-    });
-    console.log("====================================\n");
-
-    return {
-      graphAnalysis: analysis
-    };
-
-    return {
-
-      graphAnalysis:
-
-        JSON.parse(res.content)
-
-    };
-
-  }
-
-  catch (e) {
-
-    return {
-
-      graphAnalysis: {
-
-        components: [],
-
-        connections: [],
-
-        strengths: [],
-
-        issues: [],
-
-        missingComponents: [],
-
-        summary: ""
-
-      }
-
-    };
-
-  }
 
 }

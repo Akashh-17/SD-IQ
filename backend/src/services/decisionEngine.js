@@ -1,3 +1,5 @@
+import { IntentType } from "../models/InterviewEnums.js";
+
 export function decideNextAction(state) {
 
     const evaluation = state.candidate.evaluation;
@@ -16,7 +18,7 @@ export function decideNextAction(state) {
 
     // Candidate asked interviewer something
 
-    if (intent?.intent === "CLARIFICATION") {
+    if (intent?.intent === IntentType.CLARIFICATION) {
 
         return {
 
@@ -36,7 +38,7 @@ export function decideNextAction(state) {
 
     // Candidate asked a general question
 
-    if (intent?.intent === "QUESTION") {
+    if (intent?.intent === IntentType.QUESTION) {
 
         return {
 
@@ -56,7 +58,7 @@ export function decideNextAction(state) {
 
     // Candidate wants to finish
 
-    if (intent?.intent === "WRAP_UP") {
+    if (intent?.intent === IntentType.WRAP_UP) {
 
         return {
 
@@ -78,9 +80,9 @@ export function decideNextAction(state) {
 
     if (
 
-        intent?.intent === "ACKNOWLEDGEMENT" ||
+        intent?.intent === IntentType.ACKNOWLEDGEMENT ||
 
-        intent?.intent === "SMALL_TALK"
+        intent?.intent === IntentType.SMALL_TALK
 
     ) {
 
@@ -95,6 +97,27 @@ export function decideNextAction(state) {
             objective,
 
             reason: "Continue the interview."
+
+        };
+
+    }
+
+    // Unclear message: the evaluator didn't run this turn, so
+    // `evaluation` belongs to the previous answer. Don't act on it;
+    // ask the same question differently instead.
+    if (intent?.intent !== IntentType.ANSWER) {
+
+        return {
+
+            decision: "FOLLOW_UP",
+
+            targetTopic: "",
+
+            targetConcept: "",
+
+            objective,
+
+            reason: "Candidate's message was unclear."
 
         };
 
@@ -246,7 +269,35 @@ export function decideNextAction(state) {
 
     // =====================================================
     // 5. Current objective complete
+    // Last stage done: end the interview (closing message +
+    // report) instead of moving to a stage that doesn't exist
     // =====================================================
+
+    const stages = state.knowledge?.interview?.stages ?? [];
+
+    const isLastStage =
+
+        stages.length > 0 &&
+
+        stages.findIndex(s => s.name === interview.stage) === stages.length - 1;
+
+    if (isLastStage) {
+
+        return {
+
+            decision: "END_INTERVIEW",
+
+            targetTopic: "",
+
+            targetConcept: "",
+
+            objective,
+
+            reason: "All interview stages completed."
+
+        };
+
+    }
 
     return {
 

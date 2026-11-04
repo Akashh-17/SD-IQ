@@ -1,4 +1,4 @@
-import "dotenv/config";
+import "./src/config/env.js";
 import express from "express";
 import cors from "cors";
 import reportRoutes from "./src/routes/report.routes.js";
@@ -9,11 +9,15 @@ import voiceRoutes from "./src/routes/voice.routes.js";
 import { initializeAgent } from "./src/controllers/interview.controller.js";
 
 const app = express();
+// Comma-separated list, e.g.
+// CORS_ORIGINS=http://localhost:5173,https://my-app.vercel.app
+const corsOrigins = (process.env.CORS_ORIGINS ?? "http://localhost:5173")
+  .split(",")
+  .map(origin => origin.trim())
+  .filter(Boolean);
+
 app.use(cors({
-  origin: [
-    "http://localhost:5173",
-    "https://system-iq.vercel.app"
-  ],
+  origin: corsOrigins,
   credentials: true
 }));
 app.use(express.json());

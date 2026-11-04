@@ -1,7 +1,7 @@
 import fs from "fs/promises";
 import path from "path";
 
-const KNOWLEDGE_DIR = path.resolve("src/knowledge");
+import { KNOWLEDGE_DIR } from "../../config/paths.js";
 
 export class ProblemService {
 
@@ -66,6 +66,18 @@ export class ProblemService {
     // =====================================================
 
     static async get(problemId) {
+
+        // Only plain folder names: blocks "../" path traversal even
+        // if a caller skips request validation
+        if (!/^[a-z0-9_]{1,64}$/.test(problemId ?? "")) {
+
+            const err = new Error(`Unknown problem: ${problemId}`);
+
+            err.code = "ENOENT";
+
+            throw err;
+
+        }
 
         const file = path.join(
 

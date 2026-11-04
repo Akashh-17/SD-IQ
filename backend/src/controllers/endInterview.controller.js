@@ -21,7 +21,7 @@ export async function endInterview(req, res) {
 
         });
 
-        if (!graphState?.values) {
+        if (!graphState?.values?.interview) {
 
             return res.status(404).json({
 
@@ -33,6 +33,9 @@ export async function endInterview(req, res) {
 
         // =====================================================
         // Generate Report
+        // Safe to repeat: returns the saved report if the interview
+        // already ended (e.g. the candidate said "wrap up"), and
+        // waits if another request is generating it right now.
         // =====================================================
 
         await ReportService.generate(

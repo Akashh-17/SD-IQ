@@ -1,10 +1,5 @@
 import { ChatOpenAI } from "@langchain/openai";
-import dotenv from "dotenv";
-
-// Load configuration from .env.local first (if present), then .env.
-// This mirrors the dotenv tip shown in your logs and allows environment-specific overrides.
-dotenv.config({ path: ".env.local" });
-dotenv.config();
+import "../config/env.js";
 
 const OPENROUTER_MODEL = process.env.OPENROUTER_MODEL || "gpt-4o-mini";
 const OPENROUTER_BASE_URL = process.env.OPENROUTER_BASE_URL || "https://openrouter.ai/api/v1";

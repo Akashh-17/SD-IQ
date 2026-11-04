@@ -12,7 +12,13 @@ export async function sendMessage(req, res) {
 
         } = req.body;
 
-        const reply = await InterviewService.sendMessage(
+        const {
+
+            reply,
+
+            completed
+
+        } = await InterviewService.sendMessage(
 
             interviewId,
 
@@ -22,7 +28,11 @@ export async function sendMessage(req, res) {
 
         res.json({
 
-            reply
+            reply,
+
+            // true when the interview ended this turn and the
+            // report has been generated
+            completed
 
         });
 

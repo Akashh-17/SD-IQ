@@ -1,4 +1,5 @@
 import { log } from "../utils/logger.js";
+import { IntentType } from "../models/InterviewEnums.js";
 
 export async function orchestratorNode(state) {
 
@@ -16,7 +17,7 @@ export async function orchestratorNode(state) {
         // Candidate answered interviewer
         // =====================================================
 
-        case "ANSWER":
+        case IntentType.ANSWER:
 
             nextNode = "evaluator";
             break;
@@ -25,17 +26,17 @@ export async function orchestratorNode(state) {
         // Candidate asked interviewer something
         // =====================================================
 
-        case "CLARIFICATION":
+        case IntentType.CLARIFICATION:
 
-        case "QUESTION":
+        case IntentType.QUESTION:
 
-        case "ACKNOWLEDGEMENT":
+        case IntentType.ACKNOWLEDGEMENT:
 
-        case "SMALL_TALK":
+        case IntentType.SMALL_TALK:
 
-        case "WRAP_UP":
+        case IntentType.WRAP_UP:
 
-        case "UNKNOWN":
+        case IntentType.UNKNOWN:
 
             nextNode = "conversationManager";
             break;

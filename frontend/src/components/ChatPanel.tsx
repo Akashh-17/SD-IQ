@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   Bot,
   Mic,
@@ -24,6 +24,8 @@ type Message = {
 export default function ChatPanel() {
 
   const { interviewId } = useParams();
+
+  const navigate = useNavigate();
 
   const [messages, setMessages] = useState<Message[]>([]);
 
@@ -229,7 +231,7 @@ export default function ChatPanel() {
 
     try {
 
-      const reply =
+      const { reply, completed } =
         await sendInterviewMessage(
 
           interviewId!,
@@ -253,6 +255,20 @@ export default function ChatPanel() {
       ]);
 
       speechService.speak(reply);
+
+      // Interview ended from the chat: give the closing message
+      // a moment on screen, then open the report
+      if (completed) {
+
+        setTimeout(
+
+          () => navigate(`/report/${interviewId}`),
+
+          3000
+
+        );
+
+      }
 
     }
 

@@ -1,16 +1,9 @@
 import { z } from "zod";
+import { IntentType } from "../../models/InterviewEnums.js";
 
 export const IntentSchema = z.object({
 
-  intent: z.enum([
-    "ANSWER",
-    "QUESTION",
-    "ACKNOWLEDGEMENT",
-    "SMALL_TALK",
-    "CLARIFICATION",
-    "WRAPUP",
-    "UNKNOWN"
-  ]),
+  intent: z.enum(Object.values(IntentType)),
 
   nextAction: z.enum([
     "EVALUATE_ANSWER",

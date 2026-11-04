@@ -113,7 +113,42 @@ export class SessionManager {
 
         });
 
+        // ======================================================
+        // History entry (failed evaluations are not recorded,
+        // so they don't drag the final score down)
+        // ======================================================
+
+        const evaluations = evaluation.failed ? [] : [
+
+            {
+
+                stage: state.interview.stage,
+
+                question: state.interview.currentQuestion,
+
+                answer: state.candidate.latestMessage,
+
+                score: evaluation.score,
+
+                candidateLevel: evaluation.candidateLevel,
+
+                strengths: evaluation.strengths ?? [],
+
+                weaknesses: evaluation.weaknesses ?? [],
+
+                criticalMissingConcepts:
+                    evaluation.criticalMissingConcepts ?? [],
+
+                reasoning: evaluation.reasoning ?? ""
+
+            }
+
+        ];
+
         return {
+
+            // Appended by the state reducer
+            evaluations,
 
             candidate: {
 

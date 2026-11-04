@@ -10,14 +10,12 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@huggingface/transformers": "^3.8.1",
     "@supabase/supabase-js": "^2.110.2",
     "axios": "^1.18.1",
     "clsx": "^2.1.1",
     "framer-motion": "^12.42.2",
     "lucide-react": "^1.26.0",
     "react": "^19.2.4",
-    "react-countup": "^6.5.3",
     "react-dom": "^19.2.4",
     "react-icons": "^5.7.0",
     "react-resizable-panels": "^4.12.2",

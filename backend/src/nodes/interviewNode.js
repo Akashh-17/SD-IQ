@@ -2,8 +2,26 @@ import { generateInterviewerResponse } from "../agents/interviewer/agent.js";
 import { buildInterviewerContext } from "../services/contextBuilder.js";
 import { ReportService } from "../services/report/report.service.js";
 import { log } from "../utils/logger.js";
+import { buildMemory } from "../services/memoryBuilder.js";
 
 export async function interviewNode(state) {
+
+    const result = await respond(state);
+
+    // Remember what was just asked and refresh the answer digest
+    const message = result.messages?.at(-1)?.content;
+
+    if (message) {
+
+        result.memory = buildMemory(state, message);
+
+    }
+
+    return result;
+
+}
+
+async function respond(state) {
 
     // =====================================================
     // Initial Greeting

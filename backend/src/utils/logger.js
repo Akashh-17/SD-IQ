@@ -1,13 +1,30 @@
 import fs from "fs";
-import path from "path";
 import util from "util";
 
-const LOG_FILE = path.join(process.cwd(), "sample.txt");
+import { LOG_FILE } from "../config/paths.js";
 
-// Clear the file whenever the server starts
-fs.writeFileSync(LOG_FILE, "");
+// Debug log of agent activity, written to backend/sample.txt.
+// The file is cleared on every server start.
+// A write stream appends in order without blocking the event loop
+// (appendFileSync paused every request while it wrote).
+// Set LOG_TO_FILE=false to turn it off, e.g. in production.
+const enabled = process.env.LOG_TO_FILE !== "false";
+
+const stream = enabled
+
+    ? fs.createWriteStream(LOG_FILE, { flags: "w" })
+
+    : null;
+
+function write(output) {
+
+    stream?.write(output);
+
+}
 
 export function log(section, data = null) {
+
+    if (!enabled) return;
 
     const timestamp = new Date().toLocaleTimeString();
 
@@ -34,18 +51,16 @@ export function log(section, data = null) {
         output += "\n";
     }
 
-    fs.appendFileSync(LOG_FILE, output);
+    write(output);
 }
 
 export function separator(title = "") {
 
-    const output = `
+    write(`
 
 ######################################################################
 ######################## ${title} ########################
 ######################################################################
 
-`;
-
-    fs.appendFileSync(LOG_FILE, output);
+`);
 }

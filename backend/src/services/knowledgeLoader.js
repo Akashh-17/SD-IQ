@@ -1,5 +1,6 @@
 import fs from "fs";
 import path from "path";
+import { KNOWLEDGE_DIR } from "../config/paths.js";
 
 function readJSON(base, file) {
     return JSON.parse(
@@ -13,9 +14,7 @@ function readJSON(base, file) {
 export function loadKnowledge(problemId) {
 
     const base = path.join(
-        process.cwd(),
-        "src",
-        "knowledge",
+        KNOWLEDGE_DIR,
         problemId
     );
 

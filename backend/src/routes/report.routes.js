@@ -1,4 +1,6 @@
 import { Router } from "express";
+import { auth } from "../middleware/auth.js";
+import { validate, Schemas } from "../middleware/validate.js";
 import { PersistenceService } from "../services/interview/persistence.service.js";
 
 const router = Router();
@@ -6,6 +8,10 @@ const router = Router();
 router.get(
 
     "/:interviewId",
+
+    auth,
+
+    validate({ params: Schemas.interviewParams }),
 
     async (req, res) => {
 
@@ -17,7 +23,12 @@ router.get(
 
             );
 
-            if (!result) {
+            // Someone else's report is reported as missing, so its
+            // existence (and transcript) is never exposed
+            if (
+                !result ||
+                result.interview.user_id !== req.user.id
+            ) {
 
                 return res.status(404).json({
 

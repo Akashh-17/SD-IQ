@@ -24,12 +24,14 @@ export const PlannerAction = {
     WRAP_UP: "wrap_up",
 };
 
+// Single source of truth for intent labels. The intent schema,
+// prompt, orchestrator and decision engine must all use these.
 export const IntentType = {
-    ANSWER: "answer",
-    QUESTION: "question",
-    ACKNOWLEDGEMENT: "acknowledgement",
-    SMALL_TALK: "small_talk",
-    CLARIFICATION: "clarification",
-    GRAPH_UPDATE: "graph_update",
-    WRAPUP: "wrapup",
+    ANSWER: "ANSWER",
+    QUESTION: "QUESTION",
+    ACKNOWLEDGEMENT: "ACKNOWLEDGEMENT",
+    SMALL_TALK: "SMALL_TALK",
+    CLARIFICATION: "CLARIFICATION",
+    WRAP_UP: "WRAP_UP",
+    UNKNOWN: "UNKNOWN",
 };

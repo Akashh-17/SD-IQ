@@ -118,6 +118,26 @@ export const State = Annotation.Root({
   }),
 
   // ===========================
+  // Evaluation History
+  // One entry per evaluated answer, appended (never overwritten)
+  // so the final report covers the whole interview.
+  // ===========================
+
+  evaluations: Annotation({
+
+    reducer: (a, b) => [
+
+      ...(a || []),
+
+      ...(b || [])
+
+    ],
+
+    default: () => []
+
+  }),
+
+  // ===========================
   // Conversation Manager Output
   // ===========================
 

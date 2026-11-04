@@ -2,6 +2,9 @@ import { Router } from "express";
 import crypto from "crypto";
 
 import { auth } from "../middleware/auth.js";
+import { ownsInterview } from "../middleware/ownsInterview.js";
+import { rateLimit } from "../middleware/rateLimit.js";
+import { validate, Schemas } from "../middleware/validate.js";
 import { SessionService } from "../services/interview/session.service.js";
 import { ProblemService } from "../services/problem/problem.service.js";
 import { sendMessage } from "../controllers/interview.api.controller.js";
@@ -15,7 +18,12 @@ const router = Router();
 /**
  * Start a new interview
  */
-router.post("/start", auth, async (req, res) => {
+router.post(
+    "/start",
+    auth,
+    rateLimit({ name: "start", limit: 10 }),
+    validate({ body: Schemas.start }),
+    async (req, res) => {
 
     try {
 
@@ -61,6 +69,16 @@ router.post("/start", auth, async (req, res) => {
 
     catch (err) {
 
+        if (err.code === "ENOENT") {
+
+            return res.status(404).json({
+
+                message: "Problem not found"
+
+            });
+
+        }
+
         console.error(err);
 
         res.status(500).json({
@@ -73,14 +91,51 @@ router.post("/start", auth, async (req, res) => {
 
 });
 
-router.post("/initialize", auth, initializeInterview);
+// Every route below: logged in, valid input, and the
+// interview must belong to the caller
 
-router.post("/message", auth, sendMessage);
+router.post(
+    "/initialize",
+    auth,
+    validate({ body: Schemas.interviewBody }),
+    ownsInterview,
+    initializeInterview
+);
 
-router.post("/graph", auth, saveGraph);
+router.post(
+    "/message",
+    auth,
+    rateLimit({ name: "message", limit: 30 }),
+    validate({ body: Schemas.message }),
+    ownsInterview,
+    sendMessage
+);
 
-router.post("/end", auth, endInterview);
+router.post(
+    "/graph",
+    auth,
+    // Autosave fires at most every 500ms while editing
+    rateLimit({ name: "graph", limit: 240 }),
+    validate({ body: Schemas.graph }),
+    ownsInterview,
+    saveGraph
+);
 
-router.get("/state/:interviewId", auth, getInterviewState);
+router.post(
+    "/end",
+    auth,
+    rateLimit({ name: "end", limit: 10 }),
+    validate({ body: Schemas.interviewBody }),
+    ownsInterview,
+    endInterview
+);
+
+router.get(
+    "/state/:interviewId",
+    auth,
+    validate({ params: Schemas.interviewParams }),
+    ownsInterview,
+    getInterviewState
+);
 
 export default router;

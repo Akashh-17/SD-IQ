@@ -13,9 +13,8 @@ export async function saveGraph(req, res) {
 
         } = req.body;
 
-        // Save graph into Redis
-
-        await GraphService.update(
+        // Save graph into Redis (cheap, runs on every autosave)
+        const result = await GraphService.update(
 
             interviewId,
 
@@ -23,13 +22,29 @@ export async function saveGraph(req, res) {
 
         );
 
-        // Run graph analysis
+        if (!result) {
 
-        await InterviewService.analyzeGraph(
+            return res.status(404).json({
 
-            interviewId
+                message: "Interview not found"
 
-        );
+            });
+
+        }
+
+        // Analyze only structural changes, debounced so a burst of
+        // edits results in a single LLM call
+        if (result.changed) {
+
+            GraphService.scheduleAnalysis(
+
+                interviewId,
+
+                () => InterviewService.analyzeGraph(interviewId)
+
+            );
+
+        }
 
         res.json({
 

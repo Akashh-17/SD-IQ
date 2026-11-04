@@ -30,6 +30,10 @@ export async function sendInterviewMessage(
 
     );
 
-    return res.data.reply;
+    // completed: the interview ended this turn and the report is ready
+    return res.data as {
+        reply: string;
+        completed: boolean;
+    };
 
 }
