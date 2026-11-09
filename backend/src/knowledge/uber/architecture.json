@@ -1,113 +1,146 @@
 {
   "components": [
     {
+      "name": "Rider App",
+      "purpose": "Requests rides and observes versioned trip state."
+    },
+    {
+      "name": "Driver App",
+      "purpose": "Sends timestamped GPS updates and accepts fenced offers."
+    },
+    {
       "name": "API Gateway",
-      "purpose": "Entry point for all rider and driver requests."
-    },
-    {
-      "name": "Load Balancer",
-      "purpose": "Distributes requests across backend services."
-    },
-    {
-      "name": "Auth Service",
-      "purpose": "Authenticates riders and drivers."
-    },
-    {
-      "name": "User Service",
-      "purpose": "Manages rider and driver profiles."
-    },
-    {
-      "name": "Trip Service",
-      "purpose": "Manages the complete lifecycle of a trip."
+      "purpose": "Authenticates rider and driver requests."
     },
     {
       "name": "Location Service",
-      "purpose": "Receives and stores real-time driver GPS updates."
-    },
-    {
-      "name": "Matching Service",
-      "purpose": "Finds the most suitable nearby driver."
-    },
-    {
-      "name": "Pricing Service",
-      "purpose": "Calculates fares and surge pricing."
-    },
-    {
-      "name": "ETA Service",
-      "purpose": "Calculates estimated pickup and travel times."
-    },
-    {
-      "name": "Payment Service",
-      "purpose": "Processes ride payments and refunds."
-    },
-    {
-      "name": "Notification Service",
-      "purpose": "Sends trip updates and push notifications."
-    },
-    {
-      "name": "Redis",
-      "purpose": "Caches active driver locations and frequently accessed trip data."
-    },
-    {
-      "name": "Kafka",
-      "purpose": "Processes asynchronous trip events and notifications."
+      "purpose": "Validates and expires latest driver positions."
     },
     {
       "name": "Geospatial Index",
-      "purpose": "Indexes driver locations using Geohash or H3."
+      "purpose": "Finds candidates in neighboring cells and filters stale locations."
+    },
+    {
+      "name": "Matching Service",
+      "purpose": "Chooses eligible drivers and manages expiring offers."
+    },
+    {
+      "name": "ETA Service",
+      "purpose": "Estimates road-based pickup times for candidates."
+    },
+    {
+      "name": "Trip Service",
+      "purpose": "Owns assignment leases and legal trip transitions."
     },
     {
       "name": "Database",
-      "purpose": "Stores users, drivers, trips and payment records."
+      "purpose": "Stores durable trips, assignments, payment intents and history."
+    },
+    {
+      "name": "Payment Service",
+      "purpose": "Performs idempotent payment operations and reconciliation."
+    },
+    {
+      "name": "Event Queue",
+      "purpose": "Carries durable trip events and optional telemetry work."
+    },
+    {
+      "name": "Notification Service",
+      "purpose": "Sends ride offers and state-change hints; it is not a CDN."
     }
   ],
-
   "tradeoffs": [
     {
-      "topic": "Realtime Communication",
+      "topic": "Spatial lookup",
       "alternatives": [
-        "WebSocket",
-        "gRPC Streaming",
-        "Long Polling"
+        "Geohash grid",
+        "H3 cells",
+        "R-tree"
+      ],
+      "guidance": "Any justified spatial index is acceptable; handle boundaries and stale data."
+    },
+    {
+      "topic": "Assignment coordination",
+      "alternatives": [
+        "Transactional conditional update",
+        "Lease with a fencing token"
+      ],
+      "guidance": "Prevent conflicting acceptance rather than promising safety from a cache lookup alone."
+    },
+    {
+      "topic": "Dispatch quality",
+      "alternatives": [
+        "Greedy ETA-aware offer",
+        "Small-batch optimization"
+      ],
+      "guidance": "Explain latency versus utilization without requiring a proprietary algorithm."
+    }
+  ],
+  "dataModel": [
+    {
+      "entity": "Trip",
+      "key": "trip_id",
+      "fields": [
+        "rider_id",
+        "driver_id",
+        "state",
+        "state_version",
+        "created_at",
+        "completed_at"
+      ],
+      "notes": "Use conditional legal transitions and indexed user history."
+    },
+    {
+      "entity": "Assignment",
+      "key": "driver_id",
+      "fields": [
+        "trip_id",
+        "fencing_token",
+        "lease_expires_at"
+      ],
+      "notes": "Offer expiry is separate from durable accepted occupancy; terminal trip transitions release ownership conditionally."
+    },
+    {
+      "entity": "LatestLocation",
+      "key": "driver_id",
+      "fields": [
+        "latitude",
+        "longitude",
+        "observed_at",
+        "sequence",
+        "cell"
+      ],
+      "notes": "Expiring latest state; not an append-only SQL trip field."
+    },
+    {
+      "entity": "PaymentIntent",
+      "key": "trip_id + operation_id",
+      "fields": [
+        "provider_reference",
+        "status",
+        "amount",
+        "currency"
+      ],
+      "notes": "Idempotent requests and provider callbacks prevent double charging."
+    }
+  ],
+  "flows": [
+    {
+      "name": "Location to match",
+      "steps": [
+        "Driver submits a timestamped GPS update",
+        "Location service updates the expiring spatial index",
+        "Matching service filters nearby eligible drivers and requests ETA",
+        "Trip service conditionally reserves the chosen driver with a lease",
+        "Acceptance validates the offer version and commits durable driver occupancy; only a terminal or reconciled transition releases it"
       ]
     },
     {
-      "topic": "Geospatial Index",
-      "alternatives": [
-        "Geohash",
-        "Uber H3",
-        "QuadTree"
-      ]
-    },
-    {
-      "topic": "Caching",
-      "alternatives": [
-        "Redis",
-        "Memcached"
-      ]
-    },
-    {
-      "topic": "Messaging",
-      "alternatives": [
-        "Kafka",
-        "RabbitMQ",
-        "Amazon SQS"
-      ]
-    },
-    {
-      "topic": "Database",
-      "alternatives": [
-        "PostgreSQL",
-        "MySQL",
-        "Cassandra",
-        "DynamoDB"
-      ]
-    },
-    {
-      "topic": "Pricing",
-      "alternatives": [
-        "Static Pricing",
-        "Dynamic Surge Pricing"
+      "name": "Completion",
+      "steps": [
+        "Trip service conditionally marks a trip complete",
+        "A stable payment operation is sent or retried",
+        "Callbacks update the payment intent idempotently and reconciliation resolves uncertainty"
       ]
     }
   ]

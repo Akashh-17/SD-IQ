@@ -1,3 +1,4 @@
+import { logError } from "../utils/logger.js";
 import fs from "fs";
 import { transcribeAudio } from "../services/transcriber.js";
 import { log } from "../utils/logger.js";
@@ -26,7 +27,7 @@ export async function transcribe(req, res) {
       transcript,
     });
   } catch (err) {
-    console.error(err);
+    logError(err);
 
     if (req.file) {
       fs.unlink(req.file.path, () => { });

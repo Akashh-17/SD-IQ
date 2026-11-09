@@ -1,3 +1,4 @@
+import { logError } from "../utils/logger.js";
 import { redis } from "../config/redis.js";
 
 // =====================================================
@@ -50,7 +51,7 @@ export function rateLimit({ name, limit, windowSeconds = 60 }) {
         catch (err) {
 
             // Fail open: a Redis outage shouldn't take the API down
-            console.error("[Rate Limit]", err.message);
+            logError("[Rate Limit]", err.message);
 
         }
 

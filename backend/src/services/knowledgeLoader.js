@@ -11,7 +11,23 @@ function readJSON(base, file) {
     );
 }
 
-export function loadKnowledge(problemId) {
+// Built-ins remain synchronous for existing eval callers; database-backed
+// custom packs return a promise. Interview callers await either form.
+export function loadKnowledge(problemId, userId) {
+
+    if (typeof problemId === "string" && problemId.startsWith("custom_")) {
+
+        return import("./problem/customProblem.service.js")
+
+            .then(({ CustomProblemService }) => CustomProblemService.knowledge(problemId, userId));
+
+    }
+
+    if (!/^[a-z0-9_]{1,64}$/.test(problemId ?? "")) {
+
+        throw Object.assign(new Error("Problem not found"), { code: "ENOENT", status: 404 });
+
+    }
 
     const base = path.join(
         KNOWLEDGE_DIR,

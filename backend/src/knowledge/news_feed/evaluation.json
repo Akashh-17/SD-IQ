@@ -1,0 +1,359 @@
+{
+  "guidance": [
+    "Evaluate the latest answer against the current question and objective, not future stages.",
+    "Required criteria are semantic outcomes. Concepts are examples and alternatives, not an AND checklist or mandatory products.",
+    "Accept a justified algorithm, database or vendor; probe claims actually made rather than demanding every alternative.",
+    "Do not penalize optional features, omitted diagram boxes, company-specific facts or small rounding differences.",
+    "Use the fictional workload consistently; accept an explicitly justified alternative workload and its arithmetic.",
+    "Weights and minimumCoverage are advisory; runtime progression uses required criteria and report scores are computed in code."
+  ],
+  "scoreAnchors": [
+    {
+      "min": 0,
+      "max": 2,
+      "description": "Does not address the current question or makes a fundamental correctness error."
+    },
+    {
+      "min": 3,
+      "max": 4,
+      "description": "Names plausible components but cannot explain their mechanism or limitations."
+    },
+    {
+      "min": 5,
+      "max": 6,
+      "description": "Explains a workable baseline with some gaps in the current objective."
+    },
+    {
+      "min": 7,
+      "max": 8,
+      "description": "Explains a coherent mechanism, failure cases and justified tradeoffs."
+    },
+    {
+      "min": 9,
+      "max": 10,
+      "description": "Quantifies and defends a robust design, recognizing limits and alternatives."
+    }
+  ],
+  "topics": [
+    {
+      "name": "Requirements",
+      "weight": 12,
+      "minimumCoverage": 0.75,
+      "guidance": "Agree on product behavior, measurable quality targets and the stated exercise workload. Evaluate only the current question and stage; a justified alternative earns equal credit.",
+      "concepts": [
+        {
+          "name": "Functional scope",
+          "importance": "critical",
+          "probe": true,
+          "guidance": "Define following, eligibility, deletion and ordering; a chronological feed is valid, and media bytes are outside this problem."
+        },
+        {
+          "name": "Core operations and users",
+          "importance": "important",
+          "probe": true,
+          "guidance": "Supporting example for Functional scope. Reward equivalent mechanisms; do not require every listed alternative."
+        },
+        {
+          "name": "Quality targets",
+          "importance": "critical",
+          "probe": true,
+          "guidance": "Clarify freshness, pagination stability and privacy guarantees separately from read availability."
+        },
+        {
+          "name": "Latency and availability targets",
+          "importance": "important",
+          "probe": true,
+          "guidance": "Supporting example for Quality targets. Reward equivalent mechanisms; do not require every listed alternative."
+        },
+        {
+          "name": "Capacity estimates",
+          "importance": "critical",
+          "probe": true,
+          "guidance": "Use the fictional baseline or state a justified alternative; derive average and peak rates and distinguish payload bytes from replication and indexes."
+        },
+        {
+          "name": "Daily volume divided by 86400",
+          "importance": "important",
+          "probe": true,
+          "guidance": "Supporting example for Capacity estimates. Reward equivalent mechanisms; do not require every listed alternative."
+        }
+      ]
+    },
+    {
+      "name": "High Level Design",
+      "weight": 16,
+      "minimumCoverage": 0.75,
+      "guidance": "Separate post truth, relationship truth, fanout work and read assembly. Evaluate only the current question and stage; a justified alternative earns equal credit.",
+      "concepts": [
+        {
+          "name": "Publication truth",
+          "importance": "critical",
+          "probe": true,
+          "guidance": "Durably store posts and a replayable publication event before acknowledging."
+        },
+        {
+          "name": "Post store",
+          "importance": "important",
+          "probe": true,
+          "guidance": "Supporting example for Publication truth. Reward equivalent mechanisms; do not require every listed alternative."
+        },
+        {
+          "name": "Graph ownership",
+          "importance": "critical",
+          "probe": true,
+          "guidance": "Maintain follow, block and privacy state with clear authorization checks."
+        },
+        {
+          "name": "Social graph",
+          "importance": "important",
+          "probe": true,
+          "guidance": "Supporting example for Graph ownership. Reward equivalent mechanisms; do not require every listed alternative."
+        },
+        {
+          "name": "Read assembly",
+          "importance": "critical",
+          "probe": true,
+          "guidance": "Assemble eligible candidates from bounded feed references and author streams, then hydrate post metadata."
+        },
+        {
+          "name": "Feed service",
+          "importance": "important",
+          "probe": true,
+          "guidance": "Supporting example for Read assembly. Reward equivalent mechanisms; do not require every listed alternative."
+        }
+      ]
+    },
+    {
+      "name": "Core Flow",
+      "weight": 22,
+      "minimumCoverage": 0.75,
+      "guidance": "Design a high-degree-aware feed assembly flow with defensible cursor semantics. Evaluate only the current question and stage; a justified alternative earns equal credit.",
+      "concepts": [
+        {
+          "name": "Hybrid candidate strategy",
+          "importance": "critical",
+          "probe": true,
+          "guidance": "Choose write/read/hybrid fanout with a clear high-degree author policy; estimate its amplification rather than requiring one fixed threshold."
+        },
+        {
+          "name": "Push ordinary authors or justified alternative",
+          "importance": "important",
+          "probe": true,
+          "guidance": "Supporting example for Hybrid candidate strategy. Reward equivalent mechanisms; do not require every listed alternative."
+        },
+        {
+          "name": "Fanout replay",
+          "importance": "critical",
+          "probe": true,
+          "guidance": "Use stable post/event IDs and idempotent reference insertion, with a cutoff rule for follow/unfollow races."
+        },
+        {
+          "name": "Idempotent feed insertion",
+          "importance": "important",
+          "probe": true,
+          "guidance": "Supporting example for Fanout replay. Reward equivalent mechanisms; do not require every listed alternative."
+        },
+        {
+          "name": "Ordering and pagination",
+          "importance": "critical",
+          "probe": true,
+          "guidance": "Use a stable tie-breaker and cursor watermark/snapshot or a justified alternative that bounds duplicates and skipped items while new posts arrive."
+        },
+        {
+          "name": "Ordering key plus post ID",
+          "importance": "important",
+          "probe": true,
+          "guidance": "Supporting example for Ordering and pagination. Reward equivalent mechanisms; do not require every listed alternative."
+        },
+        {
+          "name": "Candidate filtering",
+          "importance": "critical",
+          "probe": true,
+          "guidance": "Apply current blocks, deletions and private-account eligibility before returning hydrated results."
+        },
+        {
+          "name": "Read-time eligibility filter",
+          "importance": "important",
+          "probe": true,
+          "guidance": "Supporting example for Candidate filtering. Reward equivalent mechanisms; do not require every listed alternative."
+        }
+      ]
+    },
+    {
+      "name": "Data Model",
+      "weight": 14,
+      "minimumCoverage": 0.75,
+      "guidance": "Model authoritative social state separately from derived feed materializations. Evaluate only the current question and stage; a justified alternative earns equal credit.",
+      "concepts": [
+        {
+          "name": "Post and author stream",
+          "importance": "critical",
+          "probe": true,
+          "guidance": "Store post ID, author, ordering key, visibility version and deletion marker; index the author timeline."
+        },
+        {
+          "name": "Author timeline index",
+          "importance": "important",
+          "probe": true,
+          "guidance": "Supporting example for Post and author stream. Reward equivalent mechanisms; do not require every listed alternative."
+        },
+        {
+          "name": "Social relationships",
+          "importance": "critical",
+          "probe": true,
+          "guidance": "Support follower enumeration for fanout and following enumeration for reads, with versioned follow/block changes."
+        },
+        {
+          "name": "Bidirectional relationship indexes",
+          "importance": "important",
+          "probe": true,
+          "guidance": "Supporting example for Social relationships. Reward equivalent mechanisms; do not require every listed alternative."
+        },
+        {
+          "name": "Feed materialization",
+          "importance": "critical",
+          "probe": true,
+          "guidance": "Store bounded recipient-post references rather than copying whole post bodies; identify the rebuild source."
+        },
+        {
+          "name": "recipient_id + ordering_key + post_id",
+          "importance": "important",
+          "probe": true,
+          "guidance": "Supporting example for Feed materialization. Reward equivalent mechanisms; do not require every listed alternative."
+        }
+      ]
+    },
+    {
+      "name": "Reliability",
+      "weight": 16,
+      "minimumCoverage": 0.75,
+      "guidance": "Protect eligibility while recovering derived feed state. Evaluate only the current question and stage; a justified alternative earns equal credit.",
+      "concepts": [
+        {
+          "name": "Durable recovery",
+          "importance": "critical",
+          "probe": true,
+          "guidance": "Replay publication work and rebuild derived feeds from post and relationship truth after worker/cache failure."
+        },
+        {
+          "name": "Replayable publication events",
+          "importance": "important",
+          "probe": true,
+          "guidance": "Supporting example for Durable recovery. Reward equivalent mechanisms; do not require every listed alternative."
+        },
+        {
+          "name": "Privacy correctness",
+          "importance": "critical",
+          "probe": true,
+          "guidance": "A stale cache cannot grant access; validate visibility or use versioned invalidation with a defined bound."
+        },
+        {
+          "name": "Authoritative eligibility check",
+          "importance": "important",
+          "probe": true,
+          "guidance": "Supporting example for Privacy correctness. Reward equivalent mechanisms; do not require every listed alternative."
+        },
+        {
+          "name": "Degraded reads",
+          "importance": "critical",
+          "probe": true,
+          "guidance": "Define bounded stale-but-eligible reads, backpressure and fallback when rankers or high-degree streams fail."
+        },
+        {
+          "name": "Eligible stale cache",
+          "importance": "important",
+          "probe": true,
+          "guidance": "Supporting example for Degraded reads. Reward equivalent mechanisms; do not require every listed alternative."
+        }
+      ]
+    },
+    {
+      "name": "Scaling",
+      "weight": 12,
+      "minimumCoverage": 0.75,
+      "guidance": "Budget write amplification and read hydration, not just incoming post requests. Evaluate only the current question and stage; a justified alternative earns equal credit.",
+      "concepts": [
+        {
+          "name": "Rate amplification",
+          "importance": "critical",
+          "probe": true,
+          "guidance": "Derive 23.15 average posts/s and 2314.81 average page reads/s; 100 ordinary followers imply 200 million reference writes/day before high-degree exceptions."
+        },
+        {
+          "name": "Posts versus fanout writes",
+          "importance": "important",
+          "probe": true,
+          "guidance": "Supporting example for Rate amplification. Reward equivalent mechanisms; do not require every listed alternative."
+        },
+        {
+          "name": "Hot-author isolation",
+          "importance": "critical",
+          "probe": true,
+          "guidance": "Shard fanout work by recipient range and bypass or batch high-degree authors; avoid one queue partition owning all celebrity work."
+        },
+        {
+          "name": "High-degree isolation",
+          "importance": "important",
+          "probe": true,
+          "guidance": "Supporting example for Hot-author isolation. Reward equivalent mechanisms; do not require every listed alternative."
+        },
+        {
+          "name": "State budget",
+          "importance": "critical",
+          "probe": true,
+          "guidance": "A 500-reference feed for 20 million active recipients contains 10 billion references, about 160 GB at 16 bytes each before overhead and replicas."
+        },
+        {
+          "name": "Bounded feed length",
+          "importance": "important",
+          "probe": true,
+          "guidance": "Supporting example for State budget. Reward equivalent mechanisms; do not require every listed alternative."
+        }
+      ]
+    },
+    {
+      "name": "Tradeoffs",
+      "weight": 8,
+      "minimumCoverage": 0.75,
+      "guidance": "Explain how the chosen design changes product behavior under load. Evaluate only the current question and stage; a justified alternative earns equal credit.",
+      "concepts": [
+        {
+          "name": "Read/write tradeoff",
+          "importance": "critical",
+          "probe": true,
+          "guidance": "Compare fanout cost, read aggregation and freshness for normal versus high-degree authors."
+        },
+        {
+          "name": "Push/pull cost crossover",
+          "importance": "important",
+          "probe": true,
+          "guidance": "Supporting example for Read/write tradeoff. Reward equivalent mechanisms; do not require every listed alternative."
+        },
+        {
+          "name": "Ranking tradeoff",
+          "importance": "critical",
+          "probe": true,
+          "guidance": "A chronological baseline is acceptable; if ranking is used, define stable cursor/version semantics and a latency fallback."
+        },
+        {
+          "name": "Chronological versus scored feed",
+          "importance": "important",
+          "probe": true,
+          "guidance": "Supporting example for Ranking tradeoff. Reward equivalent mechanisms; do not require every listed alternative."
+        },
+        {
+          "name": "Eligibility tradeoff",
+          "importance": "critical",
+          "probe": true,
+          "guidance": "Explain consistency for privacy versus eventual feed insertion and choose useful freshness, queue-lag and filtering metrics."
+        },
+        {
+          "name": "Privacy versus insertion consistency",
+          "importance": "important",
+          "probe": true,
+          "guidance": "Supporting example for Eligibility tradeoff. Reward equivalent mechanisms; do not require every listed alternative."
+        }
+      ]
+    }
+  ]
+}

@@ -1,31 +1,8 @@
 import LogoMark from "./LogoMark";
 
-export default function Logo() {
-
-    return (
-
-        <div className="flex items-center gap-3">
-
-            <LogoMark />
-
-            <h1 className="text-2xl font-bold tracking-tight">
-
-                <span className="text-white">
-
-                    System
-
-                </span>
-
-                <span className="text-[#F5B301]">
-
-                    IQ
-
-                </span>
-
-            </h1>
-
-        </div>
-
-    );
-
+export default function Logo({ collapsed = false }: { collapsed?: boolean }) {
+    return <span className="inline-flex items-center gap-2.5" aria-label="SystemIQ">
+        <LogoMark />
+        <span aria-hidden="true" className={collapsed ? "sr-only" : "whitespace-nowrap text-xl font-semibold tracking-[-0.055em] text-text"}>System<span className="text-accent">IQ</span><span className="text-muted">.</span></span>
+    </span>;
 }

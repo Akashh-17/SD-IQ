@@ -1,288 +1,273 @@
 {
-  "estimatedDuration": 50,
-
+  "estimatedDuration": 45,
   "difficultyLevels": [
-    "Junior",
     "SDE1",
     "SDE2",
     "Senior"
   ],
-
   "stages": [
     {
       "name": "Requirements",
-
-      "objective": "Gather all functional and non-functional requirements before beginning the design.",
-
-      "entryQuestion": "Before we design Instagram, what clarification questions would you ask?",
-
+      "entryQuestion": "Before designing a photo-sharing service, what scope and scale assumptions would you clarify?",
+      "objective": "Agree on product behavior, measurable quality targets and the stated exercise workload.",
       "completionCriteria": [
         {
-          "name": "Functional Requirements",
+          "name": "Functional scope",
           "required": true,
           "concepts": [
-            "Upload Posts",
-            "News Feed",
-            "Likes",
-            "Comments",
-            "Follow Users",
-            "Notifications"
-          ]
+            "Core operations and users",
+            "Explicit exclusions"
+          ],
+          "guidance": "Prioritize publish/read/follow and privacy; keep search, notifications and sophisticated recommendations optional."
         },
         {
-          "name": "Non Functional Requirements",
+          "name": "Quality targets",
           "required": true,
           "concepts": [
-            "Latency",
-            "Availability",
-            "Scalability",
-            "Durability"
-          ]
+            "Latency and availability targets",
+            "Consistency and durability expectations"
+          ],
+          "guidance": "Separate media durability, metadata freshness, private visibility and feed response latency."
         },
         {
-          "name": "Constraints",
+          "name": "Capacity estimates",
           "required": true,
           "concepts": [
-            "Large Media",
-            "Global Users",
-            "Feed Freshness"
-          ]
+            "Daily volume divided by 86400",
+            "Peak multiplier and storage budget"
+          ],
+          "guidance": "Use the fictional baseline or state a justified alternative; derive average and peak rates and distinguish payload bytes from replication and indexes."
         }
       ]
     },
-
     {
       "name": "High Level Design",
-
-      "objective": "Evaluate the overall architecture.",
-
-      "entryQuestion": "Walk me through your high-level architecture.",
-
+      "entryQuestion": "Walk me through photo publication and a follower feed request.",
+      "objective": "Separate media bytes, post metadata, follower relationships and feed serving.",
       "completionCriteria": [
         {
-          "name": "Client",
+          "name": "Publication boundary",
           "required": true,
           "concepts": [
-            "Mobile Client"
-          ]
+            "Media upload service",
+            "Post publication"
+          ],
+          "guidance": "Describe media upload and a post service that publishes only durable, accessible content."
         },
         {
-          "name": "Load Balancer",
+          "name": "Feed boundary",
           "required": true,
           "concepts": [
-            "Load Balancer"
-          ]
+            "Follower graph",
+            "Feed service"
+          ],
+          "guidance": "Separate follower lookup, candidate feed references and read serving; services may be colocated."
         },
         {
-          "name": "API Gateway",
+          "name": "Persistent storage",
           "required": true,
           "concepts": [
-            "API Gateway"
-          ]
+            "Post database",
+            "Object storage"
+          ],
+          "guidance": "Include durable post and relationship storage as well as object storage; caches are not the only copy."
         },
         {
-          "name": "Post Service",
-          "required": true,
+          "name": "Optional extensions",
+          "required": false,
           "concepts": [
-            "Post Service"
-          ]
-        },
-        {
-          "name": "Feed Service",
-          "required": true,
-          "concepts": [
-            "Feed Service"
-          ]
-        },
-        {
-          "name": "Object Storage",
-          "required": true,
-          "concepts": [
-            "Object Storage"
-          ]
+            "Search index",
+            "Personalized recommendation"
+          ],
+          "guidance": "A search index or recommendation service is not required for a correct baseline."
         }
       ]
     },
-
     {
-      "name": "Feed Generation",
-
-      "objective": "Evaluate how personalized feeds are generated.",
-
-      "entryQuestion": "How would you generate a user's home feed?",
-
+      "name": "Core Flow",
+      "entryQuestion": "How does a new photo become visible in a follower feed without serving incomplete media?",
+      "objective": "Connect the media pipeline with a defensible feed-generation strategy.",
       "completionCriteria": [
         {
-          "name": "Feed Strategy",
+          "name": "Media publication",
           "required": true,
           "concepts": [
-            "Fan-out on Write",
-            "Fan-out on Read"
-          ]
+            "Durable media reference",
+            "Thumbnail processing"
+          ],
+          "guidance": "Upload to object storage, validate/checksum and create derivatives asynchronously; do not expose an unfinished asset."
         },
         {
-          "name": "Ranking",
+          "name": "Fanout strategy",
           "required": true,
           "concepts": [
-            "Ranking",
-            "Personalization"
-          ]
+            "Fanout on write or read",
+            "High-follower account handling"
+          ],
+          "guidance": "Choose write fanout, read fanout or a hybrid, explaining the read/write tradeoff and high-degree authors."
         },
         {
-          "name": "Followers",
+          "name": "Feed ordering",
           "required": true,
           "concepts": [
-            "Follower Graph"
-          ]
+            "Chronological or scored ordering",
+            "Stable pagination cursor"
+          ],
+          "guidance": "A reverse-chronological baseline is acceptable; use a stable tie-breaker and defend any ranking signal."
+        },
+        {
+          "name": "Visibility filtering",
+          "required": true,
+          "concepts": [
+            "Read-time visibility check",
+            "Deletion filtering"
+          ],
+          "guidance": "Apply current visibility/deletion rules when serving feed references rather than trusting stale fanout forever."
         }
       ]
     },
-
     {
-      "name": "Media Storage",
-
-      "objective": "Evaluate media upload and storage pipeline.",
-
-      "entryQuestion": "How would you store and serve millions of photos and videos?",
-
+      "name": "Data Model",
+      "entryQuestion": "What schemas and indexes support posts, follows, comments and feed pagination?",
+      "objective": "Model social relationships and media references without storing blobs in relational rows.",
       "completionCriteria": [
         {
-          "name": "Storage",
+          "name": "Post records",
           "required": true,
           "concepts": [
-            "Object Storage"
-          ]
+            "Post metadata",
+            "Media manifest reference"
+          ],
+          "guidance": "Represent author, post ID, creation time, media manifest, visibility and deletion version."
         },
         {
-          "name": "CDN",
+          "name": "Relationship records",
           "required": true,
           "concepts": [
-            "CDN"
-          ]
+            "Follower and following indexes",
+            "Unique relationship key"
+          ],
+          "guidance": "Index follows by follower and author; make like/follow operations idempotent."
         },
         {
-          "name": "Compression",
+          "name": "Feed cursors",
           "required": true,
           "concepts": [
-            "Image Compression",
-            "Video Transcoding"
-          ]
+            "Timestamp plus post ID",
+            "Cursor pagination"
+          ],
+          "guidance": "Page by stable ordering key rather than deep offsets; handle deletion and repeated page requests."
+        },
+        {
+          "name": "Engagement records",
+          "required": true,
+          "concepts": [
+            "Idempotent reactions",
+            "Comment pagination and tombstones"
+          ],
+          "guidance": "Represent retried likes with a unique key and comments with post-scoped ordering, author access checks and deletion semantics."
         }
       ]
     },
-
     {
-      "name": "Database",
-
-      "objective": "Evaluate database design.",
-
-      "entryQuestion": "How would you design the database schema?",
-
+      "name": "Reliability",
+      "entryQuestion": "How do failed media jobs, duplicate events and a privacy change affect published feeds?",
+      "objective": "Handle publication retries, stale feeds and access revocation safely.",
       "completionCriteria": [
         {
-          "name": "Schema",
+          "name": "Retry correctness",
           "required": true,
           "concepts": [
-            "Users",
-            "Posts",
-            "Comments",
-            "Likes",
-            "Followers"
-          ]
+            "Idempotent event handling",
+            "Publication reconciliation"
+          ],
+          "guidance": "Use stable event IDs and idempotent derivative/fanout writes; reconcile metadata and objects after partial failure."
         },
         {
-          "name": "Indexes",
+          "name": "Privacy and deletion",
           "required": true,
           "concepts": [
-            "User ID",
-            "Timestamp"
-          ]
+            "Visibility version",
+            "Authorized media delivery"
+          ],
+          "guidance": "Invalidate or filter private/deleted posts and use bounded authorized media links where needed."
         },
         {
-          "name": "Pagination",
+          "name": "Degraded operation",
           "required": true,
           "concepts": [
-            "Cursor Pagination"
-          ]
+            "Queue lag limits",
+            "Fallback feed ordering"
+          ],
+          "guidance": "Bound worker backlogs and allow stale eligible feeds during a cache or ranking outage."
         }
       ]
     },
-
     {
       "name": "Scaling",
-
-      "objective": "Evaluate scalability.",
-
-      "entryQuestion": "How would Instagram scale to hundreds of millions of users?",
-
+      "entryQuestion": "How would you size the feed, media pipeline and caches for the stated workload?",
+      "objective": "Budget media bytes separately from post and feed metadata.",
       "completionCriteria": [
         {
-          "name": "Caching",
+          "name": "Media budget",
           "required": true,
           "concepts": [
-            "Redis"
-          ]
+            "Photo bytes versus metadata",
+            "Derivative and video headroom"
+          ],
+          "guidance": "Derive about 2.10 TB/day of source photos and 62.91 TB in a 30-day cohort before copies, derivatives and video."
         },
         {
-          "name": "Queue",
+          "name": "Feed partitioning",
           "required": true,
           "concepts": [
-            "Kafka"
-          ]
+            "Recipient feed shard",
+            "High-degree author path"
+          ],
+          "guidance": "Partition by recipient or author as appropriate and isolate high-degree users from ordinary fanout."
         },
         {
-          "name": "Partitioning",
+          "name": "Cache and delivery",
           "required": true,
           "concepts": [
-            "Sharding"
-          ]
-        },
-        {
-          "name": "Replication",
-          "required": true,
-          "concepts": [
-            "Replication"
-          ]
+            "Bounded feed reference cache",
+            "Client-to-CDN media fetch"
+          ],
+          "guidance": "Use bounded feed caches and CDN delivery of media; clients fetch media from the CDN/object path, not through an API-to-CDN RPC."
         }
       ]
     },
-
     {
       "name": "Tradeoffs",
-
-      "objective": "Assess architectural decisions.",
-
-      "entryQuestion": "Let's discuss the tradeoffs in your design.",
-
+      "entryQuestion": "Which tradeoffs matter most for feed freshness, privacy and media processing cost?",
+      "objective": "Explain the consequences of the chosen feed and storage mechanisms.",
       "completionCriteria": [
         {
-          "name": "Feed Strategy",
+          "name": "Fanout tradeoff",
           "required": true,
           "concepts": [
-            "Fan-out on Write",
-            "Fan-out on Read"
-          ]
+            "Write fanout versus read fanout",
+            "Hybrid cutoff"
+          ],
+          "guidance": "Compare write amplification with read aggregation and justify the high-degree author policy."
         },
         {
-          "name": "Consistency",
+          "name": "Consistency tradeoff",
           "required": true,
           "concepts": [
-            "Consistency"
-          ]
+            "Feed freshness",
+            "Authorization consistency"
+          ],
+          "guidance": "Allow eventual feed insertion but explain why private-content access and deletion require stronger checks."
         },
         {
-          "name": "Availability",
+          "name": "Product scope tradeoff",
           "required": true,
           "concepts": [
-            "Availability"
-          ]
-        },
-        {
-          "name": "CAP",
-          "required": true,
-          "concepts": [
-            "CAP Theorem"
-          ]
+            "Chronological baseline",
+            "Ranking latency and cost"
+          ],
+          "guidance": "Distinguish a valid chronological baseline from optional machine-learned ranking; discuss quality versus compute cost."
         }
       ]
     }

@@ -1,0 +1,80 @@
+{
+  "id": "news_feed",
+  "title": "Design a News Feed",
+  "problemDifficulty": "Hard",
+  "description": "Design a follower-based home news feed for text posts and external media references, balancing high-degree authors, freshness, privacy and stable pagination.",
+  "functionalRequirements": [
+    "Publish posts and follow or unfollow authors",
+    "Read a paginated home feed of eligible followed-author posts",
+    "Apply deletion, blocks and privacy changes to served results",
+    "Support a justified chronological or lightweight ranked feed"
+  ],
+  "nonFunctionalRequirements": [
+    "Feed server p95 below 300 ms within a region",
+    "99.9% feed-read availability target",
+    "Normal-author posts should appear within 5 seconds under healthy load, with explicit degradation for backlogs"
+  ],
+  "constraints": [
+    "20 million DAU, 2 million posts/day and 200 million feed page reads/day; assume 5x peaks",
+    "A page returns 20 post references; ordinary authors average 100 eligible followers",
+    "A few authors have more than 1 million followers and must not be treated as ordinary fanout keys"
+  ],
+  "outOfScope": [
+    "Media upload, transcoding and storage internals",
+    "Training a machine-learning recommender",
+    "Search, advertising auctions and exact company-specific traffic"
+  ],
+  "scale": {
+    "assumption": "Synthetic interview workload, not a claim about any named company's actual traffic.",
+    "rates": [
+      {
+        "name": "Posts",
+        "dailyVolume": 2000000,
+        "averagePerSecond": 23.15,
+        "peakMultiplier": 5,
+        "peakPerSecond": 115.74
+      },
+      {
+        "name": "Feed page reads",
+        "dailyVolume": 200000000,
+        "averagePerSecond": 2314.81,
+        "peakMultiplier": 5,
+        "peakPerSecond": 11574.07
+      },
+      {
+        "name": "Ordinary-author reference fanout before exceptions",
+        "dailyVolume": 200000000,
+        "averagePerSecond": 2314.81,
+        "peakMultiplier": 5,
+        "peakPerSecond": 11574.07
+      }
+    ],
+    "storageEstimates": [
+      {
+        "name": "30-day text post metadata cohort",
+        "recordsPerDay": 2000000,
+        "bytesPerRecord": 1024,
+        "days": 30,
+        "replicationFactor": 3,
+        "rawBytes": 61440000000,
+        "replicatedBytes": 184320000000
+      }
+    ],
+    "stateEstimates": [
+      {
+        "name": "500 logical feed references per active recipient",
+        "entities": 10000000000,
+        "bytesPerEntity": 16,
+        "replicationFactor": 3,
+        "rawBytes": 160000000000,
+        "replicatedBytes": 480000000000
+      }
+    ],
+    "notes": [
+      "The 100-follower fanout estimate applies to ordinary authors, not to the million-follower tail.",
+      "Each page has 20 references: 200 million page reads imply up to 4 billion metadata hydrations/day before batching/cache reuse.",
+      "Feed-reference sizing excludes list/index overhead and post bodies; external media bytes and model-training data are outside scope."
+    ],
+    "dailyActiveUsers": 20000000
+  }
+}

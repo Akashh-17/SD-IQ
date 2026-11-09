@@ -1,3 +1,4 @@
+import { logError } from "../utils/logger.js";
 import { Router } from "express";
 import crypto from "crypto";
 
@@ -6,8 +7,9 @@ import { ownsInterview } from "../middleware/ownsInterview.js";
 import { rateLimit } from "../middleware/rateLimit.js";
 import { validate, Schemas } from "../middleware/validate.js";
 import { SessionService } from "../services/interview/session.service.js";
+import { supabase } from "../config/supabase.js";
 import { ProblemService } from "../services/problem/problem.service.js";
-import { sendMessage } from "../controllers/interview.api.controller.js";
+import { sendMessage, streamMessage } from "../controllers/interview.api.controller.js";
 import { saveGraph } from "../controllers/graph.controller.js";
 import { endInterview } from "../controllers/endInterview.controller.js";
 import { getInterviewState } from "../controllers/interviewState.controller.js";
@@ -35,11 +37,11 @@ router.post(
 
         } = req.body;
 
-        const problem = await ProblemService.get(problemId);
+        const problem = await ProblemService.get(problemId, req.user.id);
 
         const interviewId = crypto.randomUUID();
 
-        await SessionService.create(
+        const session = await SessionService.create(
 
             interviewId,
 
@@ -58,6 +60,36 @@ router.post(
             }
 
         );
+
+        // Register the owned attempt now so history can offer a real resume link.
+        // Report persistence later upserts this same row on interview_id.
+        const { error: historyError } = await supabase.from("interviews").insert({
+
+            interview_id: interviewId,
+
+            user_id: req.user.id,
+
+            title: problem.title,
+
+            difficulty,
+
+            problem_difficulty: problem.problemDifficulty,
+
+            status: "ACTIVE",
+
+            overall_score: null,
+
+            started_at: new Date(session.interview.startedAt).toISOString()
+
+        });
+
+        if (historyError) {
+
+            await SessionService.delete(interviewId);
+
+            throw historyError;
+
+        }
 
         res.json({
 
@@ -79,7 +111,7 @@ router.post(
 
         }
 
-        console.error(err);
+        logError(err);
 
         res.status(500).json({
 
@@ -109,6 +141,15 @@ router.post(
     validate({ body: Schemas.message }),
     ownsInterview,
     sendMessage
+);
+
+router.post(
+    "/message/stream",
+    auth,
+    rateLimit({ name: "message", limit: 30 }),
+    validate({ body: Schemas.message }),
+    ownsInterview,
+    streamMessage
 );
 
 router.post(

@@ -1,0 +1,359 @@
+{
+  "guidance": [
+    "Evaluate the latest answer against the current question and objective, not future stages.",
+    "Required criteria are semantic outcomes. Concepts are examples and alternatives, not an AND checklist or mandatory products.",
+    "Accept a justified algorithm, database or vendor; probe claims actually made rather than demanding every alternative.",
+    "Do not penalize optional features, omitted diagram boxes, company-specific facts or small rounding differences.",
+    "Use the fictional workload consistently; accept an explicitly justified alternative workload and its arithmetic.",
+    "Weights and minimumCoverage are advisory; runtime progression uses required criteria and report scores are computed in code."
+  ],
+  "scoreAnchors": [
+    {
+      "min": 0,
+      "max": 2,
+      "description": "Does not address the current question or makes a fundamental correctness error."
+    },
+    {
+      "min": 3,
+      "max": 4,
+      "description": "Names plausible components but cannot explain their mechanism or limitations."
+    },
+    {
+      "min": 5,
+      "max": 6,
+      "description": "Explains a workable baseline with some gaps in the current objective."
+    },
+    {
+      "min": 7,
+      "max": 8,
+      "description": "Explains a coherent mechanism, failure cases and justified tradeoffs."
+    },
+    {
+      "min": 9,
+      "max": 10,
+      "description": "Quantifies and defends a robust design, recognizing limits and alternatives."
+    }
+  ],
+  "topics": [
+    {
+      "name": "Requirements",
+      "weight": 12,
+      "minimumCoverage": 0.75,
+      "guidance": "Agree on product behavior, measurable quality targets and the stated exercise workload. Evaluate only the current question and stage; a justified alternative earns equal credit.",
+      "concepts": [
+        {
+          "name": "Functional scope",
+          "importance": "critical",
+          "probe": true,
+          "guidance": "Define who is limited, which routes share a budget, what a burst means, and the scope of a policy change."
+        },
+        {
+          "name": "Core operations and users",
+          "importance": "important",
+          "probe": true,
+          "guidance": "Supporting example for Functional scope. Reward equivalent mechanisms; do not require every listed alternative."
+        },
+        {
+          "name": "Quality targets",
+          "importance": "critical",
+          "probe": true,
+          "guidance": "Separate decision latency from protected API latency; decide fail-open or fail-closed per endpoint and explain quota accuracy."
+        },
+        {
+          "name": "Latency and availability targets",
+          "importance": "important",
+          "probe": true,
+          "guidance": "Supporting example for Quality targets. Reward equivalent mechanisms; do not require every listed alternative."
+        },
+        {
+          "name": "Capacity estimates",
+          "importance": "critical",
+          "probe": true,
+          "guidance": "Use the fictional baseline or state a justified alternative; derive average and peak rates and distinguish payload bytes from replication and indexes."
+        },
+        {
+          "name": "Daily volume divided by 86400",
+          "importance": "important",
+          "probe": true,
+          "guidance": "Supporting example for Capacity estimates. Reward equivalent mechanisms; do not require every listed alternative."
+        }
+      ]
+    },
+    {
+      "name": "High Level Design",
+      "weight": 16,
+      "minimumCoverage": 0.75,
+      "guidance": "Separate synchronous budget checks from policy distribution and observability. Evaluate only the current question and stage; a justified alternative earns equal credit.",
+      "concepts": [
+        {
+          "name": "Enforcement boundary",
+          "importance": "critical",
+          "probe": true,
+          "guidance": "Place enforcement at a gateway, service library or dedicated service with authenticated tenant identity."
+        },
+        {
+          "name": "Gateway enforcement",
+          "importance": "important",
+          "probe": true,
+          "guidance": "Supporting example for Enforcement boundary. Reward equivalent mechanisms; do not require every listed alternative."
+        },
+        {
+          "name": "Policy path",
+          "importance": "critical",
+          "probe": true,
+          "guidance": "Cache versioned policies near enforcement while keeping a durable control-plane source."
+        },
+        {
+          "name": "Versioned policy cache",
+          "importance": "important",
+          "probe": true,
+          "guidance": "Supporting example for Policy path. Reward equivalent mechanisms; do not require every listed alternative."
+        },
+        {
+          "name": "Budget state",
+          "importance": "critical",
+          "probe": true,
+          "guidance": "Route the same tenant-user-route key to one atomic state owner or a coordinated equivalent."
+        },
+        {
+          "name": "Atomic bucket store",
+          "importance": "important",
+          "probe": true,
+          "guidance": "Supporting example for Budget state. Reward equivalent mechanisms; do not require every listed alternative."
+        }
+      ]
+    },
+    {
+      "name": "Core Flow",
+      "weight": 22,
+      "minimumCoverage": 0.75,
+      "guidance": "Specify a correct budget transition rather than listing algorithm names. Evaluate only the current question and stage; a justified alternative earns equal credit.",
+      "concepts": [
+        {
+          "name": "Algorithm semantics",
+          "importance": "critical",
+          "probe": true,
+          "guidance": "Choose token bucket, sliding-window counter/log or another suitable method; explain its actual burst behavior."
+        },
+        {
+          "name": "Token bucket or sliding window",
+          "importance": "important",
+          "probe": true,
+          "guidance": "Supporting example for Algorithm semantics. Reward equivalent mechanisms; do not require every listed alternative."
+        },
+        {
+          "name": "Atomic transition",
+          "importance": "critical",
+          "probe": true,
+          "guidance": "Compute refill, decision and deduction in one atomic operation or CAS retry loop; avoid a separate read and write race."
+        },
+        {
+          "name": "Atomic refill-and-consume",
+          "importance": "important",
+          "probe": true,
+          "guidance": "Supporting example for Atomic transition. Reward equivalent mechanisms; do not require every listed alternative."
+        },
+        {
+          "name": "Time and retry delay",
+          "importance": "critical",
+          "probe": true,
+          "guidance": "Use a stable time source and nonnegative elapsed time; derive Retry-After from the next permissible request rather than guessing."
+        },
+        {
+          "name": "Monotonic elapsed-time policy",
+          "importance": "important",
+          "probe": true,
+          "guidance": "Supporting example for Time and retry delay. Reward equivalent mechanisms; do not require every listed alternative."
+        },
+        {
+          "name": "Bounded state",
+          "importance": "critical",
+          "probe": true,
+          "guidance": "Expire idle buckets safely so expiry cannot create extra budget earlier than a full refill would."
+        },
+        {
+          "name": "Expiry after full refill",
+          "importance": "important",
+          "probe": true,
+          "guidance": "Supporting example for Bounded state. Reward equivalent mechanisms; do not require every listed alternative."
+        }
+      ]
+    },
+    {
+      "name": "Data Model",
+      "weight": 14,
+      "minimumCoverage": 0.75,
+      "guidance": "Model budget state and versioned policy with bounded cardinality. Evaluate only the current question and stage; a justified alternative earns equal credit.",
+      "concepts": [
+        {
+          "name": "Key isolation",
+          "importance": "critical",
+          "probe": true,
+          "guidance": "Include tenant, principal and route/policy scope; use authenticated identifiers and bound attacker-controlled cardinality."
+        },
+        {
+          "name": "tenant_id + principal_id + policy_id",
+          "importance": "important",
+          "probe": true,
+          "guidance": "Supporting example for Key isolation. Reward equivalent mechanisms; do not require every listed alternative."
+        },
+        {
+          "name": "Bucket schema",
+          "importance": "critical",
+          "probe": true,
+          "guidance": "For a token bucket, store tokens, last refill time and policy version; use the equivalent state for another chosen algorithm."
+        },
+        {
+          "name": "Token balance and refill timestamp",
+          "importance": "important",
+          "probe": true,
+          "guidance": "Supporting example for Bucket schema. Reward equivalent mechanisms; do not require every listed alternative."
+        },
+        {
+          "name": "Policy migration",
+          "importance": "critical",
+          "probe": true,
+          "guidance": "Define how new limits affect existing balances and remove obsolete buckets without granting repeated fresh bursts."
+        },
+        {
+          "name": "Versioned policy update",
+          "importance": "important",
+          "probe": true,
+          "guidance": "Supporting example for Policy migration. Reward equivalent mechanisms; do not require every listed alternative."
+        }
+      ]
+    },
+    {
+      "name": "Reliability",
+      "weight": 16,
+      "minimumCoverage": 0.75,
+      "guidance": "Make quota accuracy and outage behavior explicit. Evaluate only the current question and stage; a justified alternative earns equal credit.",
+      "concepts": [
+        {
+          "name": "Outage policy",
+          "importance": "critical",
+          "probe": true,
+          "guidance": "Choose fail-open or fail-closed by endpoint risk; distinguish a store error from a true rate-limit denial."
+        },
+        {
+          "name": "Endpoint-specific failure policy",
+          "importance": "important",
+          "probe": true,
+          "guidance": "Supporting example for Outage policy. Reward equivalent mechanisms; do not require every listed alternative."
+        },
+        {
+          "name": "State consistency",
+          "importance": "critical",
+          "probe": true,
+          "guidance": "Explain how replicas, failover or retries can overspend a quota and bound or prevent that error."
+        },
+        {
+          "name": "Authoritative state owner",
+          "importance": "important",
+          "probe": true,
+          "guidance": "Supporting example for State consistency. Reward equivalent mechanisms; do not require every listed alternative."
+        },
+        {
+          "name": "Recovery safety",
+          "importance": "critical",
+          "probe": true,
+          "guidance": "Handle time skew, stale policy caches and reconnect bursts without negative token balances."
+        },
+        {
+          "name": "Nonnegative elapsed time",
+          "importance": "important",
+          "probe": true,
+          "guidance": "Supporting example for Recovery safety. Reward equivalent mechanisms; do not require every listed alternative."
+        }
+      ]
+    },
+    {
+      "name": "Scaling",
+      "weight": 12,
+      "minimumCoverage": 0.75,
+      "guidance": "Scale across keys while recognizing single-key serialization limits. Evaluate only the current question and stage; a justified alternative earns equal credit.",
+      "concepts": [
+        {
+          "name": "Shard ownership",
+          "importance": "critical",
+          "probe": true,
+          "guidance": "Partition by a stable bucket key, with explicit shard movement and regional ownership."
+        },
+        {
+          "name": "Consistent hash or partition map",
+          "importance": "important",
+          "probe": true,
+          "guidance": "Supporting example for Shard ownership. Reward equivalent mechanisms; do not require every listed alternative."
+        },
+        {
+          "name": "Hot keys",
+          "importance": "critical",
+          "probe": true,
+          "guidance": "Explain why more shards do not split one strictly atomic hot bucket; use local allocations or hierarchical quotas only with an error budget."
+        },
+        {
+          "name": "Single-key serialization",
+          "importance": "important",
+          "probe": true,
+          "guidance": "Supporting example for Hot keys. Reward equivalent mechanisms; do not require every listed alternative."
+        },
+        {
+          "name": "Capacity budget",
+          "importance": "critical",
+          "probe": true,
+          "guidance": "Estimate 1.6 GB of logical state for 20 million 80-byte buckets, then add keys, allocator overhead, replicas and peak CPU/network cost."
+        },
+        {
+          "name": "State bytes versus store overhead",
+          "importance": "important",
+          "probe": true,
+          "guidance": "Supporting example for Capacity budget. Reward equivalent mechanisms; do not require every listed alternative."
+        }
+      ]
+    },
+    {
+      "name": "Tradeoffs",
+      "weight": 8,
+      "minimumCoverage": 0.75,
+      "guidance": "Defend an algorithm and regional coordination policy. Evaluate only the current question and stage; a justified alternative earns equal credit.",
+      "concepts": [
+        {
+          "name": "Algorithm tradeoff",
+          "importance": "critical",
+          "probe": true,
+          "guidance": "Compare the selected algorithm with a fixed or sliding-window alternative; describe boundary bursts and memory cost."
+        },
+        {
+          "name": "Token bucket versus fixed window",
+          "importance": "important",
+          "probe": true,
+          "guidance": "Supporting example for Algorithm tradeoff. Reward equivalent mechanisms; do not require every listed alternative."
+        },
+        {
+          "name": "Regional tradeoff",
+          "importance": "critical",
+          "probe": true,
+          "guidance": "Compare a globally coordinated budget with partitioned regional allowances and document possible overshoot."
+        },
+        {
+          "name": "Global exactness",
+          "importance": "important",
+          "probe": true,
+          "guidance": "Supporting example for Regional tradeoff. Reward equivalent mechanisms; do not require every listed alternative."
+        },
+        {
+          "name": "Operational tradeoff",
+          "importance": "critical",
+          "probe": true,
+          "guidance": "Measure allowed/denied/error decisions, decision latency and hot-key saturation without using raw principal IDs as labels."
+        },
+        {
+          "name": "Decision outcome metrics",
+          "importance": "important",
+          "probe": true,
+          "guidance": "Supporting example for Operational tradeoff. Reward equivalent mechanisms; do not require every listed alternative."
+        }
+      ]
+    }
+  ]
+}

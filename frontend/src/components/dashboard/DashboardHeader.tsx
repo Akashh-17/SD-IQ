@@ -1,93 +1,18 @@
 import { useEffect, useState } from "react";
-import { getCurrentUser } from "../../services/auth.service";
-import { useNavigate } from "react-router-dom";
+import { getSession } from "../../services/auth.service";
 
 export default function DashboardHeader() {
-
-    const navigate = useNavigate();
-
-    const [name, setName] = useState("Engineer");
-
+    const [name, setName] = useState("engineer");
     useEffect(() => {
-
-        async function loadUser() {
-
-            const user = await getCurrentUser();
-
-            if (user?.email) {
-
-                const username = user.email.split("@")[0];
-
-                setName(
-
-                    username.charAt(0).toUpperCase() +
-
-                    username.slice(1)
-
-                );
-
-            }
-
-        }
-
-        loadUser();
-
+        let active = true;
+        getSession().then(session => {
+            const user = session?.user;
+            const display = typeof user?.user_metadata?.full_name === "string" ? user.user_metadata.full_name.trim().split(" ")[0] : user?.email?.split("@")[0];
+            if (active && display) setName(display.slice(0, 40));
+        }).catch(() => {});
+        return () => { active = false; };
     }, []);
-
     const hour = new Date().getHours();
-
-    let greeting = "Good Evening";
-
-    if (hour < 12)
-
-        greeting = "Good Morning";
-
-    else if (hour < 18)
-
-        greeting = "Good Afternoon";
-
-    return (
-
-        <div className="flex items-center justify-between">
-
-            <div>
-
-                <h1 className="text-2xl font-bold text-white">
-
-                    {greeting},{" "}
-
-                    <span className="text-[#F5B301]">
-
-                        {name}
-
-                    </span>
-
-                    👋
-
-                </h1>
-
-                <p className="mt-2 text-m text-gray-400">
-
-                    Ready for another System Design Interview?
-
-                </p>
-
-            </div>
-
-            <button
-
-                onClick={() => navigate("/problems")}
-
-                className="rounded-xl bg-[#F5B301] px-4 py-2 font-semibold text-sm text-black transition hover:scale-105"
-
-            >
-
-                + New Interview
-
-            </button>
-
-        </div>
-
-    );
-
+    const greeting = hour < 12 ? "Good morning" : hour < 18 ? "Good afternoon" : "Good evening";
+    return <header><p className="section-kicker mb-3">Your practice workspace</p><h1 className="text-h2">{greeting}, <span className="text-accent">{name}.</span></h1><p className="mt-3 text-sm leading-relaxed text-muted">One conversation closer to a clearer way of thinking.</p></header>;
 }

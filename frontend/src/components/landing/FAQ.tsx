@@ -1,64 +1,23 @@
-import { useState } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
-import { ChevronDown, ArrowRight } from 'lucide-react'
-import Reveal from './Reveal'
+import { useId, useState } from "react";
+import { Button, Card } from "../ui";
+import { Reveal } from "../../motion";
+import Glyph from "./Glyph";
+import SectionHeading from "./SectionHeading";
 
-const FAQS = [
-  { q: 'Is SystemIQ free to use?', a: 'You can start practicing for free with a limited set of problems. Paid plans unlock the full problem library, unlimited interviews, and detailed history tracking.' },
-  { q: 'Does it support voice input?', a: 'Yes — you can speak your answers naturally during the interview and SystemIQ will transcribe and respond in real time.' },
-  { q: 'Can I use my own diagrams?', a: 'Absolutely. You can import an existing architecture or start from a blank canvas and build it live during the session.' },
-  { q: 'How is it different from ChatGPT?', a: 'SystemIQ is purpose-built for system design practice: it drives the interview, evaluates your diagram structurally, and scores you against real interview rubrics.' },
-  { q: 'Free interview now?', a: 'Yes, click "Start Interview" on the homepage to begin a free session — no credit card required.' },
-  { q: 'How are reports generated?', a: 'Each session is scored against a rubric covering scalability, reliability, trade-offs, and communication, then summarized into an actionable report.' },
-  { q: 'Which companies use this?', a: 'Engineers preparing for interviews at companies of every size use SystemIQ, from early-stage startups to large tech companies.' },
-]
+const questions = [
+    { q: "Is this a real interview or a practice session?", a: "A practice session with an AI interviewer. You choose a system design problem, explain your decisions, and work through follow-up questions. It is a space to experiment before a real interview." },
+    { q: "What can I practice?", a: "Explore the system design concepts behind chat, storage, feeds, notifications and more. The example problems are starting points for practicing different constraints and tradeoffs, from requirements to scaling." },
+    { q: "Can I draw my architecture?", a: "Yes. Build your architecture on the interview whiteboard while you explain it. The interviewer can use that diagram as context, and your report includes diagram feedback." },
+    { q: "How does scoring work?", a: "Answers are evaluated against the problem's stage criteria. The application combines those evaluations into stage scores and an overall report, alongside strengths, gaps and feedback for your next attempt." },
+    { q: "Can I speak instead of typing?", a: "Yes. You can type your answers or use voice input with microphone access. You can also keep working on your whiteboard as the conversation progresses." },
+    { q: "Do I need the perfect answer before I start?", a: "Bring a starting point and a willingness to explain it. Ask clarifying questions, make assumptions explicit, and change your mind when a tradeoff becomes clearer. That is the practice." }
+];
 
 export default function FAQ() {
-  const [open, setOpen] = useState<number | null>(0)
-
-  return (
-    <section className="mx-auto max-w-7xl px-6 pb-24">
-      <Reveal className="mb-10 flex items-end justify-between">
-        <h2 className="font-display text-3xl font-bold sm:text-4xl">Frequently Asked Questions</h2>
-        <a href="#faq-all" className="hidden shrink-0 items-center gap-1 text-sm font-medium text-amber-400 sm:flex">
-          View all <ArrowRight size={14} />
-        </a>
-      </Reveal>
-
-      <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
-        {FAQS.map((f, i) => {
-          const isOpen = open === i
-          return (
-            <Reveal key={f.q} delay={(i % 2) * 0.06} className="h-fit">
-              <div className="card overflow-hidden">
-                <button
-                  onClick={() => setOpen(isOpen ? null : i)}
-                  className="flex w-full items-center justify-between gap-4 px-5 py-4 text-left text-sm font-medium"
-                  aria-expanded={isOpen}
-                >
-                  {f.q}
-                  <motion.span animate={{ rotate: isOpen ? 180 : 0 }} transition={{ duration: 0.25 }}>
-                    <ChevronDown size={16} className="text-white/50" />
-                  </motion.span>
-                </button>
-                <AnimatePresence initial={false}>
-                  {isOpen && (
-                    <motion.div
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: 'auto', opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
-                      transition={{ duration: 0.25, ease: 'easeInOut' }}
-                      className="overflow-hidden"
-                    >
-                      <p className="px-5 pb-4 text-sm leading-relaxed text-white/55">{f.a}</p>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
-            </Reveal>
-          )
-        })}
-      </div>
-    </section>
-  )
+    const id = useId();
+    const [open, setOpen] = useState<number | null>(0);
+    return <section id="faq" className="landing-container landing-section" aria-label="Frequently asked questions">
+        <Reveal><SectionHeading eyebrow="06 / A FEW GOOD QUESTIONS" title={<>Before you<br /><span className="text-muted">start thinking out loud.</span></>} /></Reveal>
+        <div className="landing-faq-list">{questions.map((item, index) => <Card key={item.q} className="!rounded-none !border-x-0 !border-t-0 !bg-transparent !shadow-none"><h3><Button variant="ghost" fullWidth aria-expanded={open === index} aria-controls={`${id}-answer-${index}`} id={`${id}-question-${index}`} className="landing-faq-trigger" onClick={() => setOpen(open === index ? null : index)}><span>{item.q}</span><Glyph name="plus" size={17} className={`shrink-0 transition-transform duration-200 ${open === index ? "rotate-45" : ""}`} /></Button></h3><div id={`${id}-answer-${index}`} role="region" aria-labelledby={`${id}-question-${index}`} hidden={open !== index}><p className="max-w-3xl px-1 pb-6 pr-10 text-sm leading-relaxed text-muted">{item.a}</p></div></Card>)}</div>
+    </section>;
 }

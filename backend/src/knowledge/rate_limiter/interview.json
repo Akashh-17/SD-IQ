@@ -1,0 +1,257 @@
+{
+  "estimatedDuration": 45,
+  "difficultyLevels": [
+    "SDE1",
+    "SDE2",
+    "Senior"
+  ],
+  "stages": [
+    {
+      "name": "Requirements",
+      "entryQuestion": "Before designing a distributed rate limiter, what scope and scale assumptions would you clarify?",
+      "objective": "Agree on product behavior, measurable quality targets and the stated exercise workload.",
+      "completionCriteria": [
+        {
+          "name": "Functional scope",
+          "required": true,
+          "concepts": [
+            "Core operations and users",
+            "Explicit exclusions"
+          ],
+          "guidance": "Define who is limited, which routes share a budget, what a burst means, and the scope of a policy change."
+        },
+        {
+          "name": "Quality targets",
+          "required": true,
+          "concepts": [
+            "Latency and availability targets",
+            "Consistency and durability expectations"
+          ],
+          "guidance": "Separate decision latency from protected API latency; decide fail-open or fail-closed per endpoint and explain quota accuracy."
+        },
+        {
+          "name": "Capacity estimates",
+          "required": true,
+          "concepts": [
+            "Daily volume divided by 86400",
+            "Peak multiplier and storage budget"
+          ],
+          "guidance": "Use the fictional baseline or state a justified alternative; derive average and peak rates and distinguish payload bytes from replication and indexes."
+        }
+      ]
+    },
+    {
+      "name": "High Level Design",
+      "entryQuestion": "Where does the limiter sit, and what state is on the request path?",
+      "objective": "Separate synchronous budget checks from policy distribution and observability.",
+      "completionCriteria": [
+        {
+          "name": "Enforcement boundary",
+          "required": true,
+          "concepts": [
+            "Gateway enforcement",
+            "Authenticated tenant key"
+          ],
+          "guidance": "Place enforcement at a gateway, service library or dedicated service with authenticated tenant identity."
+        },
+        {
+          "name": "Policy path",
+          "required": true,
+          "concepts": [
+            "Versioned policy cache",
+            "Policy control plane"
+          ],
+          "guidance": "Cache versioned policies near enforcement while keeping a durable control-plane source."
+        },
+        {
+          "name": "Budget state",
+          "required": true,
+          "concepts": [
+            "Atomic bucket store",
+            "Consistent key routing"
+          ],
+          "guidance": "Route the same tenant-user-route key to one atomic state owner or a coordinated equivalent."
+        }
+      ]
+    },
+    {
+      "name": "Core Flow",
+      "entryQuestion": "Walk through a burst and two simultaneous requests against your chosen algorithm.",
+      "objective": "Specify a correct budget transition rather than listing algorithm names.",
+      "completionCriteria": [
+        {
+          "name": "Algorithm semantics",
+          "required": true,
+          "concepts": [
+            "Token bucket or sliding window",
+            "Burst versus sustained rate"
+          ],
+          "guidance": "Choose token bucket, sliding-window counter/log or another suitable method; explain its actual burst behavior."
+        },
+        {
+          "name": "Atomic transition",
+          "required": true,
+          "concepts": [
+            "Atomic refill-and-consume",
+            "Compare-and-set retry"
+          ],
+          "guidance": "Compute refill, decision and deduction in one atomic operation or CAS retry loop; avoid a separate read and write race."
+        },
+        {
+          "name": "Time and retry delay",
+          "required": true,
+          "concepts": [
+            "Monotonic elapsed-time policy",
+            "429 and Retry-After"
+          ],
+          "guidance": "Use a stable time source and nonnegative elapsed time; derive Retry-After from the next permissible request rather than guessing."
+        },
+        {
+          "name": "Bounded state",
+          "required": true,
+          "concepts": [
+            "Expiry after full refill",
+            "Idle key cleanup"
+          ],
+          "guidance": "Expire idle buckets safely so expiry cannot create extra budget earlier than a full refill would."
+        }
+      ]
+    },
+    {
+      "name": "Data Model",
+      "entryQuestion": "What bucket keys and fields do you store, and how do policy changes affect them?",
+      "objective": "Model budget state and versioned policy with bounded cardinality.",
+      "completionCriteria": [
+        {
+          "name": "Key isolation",
+          "required": true,
+          "concepts": [
+            "tenant_id + principal_id + policy_id",
+            "Canonical route scope"
+          ],
+          "guidance": "Include tenant, principal and route/policy scope; use authenticated identifiers and bound attacker-controlled cardinality."
+        },
+        {
+          "name": "Bucket schema",
+          "required": true,
+          "concepts": [
+            "Token balance and refill timestamp",
+            "Policy version"
+          ],
+          "guidance": "For a token bucket, store tokens, last refill time and policy version; use the equivalent state for another chosen algorithm."
+        },
+        {
+          "name": "Policy migration",
+          "required": true,
+          "concepts": [
+            "Versioned policy update",
+            "Budget migration rule"
+          ],
+          "guidance": "Define how new limits affect existing balances and remove obsolete buckets without granting repeated fresh bursts."
+        }
+      ]
+    },
+    {
+      "name": "Reliability",
+      "entryQuestion": "What should the API do if the state store times out or a replica is behind?",
+      "objective": "Make quota accuracy and outage behavior explicit.",
+      "completionCriteria": [
+        {
+          "name": "Outage policy",
+          "required": true,
+          "concepts": [
+            "Endpoint-specific failure policy",
+            "Timeout budget"
+          ],
+          "guidance": "Choose fail-open or fail-closed by endpoint risk; distinguish a store error from a true rate-limit denial."
+        },
+        {
+          "name": "State consistency",
+          "required": true,
+          "concepts": [
+            "Authoritative state owner",
+            "Duplicate check semantics"
+          ],
+          "guidance": "Explain how replicas, failover or retries can overspend a quota and bound or prevent that error."
+        },
+        {
+          "name": "Recovery safety",
+          "required": true,
+          "concepts": [
+            "Nonnegative elapsed time",
+            "Policy refresh and jitter"
+          ],
+          "guidance": "Handle time skew, stale policy caches and reconnect bursts without negative token balances."
+        }
+      ]
+    },
+    {
+      "name": "Scaling",
+      "entryQuestion": "How would you handle 300000 peak checks/s and one disproportionately hot tenant?",
+      "objective": "Scale across keys while recognizing single-key serialization limits.",
+      "completionCriteria": [
+        {
+          "name": "Shard ownership",
+          "required": true,
+          "concepts": [
+            "Consistent hash or partition map",
+            "Key migration"
+          ],
+          "guidance": "Partition by a stable bucket key, with explicit shard movement and regional ownership."
+        },
+        {
+          "name": "Hot keys",
+          "required": true,
+          "concepts": [
+            "Single-key serialization",
+            "Hierarchical token allocation"
+          ],
+          "guidance": "Explain why more shards do not split one strictly atomic hot bucket; use local allocations or hierarchical quotas only with an error budget."
+        },
+        {
+          "name": "Capacity budget",
+          "required": true,
+          "concepts": [
+            "State bytes versus store overhead",
+            "Peak 300000 checks/s"
+          ],
+          "guidance": "Estimate 1.6 GB of logical state for 20 million 80-byte buckets, then add keys, allocator overhead, replicas and peak CPU/network cost."
+        }
+      ]
+    },
+    {
+      "name": "Tradeoffs",
+      "entryQuestion": "How would you trade quota precision, latency and global availability?",
+      "objective": "Defend an algorithm and regional coordination policy.",
+      "completionCriteria": [
+        {
+          "name": "Algorithm tradeoff",
+          "required": true,
+          "concepts": [
+            "Token bucket versus fixed window",
+            "Exact log versus approximate counter"
+          ],
+          "guidance": "Compare the selected algorithm with a fixed or sliding-window alternative; describe boundary bursts and memory cost."
+        },
+        {
+          "name": "Regional tradeoff",
+          "required": true,
+          "concepts": [
+            "Global exactness",
+            "Regional allowance allocation"
+          ],
+          "guidance": "Compare a globally coordinated budget with partitioned regional allowances and document possible overshoot."
+        },
+        {
+          "name": "Operational tradeoff",
+          "required": true,
+          "concepts": [
+            "Decision outcome metrics",
+            "Bounded metric cardinality"
+          ],
+          "guidance": "Measure allowed/denied/error decisions, decision latency and hot-key saturation without using raw principal IDs as labels."
+        }
+      ]
+    }
+  ]
+}

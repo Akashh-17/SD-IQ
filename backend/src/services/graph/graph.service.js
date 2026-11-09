@@ -1,3 +1,4 @@
+import { logError } from "../../utils/logger.js";
 import { SessionService } from "../interview/session.service.js";
 import { graphSignature } from "../../utils/graphSignature.js";
 
@@ -111,7 +112,7 @@ export class GraphService {
 
             catch (err) {
 
-                console.error("[Graph Analysis]", err);
+                logError("[Graph Analysis]", err);
 
             }
 

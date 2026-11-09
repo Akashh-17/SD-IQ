@@ -1,35 +1,73 @@
 {
   "id": "chat_app",
-
   "title": "Design WhatsApp",
-
   "problemDifficulty": "Medium",
-
-  "description": "Design a globally distributed real-time messaging platform like WhatsApp supporting one-to-one chat, group chat and media sharing.",
-
+  "description": "Design a real-time chat service with one-to-one and bounded group messaging, offline delivery and media references.",
   "functionalRequirements": [
-    "One-to-one messaging",
-    "Group messaging",
-    "Online / Offline messaging",
-    "Media sharing",
-    "Read receipts",
-    "Typing indicator",
-    "Push notifications"
+    "Send one-to-one and group messages",
+    "Deliver messages after reconnection with per-conversation ordering",
+    "Upload media separately and send access-controlled references",
+    "Track delivery acknowledgements; typing and presence are extensions"
   ],
-
   "nonFunctionalRequirements": [
-    "500 Million Daily Active Users",
-    "Very low latency",
-    "High availability",
-    "Fault tolerance",
-    "Horizontal scalability",
-    "Strong durability"
+    "Online text delivery server p95 below 200 ms within a region",
+    "99.9% messaging availability target",
+    "Do not acknowledge acceptance before durable message storage"
   ],
-
   "constraints": [
-    "Global users",
-    "Large media files",
-    "Network failures",
-    "Mobile devices"
-  ]
+    "10 million DAU sending 40 text messages each per day; use a 5x peak multiplier",
+    "Assume two recipient deliveries per sent message on average; groups are capped at 256 members",
+    "Use 300 bytes per stored text message and a 30-day server retention exercise window"
+  ],
+  "outOfScope": [
+    "Cryptographic protocol design; treat end-to-end encrypted payloads as opaque if requested",
+    "Unbounded broadcast channels",
+    "Video calls"
+  ],
+  "scale": {
+    "assumption": "Synthetic interview workload, not a claim about any named company's actual traffic.",
+    "rates": [
+      {
+        "name": "Sent text messages",
+        "dailyVolume": 400000000,
+        "averagePerSecond": 4629.63,
+        "peakMultiplier": 5,
+        "peakPerSecond": 23148.15
+      },
+      {
+        "name": "Recipient deliveries",
+        "dailyVolume": 800000000,
+        "averagePerSecond": 9259.26,
+        "peakMultiplier": 5,
+        "peakPerSecond": 46296.3
+      }
+    ],
+    "storageEstimates": [
+      {
+        "name": "30-day text message retention",
+        "recordsPerDay": 400000000,
+        "bytesPerRecord": 300,
+        "days": 30,
+        "replicationFactor": 3,
+        "rawBytes": 3600000000000,
+        "replicatedBytes": 10800000000000
+      }
+    ],
+    "stateEstimates": [
+      {
+        "name": "Two million concurrent connection-directory entries",
+        "entities": 2000000,
+        "bytesPerEntity": 200,
+        "replicationFactor": 3,
+        "rawBytes": 400000000,
+        "replicatedBytes": 1200000000
+      }
+    ],
+    "notes": [
+      "Workload assumptions describe a practice system, not WhatsApp traffic.",
+      "Recipient delivery volume includes average group fanout but excludes retries; budget retry headroom separately.",
+      "Media objects, indexes and device copies are excluded from the text byte estimate."
+    ],
+    "dailyActiveUsers": 10000000
+  }
 }

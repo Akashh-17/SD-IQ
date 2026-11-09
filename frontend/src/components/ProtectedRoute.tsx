@@ -1,6 +1,7 @@
 import { Navigate } from "react-router-dom";
 import { useEffect, useState, type JSX } from "react";
 import { getCurrentUser } from "../services/auth.service";
+import RouteLoader from "./layout/RouteLoader";
 
 type Props = {
     children: JSX.Element;
@@ -30,15 +31,7 @@ export default function ProtectedRoute({ children }: Props) {
 
     if (loading) {
 
-        return (
-
-            <div className="min-h-screen flex items-center justify-center bg-gray-950 text-white">
-
-                Loading...
-
-            </div>
-
-        );
+        return <RouteLoader />;
 
     }
 

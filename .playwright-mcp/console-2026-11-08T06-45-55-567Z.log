@@ -1,0 +1,164 @@
+[     420ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://127.0.0.1:5331/node_modules/.vite/deps/react-dom_client.js?v=88c1f93b:14335
+[     931ms] [WARNING] You have Reduced Motion enabled on your device. Animations may not appear as expected.. For more information and steps for solving, visit https://motion.dev/troubleshooting/reduced-motion-disabled @ http://127.0.0.1:5331/@vite/client:524
+[   81080ms] [ERROR] React has detected a change in the order of Hooks called by %s. This will lead to bugs and errors if not fixed. For more information, read the Rules of Hooks: https://react.dev/link/rules-of-hooks
+
+   Previous render            Next render
+   ------------------------------------------------------
+%s   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ AnimatedNumber 1. useState                   useSyncExternalStore
+ @ http://127.0.0.1:5331/@vite/client:524
+[   81111ms] TypeError: values[i].get is not a function
+    at http://127.0.0.1:5331/node_modules/.vite/deps/framer-motion.js?v=88c1f93b:12909:61
+    at useCombineMotionValues (http://127.0.0.1:5331/node_modules/.vite/deps/framer-motion.js?v=88c1f93b:12804:31)
+    at useListTransform (http://127.0.0.1:5331/node_modules/.vite/deps/framer-motion.js?v=88c1f93b:12906:9)
+    at useTransform (http://127.0.0.1:5331/node_modules/.vite/deps/framer-motion.js?v=88c1f93b:12893:40)
+    at AnimatedNumber (http://127.0.0.1:5331/src/motion/AnimatedNumber.tsx?t=1794120435893:37:18)
+    at Object.react_stack_bottom_frame (http://127.0.0.1:5331/node_modules/.vite/deps/react-dom_client.js?v=88c1f93b:12866:12)
+    at renderWithHooks (http://127.0.0.1:5331/node_modules/.vite/deps/react-dom_client.js?v=88c1f93b:4213:19)
+    at updateFunctionComponent (http://127.0.0.1:5331/node_modules/.vite/deps/react-dom_client.js?v=88c1f93b:5569:16)
+    at beginWork (http://127.0.0.1:5331/node_modules/.vite/deps/react-dom_client.js?v=88c1f93b:6140:20)
+    at runWithFiberInDEV (http://127.0.0.1:5331/node_modules/.vite/deps/react-dom_client.js?v=88c1f93b:851:66)
+[   81105ms] [WARNING] %s
+
+%s
+ An error occurred in the <AnimatedNumber> component. Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://react.dev/link/error-boundaries to learn more about error boundaries. @ http://127.0.0.1:5331/@vite/client:524
+[   81885ms] [ERROR] React has detected a change in the order of Hooks called by %s. This will lead to bugs and errors if not fixed. For more information, read the Rules of Hooks: https://react.dev/link/rules-of-hooks
+
+   Previous render            Next render
+   ------------------------------------------------------
+%s   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ PageTransition 1. useState                   useSyncExternalStore
+ @ http://127.0.0.1:5331/@vite/client:524
+[   81934ms] Error: Rendered more hooks than during the previous render.
+    at updateWorkInProgressHook (http://127.0.0.1:5331/node_modules/.vite/deps/react-dom_client.js?v=88c1f93b:4327:12)
+    at updateEffectImpl (http://127.0.0.1:5331/node_modules/.vite/deps/react-dom_client.js?v=88c1f93b:4851:15)
+    at updateSyncExternalStore (http://127.0.0.1:5331/node_modules/.vite/deps/react-dom_client.js?v=88c1f93b:4542:4)
+    at Object.useSyncExternalStore (http://127.0.0.1:5331/node_modules/.vite/deps/react-dom_client.js?v=88c1f93b:13323:12)
+    at exports.useSyncExternalStore (http://127.0.0.1:5331/node_modules/.vite/deps/react.js?v=88c1f93b:751:31)
+    at useReducedMotion (http://127.0.0.1:5331/src/motion/useReducedMotion.ts:22:9)
+    at PageTransition (http://127.0.0.1:5331/src/motion/PageTransition.tsx?t=1794120436103:18:18)
+    at Object.react_stack_bottom_frame (http://127.0.0.1:5331/node_modules/.vite/deps/react-dom_client.js?v=88c1f93b:12866:12)
+    at renderWithHooks (http://127.0.0.1:5331/node_modules/.vite/deps/react-dom_client.js?v=88c1f93b:4213:19)
+    at updateFunctionComponent (http://127.0.0.1:5331/node_modules/.vite/deps/react-dom_client.js?v=88c1f93b:5569:16)
+[   81923ms] [WARNING] %s
+
+%s
+ An error occurred in the <PageTransition> component. Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://react.dev/link/error-boundaries to learn more about error boundaries. @ http://127.0.0.1:5331/@vite/client:524
+[   82320ms] [ERROR] React has detected a change in the order of Hooks called by %s. This will lead to bugs and errors if not fixed. For more information, read the Rules of Hooks: https://react.dev/link/rules-of-hooks
+
+   Previous render            Next render
+   ------------------------------------------------------
+%s   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ Stagger 1. useState                   useSyncExternalStore
+ @ http://127.0.0.1:5331/@vite/client:524
+[   82361ms] Error: Rendered more hooks than during the previous render.
+    at updateWorkInProgressHook (http://127.0.0.1:5331/node_modules/.vite/deps/react-dom_client.js?v=88c1f93b:4327:12)
+    at updateEffectImpl (http://127.0.0.1:5331/node_modules/.vite/deps/react-dom_client.js?v=88c1f93b:4851:15)
+    at updateSyncExternalStore (http://127.0.0.1:5331/node_modules/.vite/deps/react-dom_client.js?v=88c1f93b:4542:4)
+    at Object.useSyncExternalStore (http://127.0.0.1:5331/node_modules/.vite/deps/react-dom_client.js?v=88c1f93b:13323:12)
+    at exports.useSyncExternalStore (http://127.0.0.1:5331/node_modules/.vite/deps/react.js?v=88c1f93b:751:31)
+    at useReducedMotion (http://127.0.0.1:5331/src/motion/useReducedMotion.ts:22:9)
+    at Stagger (http://127.0.0.1:5331/src/motion/Stagger.tsx?t=1794120436111:27:18)
+    at Object.react_stack_bottom_frame (http://127.0.0.1:5331/node_modules/.vite/deps/react-dom_client.js?v=88c1f93b:12866:12)
+    at renderWithHooks (http://127.0.0.1:5331/node_modules/.vite/deps/react-dom_client.js?v=88c1f93b:4213:19)
+    at updateFunctionComponent (http://127.0.0.1:5331/node_modules/.vite/deps/react-dom_client.js?v=88c1f93b:5569:16)
+[   82357ms] [WARNING] %s
+
+%s
+ An error occurred in the <Stagger> component. Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://react.dev/link/error-boundaries to learn more about error boundaries. @ http://127.0.0.1:5331/@vite/client:524
+[   82849ms] [ERROR] React has detected a change in the order of Hooks called by %s. This will lead to bugs and errors if not fixed. For more information, read the Rules of Hooks: https://react.dev/link/rules-of-hooks
+
+   Previous render            Next render
+   ------------------------------------------------------
+%s   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ StreamText 1. useState                   useSyncExternalStore
+ @ http://127.0.0.1:5331/@vite/client:524
+[   82884ms] TypeError: values[i].get is not a function
+    at http://127.0.0.1:5331/node_modules/.vite/deps/framer-motion.js?v=88c1f93b:12909:61
+    at useCombineMotionValues (http://127.0.0.1:5331/node_modules/.vite/deps/framer-motion.js?v=88c1f93b:12804:31)
+    at useListTransform (http://127.0.0.1:5331/node_modules/.vite/deps/framer-motion.js?v=88c1f93b:12906:9)
+    at useTransform (http://127.0.0.1:5331/node_modules/.vite/deps/framer-motion.js?v=88c1f93b:12893:40)
+    at StreamText (http://127.0.0.1:5331/src/motion/StreamText.tsx?t=1794120436117:42:18)
+    at Object.react_stack_bottom_frame (http://127.0.0.1:5331/node_modules/.vite/deps/react-dom_client.js?v=88c1f93b:12866:12)
+    at renderWithHooks (http://127.0.0.1:5331/node_modules/.vite/deps/react-dom_client.js?v=88c1f93b:4213:19)
+    at updateFunctionComponent (http://127.0.0.1:5331/node_modules/.vite/deps/react-dom_client.js?v=88c1f93b:5569:16)
+    at beginWork (http://127.0.0.1:5331/node_modules/.vite/deps/react-dom_client.js?v=88c1f93b:6140:20)
+    at runWithFiberInDEV (http://127.0.0.1:5331/node_modules/.vite/deps/react-dom_client.js?v=88c1f93b:851:66)
+[   82883ms] [WARNING] %s
+
+%s
+ An error occurred in the <StreamText> component. Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://react.dev/link/error-boundaries to learn more about error boundaries. @ http://127.0.0.1:5331/@vite/client:524
+[   83330ms] [ERROR] React has detected a change in the order of Hooks called by %s. This will lead to bugs and errors if not fixed. For more information, read the Rules of Hooks: https://react.dev/link/rules-of-hooks
+
+   Previous render            Next render
+   ------------------------------------------------------
+%s   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ Toast 1. useState                   useSyncExternalStore
+ @ http://127.0.0.1:5331/@vite/client:524
+[   83348ms] Error: Rendered more hooks than during the previous render.
+    at updateWorkInProgressHook (http://127.0.0.1:5331/node_modules/.vite/deps/react-dom_client.js?v=88c1f93b:4327:12)
+    at updateEffectImpl (http://127.0.0.1:5331/node_modules/.vite/deps/react-dom_client.js?v=88c1f93b:4851:15)
+    at Object.useEffect (http://127.0.0.1:5331/node_modules/.vite/deps/react-dom_client.js?v=88c1f93b:13251:5)
+    at exports.useEffect (http://127.0.0.1:5331/node_modules/.vite/deps/react.js?v=88c1f93b:716:31)
+    at Toast (http://127.0.0.1:5331/src/components/ui/Toast.tsx?t=1794120436163:49:2)
+    at Object.react_stack_bottom_frame (http://127.0.0.1:5331/node_modules/.vite/deps/react-dom_client.js?v=88c1f93b:12866:12)
+    at renderWithHooks (http://127.0.0.1:5331/node_modules/.vite/deps/react-dom_client.js?v=88c1f93b:4213:19)
+    at updateFunctionComponent (http://127.0.0.1:5331/node_modules/.vite/deps/react-dom_client.js?v=88c1f93b:5569:16)
+    at beginWork (http://127.0.0.1:5331/node_modules/.vite/deps/react-dom_client.js?v=88c1f93b:6140:20)
+    at runWithFiberInDEV (http://127.0.0.1:5331/node_modules/.vite/deps/react-dom_client.js?v=88c1f93b:851:66)
+[   83333ms] [WARNING] %s
+
+%s
+ An error occurred in the <Toast> component. Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://react.dev/link/error-boundaries to learn more about error boundaries. @ http://127.0.0.1:5331/@vite/client:524
+[   83632ms] [ERROR] React has detected a change in the order of Hooks called by %s. This will lead to bugs and errors if not fixed. For more information, read the Rules of Hooks: https://react.dev/link/rules-of-hooks
+
+   Previous render            Next render
+   ------------------------------------------------------
+%s   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ Stepper 1. useId                      useId
+2. useState                   useSyncExternalStore
+ @ http://127.0.0.1:5331/@vite/client:524
+[   83643ms] Error: Rendered more hooks than during the previous render.
+    at updateWorkInProgressHook (http://127.0.0.1:5331/node_modules/.vite/deps/react-dom_client.js?v=88c1f93b:4327:12)
+    at updateEffectImpl (http://127.0.0.1:5331/node_modules/.vite/deps/react-dom_client.js?v=88c1f93b:4851:15)
+    at updateSyncExternalStore (http://127.0.0.1:5331/node_modules/.vite/deps/react-dom_client.js?v=88c1f93b:4542:4)
+    at Object.useSyncExternalStore (http://127.0.0.1:5331/node_modules/.vite/deps/react-dom_client.js?v=88c1f93b:13323:12)
+    at exports.useSyncExternalStore (http://127.0.0.1:5331/node_modules/.vite/deps/react.js?v=88c1f93b:751:31)
+    at useReducedMotion (http://127.0.0.1:5331/src/motion/useReducedMotion.ts:22:9)
+    at Stepper (http://127.0.0.1:5331/src/components/ui/Stepper.tsx?t=1794120436169:24:18)
+    at Object.react_stack_bottom_frame (http://127.0.0.1:5331/node_modules/.vite/deps/react-dom_client.js?v=88c1f93b:12866:12)
+    at renderWithHooks (http://127.0.0.1:5331/node_modules/.vite/deps/react-dom_client.js?v=88c1f93b:4213:19)
+    at updateFunctionComponent (http://127.0.0.1:5331/node_modules/.vite/deps/react-dom_client.js?v=88c1f93b:5569:16)
+[   83637ms] [WARNING] %s
+
+%s
+ An error occurred in the <Stepper> component. Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://react.dev/link/error-boundaries to learn more about error boundaries. @ http://127.0.0.1:5331/@vite/client:524
+[   84488ms] [ERROR] React has detected a change in the order of Hooks called by %s. This will lead to bugs and errors if not fixed. For more information, read the Rules of Hooks: https://react.dev/link/rules-of-hooks
+
+   Previous render            Next render
+   ------------------------------------------------------
+%s   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ DesignPage 1. useState                   useSyncExternalStore
+ @ http://127.0.0.1:5331/@vite/client:524
+[   84536ms] Error: Should have a queue. You are likely calling Hooks conditionally, which is not allowed. (https://react.dev/link/invalid-hook-call)
+    at updateReducerImpl (http://127.0.0.1:5331/node_modules/.vite/deps/react-dom_client.js?v=88c1f93b:4422:30)
+    at updateReducer (http://127.0.0.1:5331/node_modules/.vite/deps/react-dom_client.js?v=88c1f93b:4418:11)
+    at Object.useState (http://127.0.0.1:5331/node_modules/.vite/deps/react-dom_client.js?v=88c1f93b:13301:13)
+    at exports.useState (http://127.0.0.1:5331/node_modules/.vite/deps/react.js?v=88c1f93b:748:31)
+    at DesignPage (http://127.0.0.1:5331/src/pages/DesignPage.tsx?t=1794120436175:559:26)
+    at Object.react_stack_bottom_frame (http://127.0.0.1:5331/node_modules/.vite/deps/react-dom_client.js?v=88c1f93b:12866:12)
+    at renderWithHooks (http://127.0.0.1:5331/node_modules/.vite/deps/react-dom_client.js?v=88c1f93b:4213:19)
+    at updateFunctionComponent (http://127.0.0.1:5331/node_modules/.vite/deps/react-dom_client.js?v=88c1f93b:5569:16)
+    at beginWork (http://127.0.0.1:5331/node_modules/.vite/deps/react-dom_client.js?v=88c1f93b:6140:20)
+    at runWithFiberInDEV (http://127.0.0.1:5331/node_modules/.vite/deps/react-dom_client.js?v=88c1f93b:851:66)
+[   84529ms] [WARNING] %s
+
+%s
+ An error occurred in the <DesignPage> component. Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://react.dev/link/error-boundaries to learn more about error boundaries. @ http://127.0.0.1:5331/@vite/client:524

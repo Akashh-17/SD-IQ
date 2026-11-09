@@ -1,61 +1,121 @@
 {
   "components": [
     {
+      "name": "Mobile Client",
+      "purpose": "Maintains a connection and durable local message IDs/cursors."
+    },
+    {
       "name": "API Gateway",
-      "purpose": "Entry point for all client requests."
+      "purpose": "Authenticates requests and routes chat and media operations."
     },
     {
-      "name": "Load Balancer",
-      "purpose": "Distribute incoming traffic."
-    },
-    {
-      "name": "WebSocket Server",
-      "purpose": "Persistent real-time connections."
-    },
-    {
-      "name": "Redis",
-      "purpose": "Caching and Pub/Sub."
-    },
-    {
-      "name": "Kafka",
-      "purpose": "Reliable asynchronous messaging."
+      "name": "Connection Server",
+      "purpose": "Owns live connections and a short-lived connection directory."
     },
     {
       "name": "Message Service",
-      "purpose": "Stores and processes chat messages."
+      "purpose": "Deduplicates sends, persists messages and schedules delivery."
+    },
+    {
+      "name": "Message Database",
+      "purpose": "Stores conversations, membership, ordered messages and device cursors."
+    },
+    {
+      "name": "Durable Message Queue",
+      "purpose": "Buffers delivery work; messages remain recoverable from durable storage."
+    },
+    {
+      "name": "Presence Cache",
+      "purpose": "Caches expiring connection ownership and presence, not authoritative message history."
     },
     {
       "name": "Notification Service",
-      "purpose": "Push notifications."
+      "purpose": "Sends access-controlled offline push hints."
     },
     {
       "name": "Object Storage",
-      "purpose": "Media storage."
+      "purpose": "Stores encrypted or access-controlled media blobs."
     },
     {
       "name": "CDN",
-      "purpose": "Fast media delivery."
+      "purpose": "Serves authorized media through bounded signed URLs."
     }
   ],
-
   "tradeoffs": [
     {
-      "topic": "WebSocket",
+      "topic": "Message delivery",
       "alternatives": [
-        "Server Sent Events",
-        "Long Polling"
+        "At-least-once delivery with stable IDs",
+        "Best-effort ephemeral delivery for typing indicators"
+      ],
+      "guidance": "Critical messages and ephemeral presence need different guarantees."
+    },
+    {
+      "topic": "Realtime transport",
+      "alternatives": [
+        "WebSocket",
+        "Long polling",
+        "Bidirectional RPC streaming"
+      ],
+      "guidance": "Justify connection cost and mobile network recovery."
+    },
+    {
+      "topic": "Partition key",
+      "alternatives": [
+        "Conversation ownership",
+        "User inbox ownership with a conversation sequencer"
+      ],
+      "guidance": "Explain the ordering and fanout consequences."
+    }
+  ],
+  "dataModel": [
+    {
+      "entity": "Message",
+      "key": "conversation_id + sequence",
+      "fields": [
+        "client_message_id",
+        "sender_id",
+        "payload_reference",
+        "accepted_at"
+      ],
+      "notes": "Deduplicate client IDs within a sender/conversation namespace."
+    },
+    {
+      "entity": "Membership",
+      "key": "conversation_id + user_id",
+      "fields": [
+        "role",
+        "joined_sequence",
+        "left_sequence"
+      ],
+      "notes": "Authorize reads and group fanout against membership."
+    },
+    {
+      "entity": "DeviceCursor",
+      "key": "user_id + device_id + conversation_id",
+      "fields": [
+        "delivered_sequence",
+        "read_sequence"
+      ],
+      "notes": "Monotonic cursors enable replay and gap detection."
+    }
+  ],
+  "flows": [
+    {
+      "name": "Send and replay",
+      "steps": [
+        "Client sends a stable message ID over an authenticated connection",
+        "Message service deduplicates and persists before accepting",
+        "Durable delivery work routes to current connections or offline notification",
+        "Reconnecting devices replay after their stored cursors and acknowledge receipt"
       ]
     },
     {
-      "topic": "Redis",
-      "alternatives": [
-        "Memcached"
-      ]
-    },
-    {
-      "topic": "Kafka",
-      "alternatives": [
-        "RabbitMQ"
+      "name": "Media",
+      "steps": [
+        "Client uploads media to authorized object storage",
+        "A chat message carries a blob reference rather than the bytes",
+        "Recipients request short-lived authorized download links"
       ]
     }
   ]

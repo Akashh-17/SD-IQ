@@ -1,34 +1,63 @@
 {
   "id": "url_shortener",
-
   "title": "Design TinyURL",
-
   "problemDifficulty": "Easy",
-
-  "description": "Design a scalable URL shortening service like TinyURL that converts long URLs into short aliases and redirects users with minimal latency.",
-
+  "description": "Design a URL-shortening service with durable short-code mappings, fast redirects and explicit expiration semantics.",
   "functionalRequirements": [
-    "Shorten long URLs",
-    "Redirect short URLs",
-    "Custom aliases",
-    "URL expiration",
-    "Analytics (click count)",
-    "Duplicate URL handling"
+    "Create short links and redirect them to the original URL",
+    "Reject conflicting custom aliases",
+    "Support link expiration and deletion",
+    "Collect click counts asynchronously as an extension"
   ],
-
   "nonFunctionalRequirements": [
-    "Low latency redirects",
-    "High availability",
-    "Scalability to billions of URLs",
-    "High read throughput",
-    "Fault tolerance",
-    "Durable storage"
+    "Redirect server p95 below 50 ms within one region, excluding client network time",
+    "99.9% redirect availability target",
+    "A successful creation must not silently lose its mapping"
   ],
-
   "constraints": [
-    "Billions of URLs",
-    "High read-to-write ratio",
-    "Unique short codes",
-    "Prevent collisions"
-  ]
+    "1 million new links and 100 million redirects per day; assume a 5x traffic peak",
+    "Average stored mapping is 500 bytes before indexes and replication",
+    "Custom aliases are unique; expired or deleted links must not redirect indefinitely"
+  ],
+  "outOfScope": [
+    "Malware classification internals",
+    "Exact real-company traffic numbers",
+    "Real-time analytics dashboards"
+  ],
+  "scale": {
+    "assumption": "Synthetic interview workload, not a claim about any named company's actual traffic.",
+    "rates": [
+      {
+        "name": "New links",
+        "dailyVolume": 1000000,
+        "averagePerSecond": 11.57,
+        "peakMultiplier": 5,
+        "peakPerSecond": 57.87
+      },
+      {
+        "name": "Redirects",
+        "dailyVolume": 100000000,
+        "averagePerSecond": 1157.41,
+        "peakMultiplier": 5,
+        "peakPerSecond": 5787.04
+      }
+    ],
+    "storageEstimates": [
+      {
+        "name": "One year of mapping records before deletion",
+        "recordsPerDay": 1000000,
+        "bytesPerRecord": 500,
+        "days": 365,
+        "replicationFactor": 3,
+        "rawBytes": 182500000000,
+        "replicatedBytes": 547500000000
+      }
+    ],
+    "stateEstimates": [],
+    "notes": [
+      "A 7-character Base62 namespace has 62^7 possible codes; random allocation still needs collision detection.",
+      "The byte estimate excludes indexes, object overhead and analytics retention.",
+      "CDN and analytics are optional; aliases and expiry are authoritative in the mapping store."
+    ]
+  }
 }

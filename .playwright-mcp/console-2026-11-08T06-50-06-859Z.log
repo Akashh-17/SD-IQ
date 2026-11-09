@@ -1,0 +1,53 @@
+[     678ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://127.0.0.1:5331/node_modules/.vite/deps/react-dom_client.js?v=88c1f93b:14335
+[  147002ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:5000/api/problems:0
+[  147002ms] [ERROR] TypeError: Failed to fetch
+    at getProblems (http://127.0.0.1:5331/src/services/problem.service.ts:3:20)
+    at load (http://127.0.0.1:5331/src/components/dashboard/PopularProblems.tsx:34:25)
+    at t1 (http://127.0.0.1:5331/src/components/dashboard/PopularProblems.tsx:41:4)
+    at Object.react_stack_bottom_frame (http://127.0.0.1:5331/node_modules/.vite/deps/react-dom_client.js?v=88c1f93b:12902:13)
+    at runWithFiberInDEV (http://127.0.0.1:5331/node_modules/.vite/deps/react-dom_client.js?v=88c1f93b:851:66)
+    at commitHookEffectListMount (http://127.0.0.1:5331/node_modules/.vite/deps/react-dom_client.js?v=88c1f93b:6617:153)
+    at commitHookPassiveMountEffects (http://127.0.0.1:5331/node_modules/.vite/deps/react-dom_client.js?v=88c1f93b:6652:55)
+    at commitPassiveMountOnFiber (http://127.0.0.1:5331/node_modules/.vite/deps/react-dom_client.js?v=88c1f93b:7618:22)
+    at recursivelyTraversePassiveMountEffects (http://127.0.0.1:5331/node_modules/.vite/deps/react-dom_client.js?v=88c1f93b:7606:5)
+    at commitPassiveMountOnFiber (http://127.0.0.1:5331/node_modules/.vite/deps/react-dom_client.js?v=88c1f93b:7672:14) @ http://127.0.0.1:5331/@vite/client:524
+[  147002ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:5000/api/history:0
+[  147003ms] [ERROR] TypeError: Failed to fetch
+    at getHistory (http://127.0.0.1:5331/src/services/history.service.ts:5:20)
+    at async loadHistory (http://127.0.0.1:5331/src/pages/Dashboard.tsx?t=1794120522976:36:19) @ http://127.0.0.1:5331/@vite/client:524
+[  151351ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:5000/api/problems:0
+[  151351ms] [ERROR] TypeError: Failed to fetch
+    at getProblems (http://127.0.0.1:5331/src/services/problem.service.ts:3:20)
+    at loadProblems (http://127.0.0.1:5331/src/pages/ProblemPage.tsx?t=1794120522976:24:24)
+    at http://127.0.0.1:5331/src/pages/ProblemPage.tsx?t=1794120522976:30:3
+    at Object.react_stack_bottom_frame (http://127.0.0.1:5331/node_modules/.vite/deps/react-dom_client.js?v=88c1f93b:12902:13)
+    at runWithFiberInDEV (http://127.0.0.1:5331/node_modules/.vite/deps/react-dom_client.js?v=88c1f93b:851:66)
+    at commitHookEffectListMount (http://127.0.0.1:5331/node_modules/.vite/deps/react-dom_client.js?v=88c1f93b:6617:153)
+    at commitHookPassiveMountEffects (http://127.0.0.1:5331/node_modules/.vite/deps/react-dom_client.js?v=88c1f93b:6652:55)
+    at commitPassiveMountOnFiber (http://127.0.0.1:5331/node_modules/.vite/deps/react-dom_client.js?v=88c1f93b:7618:22)
+    at recursivelyTraversePassiveMountEffects (http://127.0.0.1:5331/node_modules/.vite/deps/react-dom_client.js?v=88c1f93b:7606:5)
+    at commitPassiveMountOnFiber (http://127.0.0.1:5331/node_modules/.vite/deps/react-dom_client.js?v=88c1f93b:7617:6) @ http://127.0.0.1:5331/@vite/client:524
+[  153717ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:5000/api/history:0
+[  153717ms] [ERROR] TypeError: Failed to fetch
+    at getHistory (http://127.0.0.1:5331/src/services/history.service.ts:5:20)
+    at async loadHistory (http://127.0.0.1:5331/src/pages/HistoryPage.tsx?t=1794120522976:36:19) @ http://127.0.0.1:5331/@vite/client:524
+[  157864ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:5000/api/history:0
+[  157864ms] [ERROR] TypeError: Failed to fetch
+    at getHistory (http://127.0.0.1:5331/src/services/history.service.ts:5:20)
+    at async loadHistory (http://127.0.0.1:5331/src/pages/Dashboard.tsx?t=1794120522976:36:19) @ http://127.0.0.1:5331/@vite/client:524
+[  157865ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:5000/api/problems:0
+[  157865ms] [ERROR] TypeError: Failed to fetch
+    at getProblems (http://127.0.0.1:5331/src/services/problem.service.ts:3:20)
+    at load (http://127.0.0.1:5331/src/components/dashboard/PopularProblems.tsx:34:25)
+    at t1 (http://127.0.0.1:5331/src/components/dashboard/PopularProblems.tsx:41:4)
+    at Object.react_stack_bottom_frame (http://127.0.0.1:5331/node_modules/.vite/deps/react-dom_client.js?v=88c1f93b:12902:13)
+    at runWithFiberInDEV (http://127.0.0.1:5331/node_modules/.vite/deps/react-dom_client.js?v=88c1f93b:851:66)
+    at commitHookEffectListMount (http://127.0.0.1:5331/node_modules/.vite/deps/react-dom_client.js?v=88c1f93b:6617:153)
+    at commitHookPassiveMountEffects (http://127.0.0.1:5331/node_modules/.vite/deps/react-dom_client.js?v=88c1f93b:6652:55)
+    at commitPassiveMountOnFiber (http://127.0.0.1:5331/node_modules/.vite/deps/react-dom_client.js?v=88c1f93b:7618:22)
+    at recursivelyTraversePassiveMountEffects (http://127.0.0.1:5331/node_modules/.vite/deps/react-dom_client.js?v=88c1f93b:7606:5)
+    at commitPassiveMountOnFiber (http://127.0.0.1:5331/node_modules/.vite/deps/react-dom_client.js?v=88c1f93b:7672:14) @ http://127.0.0.1:5331/@vite/client:524
+[  198933ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://127.0.0.1:5331/node_modules/.vite/deps/react-dom_client.js?v=88c1f93b:14335
+[  200278ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://127.0.0.1:5331/node_modules/.vite/deps/react-dom_client.js?v=88c1f93b:14335
+[  201597ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://127.0.0.1:5331/node_modules/.vite/deps/react-dom_client.js?v=88c1f93b:14335
+[  202525ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://127.0.0.1:5331/node_modules/.vite/deps/react-dom_client.js?v=88c1f93b:14335

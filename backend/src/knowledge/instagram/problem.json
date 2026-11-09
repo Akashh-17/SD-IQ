@@ -1,37 +1,73 @@
 {
   "id": "instagram",
-
   "title": "Design Instagram",
-
   "problemDifficulty": "Medium",
-
-  "description": "Design a scalable photo and video sharing platform like Instagram supporting media uploads, news feed generation, likes, comments and following users.",
-
+  "description": "Design a photo-sharing service with a bounded video extension, durable media publication and a follower-based home feed.",
   "functionalRequirements": [
-    "User registration and login",
-    "Upload photos and videos",
-    "View personalized news feed",
-    "Like posts",
-    "Comment on posts",
-    "Follow and unfollow users",
-    "Search users",
-    "Push notifications"
+    "Publish photos and view a follower-based home feed",
+    "Follow or unfollow accounts and page through posts",
+    "Like and comment on posts",
+    "Enforce private-account visibility and post deletion"
   ],
-
   "nonFunctionalRequirements": [
-    "500 Million Daily Active Users",
-    "Low feed latency",
-    "High availability",
-    "Horizontal scalability",
-    "Fault tolerance",
-    "Durable media storage"
+    "Feed metadata server p95 below 300 ms within a region",
+    "99.9% feed API availability target",
+    "No successful publication before media is durable and no unauthorized private-content access"
   ],
-
   "constraints": [
-    "Large media files",
-    "High read-to-write ratio",
-    "Global users",
-    "Millions of concurrent uploads",
-    "Feed freshness"
-  ]
+    "10 million DAU, 1 million photo posts/day and 100 million feed page reads/day; plan for 5x peaks",
+    "A feed page contains 20 post references; average source photo is 2 MiB",
+    "Videos, thumbnails and replicas require additional byte and compute budgets"
+  ],
+  "outOfScope": [
+    "Training a recommendation model",
+    "Live video and stories",
+    "Exact company-scale facts; use the stated practice workload"
+  ],
+  "scale": {
+    "assumption": "Synthetic interview workload, not a claim about any named company's actual traffic.",
+    "rates": [
+      {
+        "name": "Photo posts",
+        "dailyVolume": 1000000,
+        "averagePerSecond": 11.57,
+        "peakMultiplier": 5,
+        "peakPerSecond": 57.87
+      },
+      {
+        "name": "Feed page reads",
+        "dailyVolume": 100000000,
+        "averagePerSecond": 1157.41,
+        "peakMultiplier": 5,
+        "peakPerSecond": 5787.04
+      }
+    ],
+    "storageEstimates": [
+      {
+        "name": "30-day source-photo cohort, excluding derivatives and videos",
+        "recordsPerDay": 1000000,
+        "bytesPerRecord": 2097152,
+        "days": 30,
+        "replicationFactor": 3,
+        "rawBytes": 62914560000000,
+        "replicatedBytes": 188743680000000
+      }
+    ],
+    "stateEstimates": [
+      {
+        "name": "500 cached references per daily active recipient",
+        "entities": 5000000000,
+        "bytesPerEntity": 16,
+        "replicationFactor": 3,
+        "rawBytes": 80000000000,
+        "replicatedBytes": 240000000000
+      }
+    ],
+    "notes": [
+      "One page read returns 20 references; serving all embedded post metadata requires a separate access/caching budget.",
+      "Feed reference bytes exclude data-structure overhead, post metadata and cache replication beyond the explicit factor.",
+      "Photo sizing does not pretend video processing or all historical media is included."
+    ],
+    "dailyActiveUsers": 10000000
+  }
 }

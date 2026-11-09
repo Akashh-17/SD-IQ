@@ -1,204 +1,357 @@
 {
+  "guidance": [
+    "Evaluate the latest answer against the current question and objective, not future stages.",
+    "Required criteria are semantic outcomes. Concepts are examples and alternatives, not an AND checklist or mandatory products.",
+    "Accept a justified algorithm, database or vendor; probe claims actually made rather than demanding every alternative.",
+    "Do not penalize optional features, omitted diagram boxes, company-specific facts or small rounding differences.",
+    "Use the fictional workload consistently; accept an explicitly justified alternative workload and its arithmetic.",
+    "Weights and minimumCoverage are advisory; runtime progression uses required criteria and report scores are computed in code."
+  ],
+  "scoreAnchors": [
+    {
+      "min": 0,
+      "max": 2,
+      "description": "Does not address the current question or makes a fundamental correctness error."
+    },
+    {
+      "min": 3,
+      "max": 4,
+      "description": "Names plausible components but cannot explain their mechanism or limitations."
+    },
+    {
+      "min": 5,
+      "max": 6,
+      "description": "Explains a workable baseline with some gaps in the current objective."
+    },
+    {
+      "min": 7,
+      "max": 8,
+      "description": "Explains a coherent mechanism, failure cases and justified tradeoffs."
+    },
+    {
+      "min": 9,
+      "max": 10,
+      "description": "Quantifies and defends a robust design, recognizing limits and alternatives."
+    }
+  ],
   "topics": [
     {
-      "name": "Requirement Gathering",
-      "weight": 10,
+      "name": "Requirements",
+      "weight": 12,
       "minimumCoverage": 0.75,
+      "guidance": "Agree on product behavior, measurable quality targets and the stated exercise workload. Evaluate only the current question and stage; a justified alternative earns equal credit.",
       "concepts": [
         {
-          "name": "DAU",
+          "name": "Functional scope",
           "importance": "critical",
-          "probe": false
+          "probe": true,
+          "guidance": "Clarify online/offline delivery, group bounds, media references and acknowledgement meanings; typing indicators are optional."
         },
         {
-          "name": "Functional Requirements",
-          "importance": "critical",
-          "probe": false
-        },
-        {
-          "name": "Non Functional Requirements",
-          "importance": "critical",
-          "probe": false
-        },
-        {
-          "name": "Media",
+          "name": "Core operations and users",
           "importance": "important",
-          "probe": false
+          "probe": true,
+          "guidance": "Supporting example for Functional scope. Reward equivalent mechanisms; do not require every listed alternative."
         },
         {
-          "name": "Groups",
+          "name": "Quality targets",
+          "importance": "critical",
+          "probe": true,
+          "guidance": "Separate accepted, delivered and read states; order within a conversation rather than globally."
+        },
+        {
+          "name": "Latency and availability targets",
           "importance": "important",
-          "probe": false
+          "probe": true,
+          "guidance": "Supporting example for Quality targets. Reward equivalent mechanisms; do not require every listed alternative."
         },
         {
-          "name": "Encryption",
-          "importance": "optional",
-          "probe": false
+          "name": "Capacity estimates",
+          "importance": "critical",
+          "probe": true,
+          "guidance": "Use the fictional baseline or state a justified alternative; derive average and peak rates and distinguish payload bytes from replication and indexes."
+        },
+        {
+          "name": "Daily volume divided by 86400",
+          "importance": "important",
+          "probe": true,
+          "guidance": "Supporting example for Capacity estimates. Reward equivalent mechanisms; do not require every listed alternative."
         }
       ]
     },
-
     {
       "name": "High Level Design",
-      "weight": 10,
-      "minimumCoverage": 0.8,
-      "concepts": [
-        {
-          "name": "Load Balancer",
-          "importance": "critical",
-          "probe": false
-        },
-        {
-          "name": "WebSocket",
-          "importance": "critical",
-          "probe": true
-        },
-        {
-          "name": "Message Service",
-          "importance": "critical",
-          "probe": true
-        },
-        {
-          "name": "Database",
-          "importance": "critical",
-          "probe": false
-        },
-        {
-          "name": "Redis",
-          "importance": "important",
-          "probe": true
-        },
-        {
-          "name": "Kafka",
-          "importance": "important",
-          "probe": true
-        },
-        {
-          "name": "Notification Service",
-          "importance": "optional",
-          "probe": false
-        },
-        {
-          "name": "API Gateway",
-          "importance": "optional",
-          "probe": false
-        }
-      ]
-    },
-
-    {
-      "name": "Realtime Communication",
-      "weight": 10,
+      "weight": 16,
       "minimumCoverage": 0.75,
+      "guidance": "Separate connection routing, durable messaging and asynchronous notifications. Evaluate only the current question and stage; a justified alternative earns equal credit.",
       "concepts": [
         {
-          "name": "Heartbeat",
+          "name": "Connection routing",
+          "importance": "critical",
+          "probe": true,
+          "guidance": "Route authenticated persistent connections to a connection server; WebSocket or an equivalent transport is acceptable."
+        },
+        {
+          "name": "Persistent connections",
           "importance": "important",
-          "probe": true
+          "probe": true,
+          "guidance": "Supporting example for Connection routing. Reward equivalent mechanisms; do not require every listed alternative."
         },
         {
-          "name": "Reconnect",
+          "name": "Durable messaging",
+          "importance": "critical",
+          "probe": true,
+          "guidance": "Assign message persistence and recipient delivery to a messaging service and durable store."
+        },
+        {
+          "name": "Message service",
           "importance": "important",
-          "probe": true
+          "probe": true,
+          "guidance": "Supporting example for Durable messaging. Reward equivalent mechanisms; do not require every listed alternative."
         },
         {
-          "name": "PubSub",
+          "name": "Offline and media paths",
           "importance": "critical",
-          "probe": true
+          "probe": true,
+          "guidance": "Describe offline backlog access and media stored outside the message database."
         },
         {
-          "name": "Ordering",
-          "importance": "critical",
-          "probe": true
-        },
-        {
-          "name": "Offline Messaging",
-          "importance": "critical",
-          "probe": false
+          "name": "Offline backlog",
+          "importance": "important",
+          "probe": true,
+          "guidance": "Supporting example for Offline and media paths. Reward equivalent mechanisms; do not require every listed alternative."
         }
       ]
     },
-
     {
-      "name": "Database",
-      "weight": 10,
-      "minimumCoverage": 0.8,
+      "name": "Core Flow",
+      "weight": 22,
+      "minimumCoverage": 0.75,
+      "guidance": "Provide practical at-least-once delivery with deduplication and bounded ordering. Evaluate only the current question and stage; a justified alternative earns equal credit.",
       "concepts": [
         {
-          "name": "Schema",
+          "name": "Acknowledgement boundary",
           "importance": "critical",
-          "probe": true
+          "probe": true,
+          "guidance": "Distinguish server acceptance from recipient delivery and read receipts; persist before acceptance ACK."
         },
         {
-          "name": "Indexes",
+          "name": "Durable acceptance ACK",
           "importance": "important",
-          "probe": true
+          "probe": true,
+          "guidance": "Supporting example for Acknowledgement boundary. Reward equivalent mechanisms; do not require every listed alternative."
         },
         {
-          "name": "Pagination",
-          "importance": "important",
-          "probe": true
+          "name": "Retry deduplication",
+          "importance": "critical",
+          "probe": true,
+          "guidance": "Use a stable client message ID so reconnect retries do not create duplicate visible messages."
         },
+        {
+          "name": "Client-generated message ID",
+          "importance": "important",
+          "probe": true,
+          "guidance": "Supporting example for Retry deduplication. Reward equivalent mechanisms; do not require every listed alternative."
+        },
+        {
+          "name": "Conversation ordering",
+          "importance": "critical",
+          "probe": true,
+          "guidance": "Choose per-conversation sequence allocation or a justified alternative; handle gaps and duplicate arrivals."
+        },
+        {
+          "name": "Per-conversation sequence",
+          "importance": "important",
+          "probe": true,
+          "guidance": "Supporting example for Conversation ordering. Reward equivalent mechanisms; do not require every listed alternative."
+        },
+        {
+          "name": "Group fanout",
+          "importance": "critical",
+          "probe": true,
+          "guidance": "Explain bounded group membership lookup and per-recipient delivery without promising a global order across chats."
+        },
+        {
+          "name": "Group membership version",
+          "importance": "important",
+          "probe": true,
+          "guidance": "Supporting example for Group fanout. Reward equivalent mechanisms; do not require every listed alternative."
+        }
+      ]
+    },
+    {
+      "name": "Data Model",
+      "weight": 14,
+      "minimumCoverage": 0.75,
+      "guidance": "Model conversations, membership and messages with cursor-based reads. Evaluate only the current question and stage; a justified alternative earns equal credit.",
+      "concepts": [
+        {
+          "name": "Message schema",
+          "importance": "critical",
+          "probe": true,
+          "guidance": "Key messages by conversation and sequence or equivalent sortable cursor; store sender, stable message ID and payload reference."
+        },
+        {
+          "name": "conversation_id and sequence",
+          "importance": "important",
+          "probe": true,
+          "guidance": "Supporting example for Message schema. Reward equivalent mechanisms; do not require every listed alternative."
+        },
+        {
+          "name": "Membership and cursors",
+          "importance": "critical",
+          "probe": true,
+          "guidance": "Represent group membership and per-device delivered/read cursors while enforcing access."
+        },
+        {
+          "name": "Conversation membership",
+          "importance": "important",
+          "probe": true,
+          "guidance": "Supporting example for Membership and cursors. Reward equivalent mechanisms; do not require every listed alternative."
+        },
+        {
+          "name": "Retention and pagination",
+          "importance": "critical",
+          "probe": true,
+          "guidance": "Use cursor pagination and an explicit retention policy; do not retain media inline in text rows."
+        },
+        {
+          "name": "Cursor pagination",
+          "importance": "important",
+          "probe": true,
+          "guidance": "Supporting example for Retention and pagination. Reward equivalent mechanisms; do not require every listed alternative."
+        }
+      ]
+    },
+    {
+      "name": "Reliability",
+      "weight": 16,
+      "minimumCoverage": 0.75,
+      "guidance": "Recover delivery from durable state rather than transient Pub/Sub. Evaluate only the current question and stage; a justified alternative earns equal credit.",
+      "concepts": [
+        {
+          "name": "Durable replay",
+          "importance": "critical",
+          "probe": true,
+          "guidance": "A transient Redis Pub/Sub channel alone is not an offline message store; replay from durable messages or a durable log."
+        },
+        {
+          "name": "Durable replay log",
+          "importance": "important",
+          "probe": true,
+          "guidance": "Supporting example for Durable replay. Reward equivalent mechanisms; do not require every listed alternative."
+        },
+        {
+          "name": "Reconnect recovery",
+          "importance": "critical",
+          "probe": true,
+          "guidance": "Handle reconnect storms, exponential backoff and stale connection ownership."
+        },
+        {
+          "name": "Backoff with jitter",
+          "importance": "important",
+          "probe": true,
+          "guidance": "Supporting example for Reconnect recovery. Reward equivalent mechanisms; do not require every listed alternative."
+        },
+        {
+          "name": "Safe notifications",
+          "importance": "critical",
+          "probe": true,
+          "guidance": "Push notifications are hints, not proof of delivery; respect membership changes and avoid leaking private media."
+        },
+        {
+          "name": "Push as a delivery hint",
+          "importance": "important",
+          "probe": true,
+          "guidance": "Supporting example for Safe notifications. Reward equivalent mechanisms; do not require every listed alternative."
+        }
+      ]
+    },
+    {
+      "name": "Scaling",
+      "weight": 12,
+      "minimumCoverage": 0.75,
+      "guidance": "Scale connections, writes and fanout independently. Evaluate only the current question and stage; a justified alternative earns equal credit.",
+      "concepts": [
         {
           "name": "Partitioning",
           "importance": "critical",
-          "probe": true
+          "probe": true,
+          "guidance": "Choose conversation-based ownership for message order; distribute unrelated conversations independently."
         },
         {
-          "name": "Replication",
+          "name": "Conversation partition",
           "importance": "important",
-          "probe": true
-        }
-      ]
-    },
-
-    {
-      "name": "Scaling",
-      "weight": 10,
-      "minimumCoverage": 0.8,
-      "concepts": [
+          "probe": true,
+          "guidance": "Supporting example for Partitioning. Reward equivalent mechanisms; do not require every listed alternative."
+        },
         {
-          "name": "Sharding",
+          "name": "Traffic and storage",
           "importance": "critical",
-          "probe": true
+          "probe": true,
+          "guidance": "Derive 4629.63 sent messages/s average, 23148.15 peak and 3.6 TB raw text retention for 30 days."
         },
         {
-          "name": "Caching",
+          "name": "Sent versus delivered volume",
           "importance": "important",
-          "probe": false
+          "probe": true,
+          "guidance": "Supporting example for Traffic and storage. Reward equivalent mechanisms; do not require every listed alternative."
         },
         {
-          "name": "Kafka",
-          "importance": "important",
-          "probe": false
+          "name": "Backpressure",
+          "importance": "critical",
+          "probe": true,
+          "guidance": "Bound queues and isolate busy groups or users; avoid a single global broker partition."
         },
         {
-          "name": "Replication",
+          "name": "Hot conversation handling",
           "importance": "important",
-          "probe": false
+          "probe": true,
+          "guidance": "Supporting example for Backpressure. Reward equivalent mechanisms; do not require every listed alternative."
         }
       ]
     },
-
     {
       "name": "Tradeoffs",
       "weight": 8,
-      "minimumCoverage": 0.6,
+      "minimumCoverage": 0.75,
+      "guidance": "Explain transport, delivery and storage tradeoffs without requiring a specific broker. Evaluate only the current question and stage; a justified alternative earns equal credit.",
       "concepts": [
         {
-          "name": "CAP",
+          "name": "Delivery tradeoff",
+          "importance": "critical",
+          "probe": true,
+          "guidance": "Compare at-least-once plus dedupe with the cost and limits of end-to-end exactly-once claims."
+        },
+        {
+          "name": "At-least-once delivery",
           "importance": "important",
-          "probe": true
+          "probe": true,
+          "guidance": "Supporting example for Delivery tradeoff. Reward equivalent mechanisms; do not require every listed alternative."
         },
         {
-          "name": "Consistency",
+          "name": "Consistency tradeoff",
           "importance": "critical",
-          "probe": true
+          "probe": true,
+          "guidance": "Explain ordering and membership correctness during partitions, not only a memorized CAP slogan."
         },
         {
-          "name": "Availability",
+          "name": "Per-chat order",
+          "importance": "important",
+          "probe": true,
+          "guidance": "Supporting example for Consistency tradeoff. Reward equivalent mechanisms; do not require every listed alternative."
+        },
+        {
+          "name": "Transport tradeoff",
           "importance": "critical",
-          "probe": true
+          "probe": true,
+          "guidance": "Compare persistent connections with polling or streaming alternatives and their mobile-resource costs."
+        },
+        {
+          "name": "WebSocket or equivalent",
+          "importance": "important",
+          "probe": true,
+          "guidance": "Supporting example for Transport tradeoff. Reward equivalent mechanisms; do not require every listed alternative."
         }
       ]
     }

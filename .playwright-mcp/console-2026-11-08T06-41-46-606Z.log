@@ -1,0 +1,2 @@
+[    7197ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://127.0.0.1:5331/node_modules/.vite/deps/react-dom_client.js?v=88c1f93b:14335
+[  195691ms] [WARNING] You have Reduced Motion enabled on your device. Animations may not appear as expected.. For more information and steps for solving, visit https://motion.dev/troubleshooting/reduced-motion-disabled @ http://127.0.0.1:5331/@vite/client:524

@@ -1,15 +1,130 @@
 {
   "nodeMapping": {
+    "client": "Desktop or Mobile Client",
     "api": "API Gateway",
-    "lb": "Load Balancer",
-    "auth_service": "Authentication Service",
-    "metadata_service": "Metadata Service",
-    "upload_service": "Upload Service",
-    "object_storage": "Object Storage",
+    "auth": "Authorization Service",
+    "metadata": "Metadata Service",
     "db": "Metadata Database",
-    "cache": "Redis",
-    "queue": "Message Queue",
-    "notification_service": "Notification Service",
+    "upload": "Upload Service",
+    "objects": "Object Storage",
+    "queue": "Change Queue",
+    "notify": "Sync Notification Service",
+    "cache": "Metadata Cache",
     "cdn": "CDN"
-  }
+  },
+  "recommendedNodes": [
+    "Desktop or Mobile Client",
+    "API Gateway",
+    "Authorization Service",
+    "Metadata Service",
+    "Metadata Database",
+    "Upload Service",
+    "Object Storage"
+  ],
+  "optionalNodes": [
+    "Change Queue",
+    "Sync Notification Service",
+    "Metadata Cache",
+    "CDN"
+  ],
+  "recommendedConnections": [
+    {
+      "from": "Desktop or Mobile Client",
+      "to": "API Gateway"
+    },
+    {
+      "from": "API Gateway",
+      "to": "Authorization Service"
+    },
+    {
+      "from": "API Gateway",
+      "to": "Metadata Service"
+    },
+    {
+      "from": "Metadata Service",
+      "to": "Metadata Database"
+    },
+    {
+      "from": "API Gateway",
+      "to": "Upload Service"
+    },
+    {
+      "from": "Desktop or Mobile Client",
+      "to": "Object Storage"
+    },
+    {
+      "from": "Upload Service",
+      "to": "Object Storage"
+    },
+    {
+      "from": "Upload Service",
+      "to": "Metadata Service"
+    },
+    {
+      "from": "Metadata Service",
+      "to": "Change Queue"
+    },
+    {
+      "from": "Change Queue",
+      "to": "Sync Notification Service"
+    },
+    {
+      "from": "Metadata Service",
+      "to": "Metadata Cache"
+    },
+    {
+      "from": "Desktop or Mobile Client",
+      "to": "CDN"
+    },
+    {
+      "from": "CDN",
+      "to": "Object Storage"
+    }
+  ],
+  "graphChecks": [
+    {
+      "name": "Desktop or Mobile Client role represented",
+      "required": true
+    },
+    {
+      "name": "API Gateway role represented",
+      "required": true
+    },
+    {
+      "name": "Authorization Service role represented",
+      "required": true
+    },
+    {
+      "name": "Metadata Service role represented",
+      "required": true
+    },
+    {
+      "name": "Metadata Database role represented",
+      "required": true
+    },
+    {
+      "name": "Upload Service role represented",
+      "required": true
+    },
+    {
+      "name": "Object Storage role represented",
+      "required": true
+    },
+    {
+      "name": "Change Queue role represented",
+      "required": false
+    },
+    {
+      "name": "Sync Notification Service role represented",
+      "required": false
+    },
+    {
+      "name": "Metadata Cache role represented",
+      "required": false
+    },
+    {
+      "name": "CDN role represented",
+      "required": false
+    }
+  ]
 }

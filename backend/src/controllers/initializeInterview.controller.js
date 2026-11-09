@@ -1,3 +1,4 @@
+import { logError } from "../utils/logger.js";
 import { InterviewService } from "../services/interview/interview.service.js";
 
 export async function initializeInterview(req, res) {
@@ -6,7 +7,7 @@ export async function initializeInterview(req, res) {
 
         const { interviewId } = req.body;
 
-        const result = await InterviewService.initialize(interviewId);
+        const result = await InterviewService.initialize(interviewId, { interviewId });
 
         const reply = result.messages?.at(-1)?.content;
 
@@ -20,7 +21,7 @@ export async function initializeInterview(req, res) {
 
     catch (err) {
 
-        console.error(err);
+        logError(err);
 
         res.status(500).json({
 

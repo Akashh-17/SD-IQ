@@ -6,7 +6,8 @@ const API = `${API_URL}/api`;
 
 export async function endInterview(
 
-    interviewId: string
+    interviewId: string,
+    signal?: AbortSignal
 
 ) {
 
@@ -28,6 +29,7 @@ export async function endInterview(
 
         {
 
+            signal,
             headers: {
 
                 Authorization:
@@ -40,6 +42,21 @@ export async function endInterview(
 
     );
 
-    return res.data;
+    return res.data as { status: "generating" | "ready" };
 
+}
+export type ReportStatus = {
+    status: "generating" | "ready" | "failed";
+    error?: string;
+};
+
+export async function getReportStatus(interviewId: string, signal?: AbortSignal): Promise<ReportStatus> {
+    const { data: { session } } = await supabase.auth.getSession();
+    const response = await axios.get(`${API}/report/${interviewId}/status`, {
+        signal,
+        headers: { Authorization: `Bearer ${session?.access_token}` }
+    });
+    const data = response.data as ReportStatus;
+    if (!["generating", "ready", "failed"].includes(data.status)) throw new Error("Invalid report status");
+    return data;
 }

@@ -1,86 +1,111 @@
 {
   "components": [
     {
+      "name": "Web Client",
+      "purpose": "Creates links and follows redirects."
+    },
+    {
       "name": "Load Balancer",
-      "purpose": "Distributes incoming requests across API servers."
+      "purpose": "Routes requests to stateless API replicas."
     },
     {
       "name": "API Server",
-      "purpose": "Handles URL shortening and redirect requests."
+      "purpose": "Validates inputs and handles link creation and redirects."
     },
     {
       "name": "URL Service",
-      "purpose": "Generates short URLs and manages URL mappings."
+      "purpose": "Owns mapping writes, expiry checks and lookups; may be colocated with the API."
     },
     {
       "name": "ID Generator",
-      "purpose": "Generates globally unique IDs for new URLs."
+      "purpose": "Optional unique-ID allocation for an encoded-ID strategy; random generation is also valid."
     },
     {
-      "name": "Base62 Encoder",
-      "purpose": "Encodes unique IDs into compact Base62 short codes."
-    },
-    {
-      "name": "Redis",
-      "purpose": "Caches frequently accessed short URL mappings."
+      "name": "Cache",
+      "purpose": "Caches popular mappings with TTLs bounded by expiry."
     },
     {
       "name": "Database",
-      "purpose": "Stores short URL mappings and metadata."
-    },
-    {
-      "name": "Analytics Service",
-      "purpose": "Processes click events and usage statistics asynchronously."
+      "purpose": "Durable mappings with unique aliases and conditional writes."
     },
     {
       "name": "Message Queue",
-      "purpose": "Buffers analytics events without impacting redirect latency."
+      "purpose": "Optional asynchronous click-event buffer."
+    },
+    {
+      "name": "Analytics Service",
+      "purpose": "Aggregates click events without blocking redirects."
     },
     {
       "name": "CDN",
-      "purpose": "Caches redirect responses closer to users."
+      "purpose": "Optional cache of immutable redirect responses with an explicit invalidation policy."
     }
   ],
-
   "tradeoffs": [
     {
-      "topic": "ID Generation",
+      "topic": "Code allocation",
       "alternatives": [
-        "Auto Increment",
-        "Snowflake ID",
-        "UUID"
+        "Random Base62 strings with collision retry",
+        "Unique integer allocation followed by Base62 encoding"
+      ],
+      "guidance": "Encoding alone does not create uniqueness or secrecy."
+    },
+    {
+      "topic": "Redirect caching",
+      "alternatives": [
+        "302 with bounded TTL",
+        "301 for immutable mappings"
+      ],
+      "guidance": "Deletion and edit semantics determine whether long caching is safe."
+    },
+    {
+      "topic": "Mapping store",
+      "alternatives": [
+        "SQL with a unique index",
+        "Partitioned key-value store with conditional writes"
+      ],
+      "guidance": "Both can be correct; defend durability and lookup behavior."
+    }
+  ],
+  "dataModel": [
+    {
+      "entity": "Link",
+      "key": "short_code",
+      "fields": [
+        "target_url",
+        "owner_id",
+        "created_at",
+        "expires_at",
+        "deleted_at"
+      ],
+      "notes": "Enforce uniqueness atomically; check expiry on lookup."
+    },
+    {
+      "entity": "CreateRequest",
+      "key": "owner_id + idempotency_key",
+      "fields": [
+        "short_code",
+        "request_hash",
+        "expires_at"
+      ],
+      "notes": "Return the original result for a retried create request."
+    }
+  ],
+  "flows": [
+    {
+      "name": "Create and redirect",
+      "steps": [
+        "Client sends create request with an optional idempotency key",
+        "URL service allocates a code and conditionally stores the mapping",
+        "A redirect checks cache, then durable storage on miss, respecting expiry",
+        "API returns the selected redirect status without waiting for click aggregation"
       ]
     },
     {
-      "topic": "Short Code",
-      "alternatives": [
-        "Base62",
-        "Hashing",
-        "Random String"
-      ]
-    },
-    {
-      "topic": "Database",
-      "alternatives": [
-        "MySQL",
-        "PostgreSQL",
-        "Cassandra",
-        "DynamoDB"
-      ]
-    },
-    {
-      "topic": "Caching",
-      "alternatives": [
-        "Redis",
-        "Memcached"
-      ]
-    },
-    {
-      "topic": "Queue",
-      "alternatives": [
-        "Kafka",
-        "RabbitMQ",
-        "Amazon SQS"
+      "name": "Analytics extension",
+      "steps": [
+        "API enqueues a click event on a bounded best-effort path",
+        "Analytics workers deduplicate events and aggregate counts"
       ]
     }
   ]

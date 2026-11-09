@@ -1,79 +1,19 @@
-import { useEffect, useState } from "react";
-import PopularProblems from "../components/dashboard/PopularProblems";
 import DashboardLayout from "../components/layout/DashboardLayout";
-import { getHistory } from "../services/history.service";
 import DashboardHeader from "../components/dashboard/DashboardHeader";
 import DashboardStats from "../components/dashboard/DashboardStats";
+import InterviewHero from "../components/dashboard/InterviewHero";
 import RecentInterviewList from "../components/dashboard/RecentInterviewList";
+import PopularProblems from "../components/dashboard/PopularProblems";
+import { HistoryError, HistoryLoading } from "../components/history/HistoryFeedback";
+import { useHistory } from "../components/history/useHistory";
+import { Reveal } from "../motion";
 
 export default function Dashboard() {
-
-    const [history, setHistory] = useState<any[]>([]);
-
-    useEffect(() => {
-
-        loadHistory();
-
-    }, []);
-
-    async function loadHistory() {
-
-        try {
-
-            const data = await getHistory();
-
-            setHistory(data);
-
-        }
-
-        catch (err) {
-
-            console.error(err);
-
-        }
-
-    }
-
-    return (
-
-        <DashboardLayout>
-
-            <div className="space-y-6">
-
-                {/* HEADER */}
-
-                <DashboardHeader />
-
-                {/* STATS */}
-
-                <DashboardStats history={history} />
-
-                {/* CONTENT */}
-
-                <div className="grid grid-cols-12 gap-6">
-
-                    {/* Left - 65% */}
-
-                    <div className="col-span-8">
-
-                        <RecentInterviewList history={history} />
-
-                    </div>
-
-                    {/* Right - 35% */}
-
-                    <div className="col-span-4">
-
-                        <PopularProblems />
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </DashboardLayout>
-
-    );
-
+    const { items, phase, retry } = useHistory();
+    return <DashboardLayout><div className="space-y-8"><DashboardHeader />
+        {phase === "loading" ? <HistoryLoading /> : phase === "error" ? <HistoryError retry={retry} /> : <>
+            <Reveal><InterviewHero history={items} /></Reveal><DashboardStats history={items} />
+            <div className="grid items-start gap-6 xl:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)]"><RecentInterviewList history={items} /><PopularProblems history={items} /></div>
+        </>}
+    </div></DashboardLayout>;
 }

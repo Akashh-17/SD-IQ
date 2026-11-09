@@ -38,7 +38,7 @@ SystemIQ is a full-stack web app that simulates a system design interview. You p
 |---|---|
 | **Node.js** (ESM) + **Express 5** | REST API server |
 | **LangGraph** (`@langchain/langgraph`) | Multi-agent state machine that runs the interview |
-| **LangChain** + **OpenRouter** | LLM calls through an OpenAI-compatible API (any OpenRouter model, default `gpt-4o-mini`) |
+| **LangChain** + **OpenRouter** | LLM calls through an OpenAI-compatible API (any OpenRouter model, default `nvidia/nemotron-3.5-super-vl:free`), with timeouts and retries |
 | **PostgreSQL** (`@langchain/langgraph-checkpoint-postgres`) | Saves LangGraph state so interviews survive restarts |
 | **Upstash Redis** | Live session store (transcript, diagram, scores) during an interview |
 | **Supabase** | Auth (JWT verification) and Postgres for interviews, reports and diagrams |
@@ -214,6 +214,42 @@ create table graphs (
 
 You don't need to create the LangGraph checkpoint tables. The backend creates them on first start.
 
+### Custom practice topics
+
+Run this SQL in your own Supabase project before using **Practice any topic** in real mode. The backend saves validated knowledge packs with its service role; clients can read only their own brief metadata and cannot insert or modify the grading material directly.
+
+```sql
+create table if not exists public.custom_problems (
+  id         text primary key check (id ~ '^custom_[0-9a-f]{32}$'),
+  user_id    uuid not null references auth.users(id) on delete cascade,
+  topic      text not null check (char_length(trim(topic)) between 3 and 120),
+  slug       text not null,
+  knowledge  jsonb not null check (jsonb_typeof(knowledge) = 'object'),
+  created_at timestamptz not null default now(),
+  unique (user_id, slug)
+);
+
+create index if not exists custom_problems_user_created_idx
+  on public.custom_problems (user_id, created_at desc);
+
+alter table public.custom_problems enable row level security;
+revoke all on table public.custom_problems from public, anon, authenticated;
+grant select (id, user_id, topic, slug, created_at)
+  on table public.custom_problems to authenticated;
+grant all on table public.custom_problems to service_role;
+
+drop policy if exists "Read own custom problems" on public.custom_problems;
+create policy "Read own custom problems"
+  on public.custom_problems for select to authenticated
+  using ((select auth.uid()) = user_id);
+```
+
+The problem picker accepts a high-level system design topic of 3–120 characters. It classifies the request, reuses a clear match from the built-ins or your own saved problems, or generates all five knowledge files. The pack must pass the same schema and cross-file checks as built-in knowledge; one invalid result is regenerated once. Requests are limited to five per hour per signed-in user. Low-level/OOP topics receive a suggested high-level version.
+
+`PROBLEM_GENERATOR_MODEL` optionally selects an OpenRouter model for full-pack generation; it defaults to `OPENROUTER_MODEL` and then `nvidia/nemotron-3.5-super-vl:free`. Generation uses a separate 16,384-token output budget, preserving the interview models' limits. `PROBLEM_GENERATOR_TIMEOUT_MS` defaults to 45,000 milliseconds per attempt. Preparation time depends on the provider and topic; the UI stays pending until the real request finishes.
+
+`MOCK_MODE=true` uses an explicitly offline fixture pack to exercise the full custom-topic interview without keys or a hosted database. Its reference architecture is a demo fixture, not a real assessment of the requested topic. Real mode always calls the configured model. Generated briefs are private, flagged **AI-generated**, and are not written into the built-in knowledge folders.
+
 ### 3. Set up the backend
 
 ```bash
@@ -221,33 +257,25 @@ cd backend
 npm install
 ```
 
-Create `backend/.env`:
+Copy the example file and fill it in. Every variable is explained in [`backend/.env.example`](backend/.env.example):
 
-```env
-PORT=5000
-
-# Frontend origins allowed to call the API (comma-separated)
-CORS_ORIGINS=http://localhost:5173
-
-# Supabase (auth + persistence)
-SUPABASE_URL=https://<project>.supabase.co
-SUPABASE_SERVICE_ROLE_KEY=<service-role-key>
-
-# Postgres connection string for the LangGraph checkpointer
-DATABASE_URL=postgresql://<user>:<password>@<host>:5432/postgres
-
-# Upstash Redis (live session state)
-UPSTASH_REDIS_REST_URL=https://<db>.upstash.io
-UPSTASH_REDIS_REST_TOKEN=<token>
-
-# LLM via OpenRouter
-OPENROUTER_API_KEY=<openrouter-key>
-OPENROUTER_MODEL=gpt-4o-mini                       # optional, any OpenRouter model id
-OPENROUTER_BASE_URL=https://openrouter.ai/api/v1   # optional
-
-# Voice transcription (Groq Whisper)
-GROQ_API_KEY=<groq-key>
+```bash
+cp .env.example .env
 ```
+
+| Variable | Required | Notes |
+|---|---|---|
+| `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY` | Yes | Project Settings → API. The service role key is secret; keep it on the backend only. |
+| `DATABASE_URL` | Yes | Supabase → Connect → **Session pooler** string |
+| `UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKEN` | Yes | Upstash database → REST API |
+| `OPENROUTER_API_KEY` | Yes | openrouter.ai → Keys |
+| `OPENROUTER_MODEL` | Recommended | Needs the provider prefix and tool-calling support. Defaults to `nvidia/nemotron-3.5-super-vl:free`. |
+| `OPENROUTER_FAST_MODEL` | Optional | A faster model for intent and conversation style. Defaults to `OPENROUTER_MODEL`. |
+| `GROQ_API_KEY` | For voice | console.groq.com → API Keys |
+| `CORS_ORIGINS` | For deployment | Comma-separated frontend URLs. Defaults to `http://localhost:5173`. |
+| `LOG_TO_FILE` | Optional | Set to `false` in production |
+
+The default model is the [free NVIDIA Nemotron endpoint](https://openrouter.ai/nvidia/nemotron-3.5-super-vl:free), verified against OpenRouter’s catalog on 2026-11-09 for tool calling and JSON-schema output. It still needs `OPENROUTER_API_KEY` and is subject to free-model rate limits and availability. There is no automatic paid-model fallback. Reasoning is disabled for this endpoint to preserve the short classification output budget. Explicit model environment overrides remain supported.
 
 Start the server:
 
@@ -255,7 +283,7 @@ Start the server:
 npm run dev
 ```
 
-It runs on `http://localhost:5000`. The server won't start if `OPENROUTER_API_KEY` or `DATABASE_URL` is missing.
+It runs on `http://localhost:5000`. The server won't start if `OPENROUTER_API_KEY` or `DATABASE_URL` is missing. To check that Redis and Postgres are reachable, open `http://localhost:5000/health`. It returns `200` when both respond and `503` with details when either one doesn't.
 
 ### 4. Set up the frontend
 
@@ -264,12 +292,10 @@ cd frontend
 npm install
 ```
 
-Create `frontend/.env`:
+Copy [`frontend/.env.example`](frontend/.env.example) to `frontend/.env` and fill in `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY`. Use the **anon** key here, never the service role key. `VITE_API_URL` defaults to `http://localhost:5000`.
 
-```env
-VITE_SUPABASE_URL=https://<project>.supabase.co
-VITE_SUPABASE_ANON_KEY=<anon-key>
-VITE_API_URL=http://localhost:5000   # optional, this is the default
+```bash
+cp .env.example .env
 ```
 
 Start the dev server:
@@ -287,7 +313,7 @@ It runs on `http://localhost:5173`.
 ## ☁️ Deployment
 
 - **Frontend:** deployed on Vercel. `frontend/vercel.json` rewrites every path to `index.html` so client-side routes work. Set the three `VITE_*` variables in the Vercel project settings.
-- **Backend:** runs on any Node host that supports long-running processes, such as Render, Railway or Fly.io. Set the backend environment variables listed above, including `CORS_ORIGINS` with your frontend's URL.
+- **Backend:** runs on any Node host that supports long-running processes, such as Render, Railway or Fly.io. Set the backend environment variables listed above, including `CORS_ORIGINS` with your frontend's URL, and point the host's health check at `/health`.
 
 ---
 
@@ -326,3 +352,27 @@ This project is licensed under the MIT License.
 <div align="center">
   Built with ❤️ | SystemIQ: Practice Smarter, Interview Better
 </div>
+
+## Run without any API keys
+
+Use Node 24 and install both apps with `npm ci` in `backend/` and `frontend/`.
+No `.env` files or service credentials are needed:
+
+1. In `backend/`, run `npm run dev:mock` (port 5000).
+2. In `frontend/`, run `npm run dev:mock` (port 5173).
+3. Open http://localhost:5173/problems, pick a problem and start an interview.
+   Send a few design answers, then "let's wrap up" to see the report.
+
+The demo signs in as `demo-user`, using `mock-token-demo-user`. The backend uses
+in-memory Redis, Supabase tables and a LangGraph MemorySaver. LLM responses,
+scores and voice transcription are deterministic fixtures, not real AI assessment
+or speech recognition. All demo data disappears when the backend restarts.
+
+`MOCK_MODE=true` enables the backend fixtures; the backend refuses to boot when
+both `MOCK_MODE=true` and `NODE_ENV=production`. Frontend mock auth is enabled
+only by `VITE_MOCK_AUTH=true` (included in the explicit `--mode mock` launch).
+Regular production builds use real auth; explicitly supplying that flag when
+building produces a demo build. Never deploy demo builds as a real service.
+
+Run `npm test` in each app; use `npm run test:watch` while working. CI runs lint,
+syntax/type checks, tests and builds for both apps without credentials.

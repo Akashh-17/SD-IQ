@@ -1,3 +1,4 @@
+import { logError } from "../utils/logger.js";
 import { evaluateAnswer } from "../agents/evaluator/agent.js";
 import { buildEvaluatorContext } from "../services/contextBuilder.js";
 import { SessionManager } from "../services/sessionManager.js";
@@ -43,7 +44,7 @@ export async function evaluatorNode(state) {
 
     } catch (err) {
 
-        console.error("[Evaluator]", err);
+        logError("[Evaluator]", err);
 
         return SessionManager.setEvaluation(state, {
 

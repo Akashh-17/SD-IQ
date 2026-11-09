@@ -1,219 +1,25 @@
-import { useEffect, useRef, useState } from "react";
-import {
-    BaseEdge,
-    EdgeLabelRenderer,
-    getBezierPath,
-    useReactFlow,
-    type EdgeProps,
-} from "reactflow";
+import { memo, useEffect, useRef, useState } from "react";
+import { BaseEdge, EdgeLabelRenderer, getBezierPath, useReactFlow, type EdgeProps } from "reactflow";
+import { Button, Input } from "./ui";
 
-interface LabeledEdgeData {
-    label?: string;
-}
-
-export default function LabeledEdge({
-    id,
-    sourceX,
-    sourceY,
-    targetX,
-    targetY,
-    sourcePosition,
-    targetPosition,
-    style,
-    markerEnd,
-    data,
-}: EdgeProps<LabeledEdgeData>) {
-
+function LabeledEdge({ id, sourceX, sourceY, targetX, targetY, sourcePosition, targetPosition, style, markerEnd, data, selected }: EdgeProps<{ label?: string }>) {
     const { setEdges } = useReactFlow();
-
     const [editing, setEditing] = useState(false);
-
-    const [value, setValue] = useState(data?.label ?? "");
-
-    const inputRef = useRef<HTMLInputElement>(null);
-
-    const [edgePath, labelX, labelY] = getBezierPath({
-
-        sourceX,
-
-        sourceY,
-
-        sourcePosition,
-
-        targetX,
-
-        targetY,
-
-        targetPosition,
-
-    });
-
-    useEffect(() => {
-
-        if (editing) {
-
-            inputRef.current?.focus();
-
-            inputRef.current?.select();
-
-        }
-
-    }, [editing]);
-
-    const commit = () => {
-
-        const trimmed = value.trim();
-
-        setValue(trimmed);
-
+    const [draft, setDraft] = useState("");
+    const input = useRef<HTMLInputElement>(null);
+    const cancelled = useRef(false);
+    const [path, x, y] = getBezierPath({ sourceX, sourceY, targetX, targetY, sourcePosition, targetPosition });
+    useEffect(() => { if (editing) { input.current?.focus(); input.current?.select(); } }, [editing]);
+    function edit() { cancelled.current = false; setDraft(data?.label ?? ""); setEditing(true); }
+    function commit() {
+        if (cancelled.current) return;
         setEditing(false);
-
-        setEdges((eds) =>
-
-            eds.map((e) =>
-
-                e.id === id
-
-                    ? { ...e, data: { ...e.data, label: trimmed } }
-
-                    : e
-
-            )
-
-        );
-
-    };
-
-    return (
-
-        <>
-
-            <BaseEdge
-
-                id={id}
-
-                path={edgePath}
-
-                style={style}
-
-                markerEnd={markerEnd}
-
-            />
-
-            <EdgeLabelRenderer>
-
-                <div
-
-                    style={{
-
-                        position: "absolute",
-
-                        transform: `translate(-50%, -50%) translate(${labelX}px, ${labelY}px)`,
-
-                        pointerEvents: "all",
-
-                    }}
-
-                    className="nodrag nopan"
-
-                    onDoubleClick={() => setEditing(true)}
-
-                >
-
-                    {editing ? (
-
-                        <input
-
-                            ref={inputRef}
-
-                            value={value}
-
-                            onChange={(e) => setValue(e.target.value)}
-
-                            onBlur={commit}
-
-                            onKeyDown={(e) => {
-
-                                if (e.key === "Enter") commit();
-
-                                if (e.key === "Escape") setEditing(false);
-
-                            }}
-
-                            placeholder="label"
-
-                            className="
-                                h-6
-                                w-24
-                                rounded-md
-                                border
-                                border-[#F5B301]
-                                bg-[#16181D]
-                                px-2
-                                text-[10px]
-                                text-white
-                                outline-none
-                            "
-
-                        />
-
-                    ) : value ? (
-
-                        <div
-
-                            className="
-                                rounded-md
-                                border
-                                border-white/10
-                                bg-[#16181D]
-                                px-2
-                                py-0.5
-                                text-[10px]
-                                text-gray-300
-                                shadow
-                                cursor-pointer
-                                hover:border-[#F5B301]/40
-                            "
-
-                        >
-
-                            {value}
-
-                        </div>
-
-                    ) : (
-
-                        <div
-
-                            className="
-                                rounded-md
-                                border
-                                border-dashed
-                                border-white/20
-                                px-2
-                                py-0.5
-                                text-[10px]
-                                text-gray-500
-                                opacity-0
-                                hover:opacity-70
-                                transition-opacity
-                                cursor-pointer
-                            "
-
-                        >
-
-                            + label
-
-                        </div>
-
-                    )}
-
-                </div>
-
-            </EdgeLabelRenderer>
-
-        </>
-
-    );
-
+        const label = draft.trim();
+        if (label !== (data?.label ?? "")) setEdges(edges => edges.map(edge => edge.id === id ? { ...edge, data: { ...edge.data, label } } : edge));
+    }
+    return <><g className="room-flowing-edge"><BaseEdge id={id} path={path} markerEnd={markerEnd} style={{ ...style, stroke: selected ? "rgb(var(--color-accent))" : "rgb(var(--color-muted) / .65)", strokeWidth: selected ? 2 : 1.3 }} /></g><EdgeLabelRenderer><div style={{ position: "absolute", transform: `translate(-50%, -50%) translate(${x}px, ${y}px)`, pointerEvents: "all" }} className="nodrag nopan" onDoubleClick={edit}>
+        {editing ? <Input ref={input} aria-label="Connection label" value={draft} maxLength={100} onChange={event => setDraft(event.target.value)} onBlur={commit} className="!min-h-8 !w-36 !px-2 !py-1 !font-mono !text-[10px]" onKeyDown={event => { event.stopPropagation(); if (event.key === "Enter") commit(); if (event.key === "Escape") { cancelled.current = true; setEditing(false); } }} />
+            : <Button variant="secondary" size="sm" aria-label={`Edit connection label${data?.label ? ": " + data.label : ""}`} className={`!min-h-6 !rounded-control !bg-surface !px-2 !py-1 !font-mono !text-[9px] ${data?.label ? "" : "opacity-0 hover:opacity-100 focus:opacity-100"}`} onClick={edit}>{data?.label || "+ label"}</Button>}
+    </div></EdgeLabelRenderer></>;
 }
+export default memo(LabeledEdge);

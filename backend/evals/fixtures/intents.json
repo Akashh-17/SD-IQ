@@ -1,0 +1,77 @@
+[
+  {
+    "id": "intent-01",
+    "message": "I would partition messages by conversation ID and use stable sequence numbers.",
+    "expected": "ANSWER"
+  },
+  {
+    "id": "intent-02",
+    "message": "A durable queue buffers work while workers retry idempotently.",
+    "expected": "ANSWER"
+  },
+  {
+    "id": "intent-03",
+    "message": "The short code needs a unique index and an expiration timestamp.",
+    "expected": "ANSWER"
+  },
+  {
+    "id": "intent-04",
+    "message": "How is the interview score calculated?",
+    "expected": "QUESTION"
+  },
+  {
+    "id": "intent-05",
+    "message": "Can you explain what a fencing token means?",
+    "expected": "QUESTION"
+  },
+  {
+    "id": "intent-06",
+    "message": "Should we support group chats in this problem?",
+    "expected": "CLARIFICATION"
+  },
+  {
+    "id": "intent-07",
+    "message": "How many daily active users should I assume?",
+    "expected": "CLARIFICATION"
+  },
+  {
+    "id": "intent-08",
+    "message": "Do we need custom aliases and expiring links?",
+    "expected": "CLARIFICATION"
+  },
+  {
+    "id": "intent-09",
+    "message": "Let's end the interview and generate the report.",
+    "expected": "WRAP_UP"
+  },
+  {
+    "id": "intent-10",
+    "message": "I want to stop the interview here.",
+    "expected": "WRAP_UP"
+  },
+  {
+    "id": "intent-11",
+    "message": "We are done with this interview; please finish it.",
+    "expected": "WRAP_UP"
+  },
+  {
+    "id": "intent-12",
+    "message": "Good morning!",
+    "expected": "SMALL_TALK"
+  },
+  {
+    "id": "intent-13",
+    "message": "Hello, nice to meet you.",
+    "expected": "SMALL_TALK"
+  },
+  {
+    "id": "intent-14",
+    "message": "No more clarification questions. I am ready to start the design.",
+    "expected": "ACKNOWLEDGEMENT"
+  },
+  {
+    "id": "intent-15",
+    "message": "No, that's all for clarification. Let's continue.",
+    "expected": "ACKNOWLEDGEMENT"
+  }
+]

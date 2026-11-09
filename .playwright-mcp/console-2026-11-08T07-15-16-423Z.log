@@ -1,0 +1,25 @@
+[    3142ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://127.0.0.1:5331/node_modules/.vite/deps/react-dom_client.js?v=88c1f93b:14335
+[   41169ms] [ERROR] React has detected a change in the order of Hooks called by %s. This will lead to bugs and errors if not fixed. For more information, read the Rules of Hooks: https://react.dev/link/rules-of-hooks
+
+   Previous render            Next render
+   ------------------------------------------------------
+%s   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ HowItWorks 1. useSyncExternalStore       useSyncExternalStore
+2. useRef                     useState
+ @ http://127.0.0.1:5331/@vite/client:524
+[   41221ms] Error: Should have a queue. You are likely calling Hooks conditionally, which is not allowed. (https://react.dev/link/invalid-hook-call)
+    at updateReducerImpl (http://127.0.0.1:5331/node_modules/.vite/deps/react-dom_client.js?v=88c1f93b:4422:30)
+    at updateReducer (http://127.0.0.1:5331/node_modules/.vite/deps/react-dom_client.js?v=88c1f93b:4418:11)
+    at Object.useState (http://127.0.0.1:5331/node_modules/.vite/deps/react-dom_client.js?v=88c1f93b:13301:13)
+    at exports.useState (http://127.0.0.1:5331/node_modules/.vite/deps/react.js?v=88c1f93b:748:31)
+    at usePlayback (http://127.0.0.1:5331/src/components/landing/usePlayback.ts?t=1794122157157:14:27)
+    at HowItWorks (http://127.0.0.1:5331/src/components/landing/HowItWorks.tsx?t=1794122157157:411:19)
+    at Object.react_stack_bottom_frame (http://127.0.0.1:5331/node_modules/.vite/deps/react-dom_client.js?v=88c1f93b:12866:12)
+    at renderWithHooks (http://127.0.0.1:5331/node_modules/.vite/deps/react-dom_client.js?v=88c1f93b:4213:19)
+    at updateFunctionComponent (http://127.0.0.1:5331/node_modules/.vite/deps/react-dom_client.js?v=88c1f93b:5569:16)
+    at beginWork (http://127.0.0.1:5331/node_modules/.vite/deps/react-dom_client.js?v=88c1f93b:6140:20)
+[   41209ms] [WARNING] %s
+
+%s
+ An error occurred in the <HowItWorks> component. Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://react.dev/link/error-boundaries to learn more about error boundaries. @ http://127.0.0.1:5331/@vite/client:524

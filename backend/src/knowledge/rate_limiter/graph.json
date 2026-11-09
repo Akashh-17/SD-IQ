@@ -1,0 +1,98 @@
+{
+  "nodeMapping": {
+    "client": "API Client",
+    "gateway": "API Gateway",
+    "limiter": "Limiter Service",
+    "buckets": "Bucket Store",
+    "policy": "Policy Service",
+    "db": "Policy Database",
+    "cache": "Policy Cache",
+    "api": "Protected API",
+    "metrics": "Metrics Collector"
+  },
+  "recommendedNodes": [
+    "API Client",
+    "API Gateway",
+    "Limiter Service",
+    "Bucket Store",
+    "Policy Service",
+    "Policy Database",
+    "Protected API"
+  ],
+  "optionalNodes": [
+    "Policy Cache",
+    "Metrics Collector"
+  ],
+  "recommendedConnections": [
+    {
+      "from": "API Client",
+      "to": "API Gateway"
+    },
+    {
+      "from": "API Gateway",
+      "to": "Limiter Service"
+    },
+    {
+      "from": "Limiter Service",
+      "to": "Bucket Store"
+    },
+    {
+      "from": "Limiter Service",
+      "to": "Policy Cache"
+    },
+    {
+      "from": "Policy Cache",
+      "to": "Policy Service"
+    },
+    {
+      "from": "Policy Service",
+      "to": "Policy Database"
+    },
+    {
+      "from": "API Gateway",
+      "to": "Protected API"
+    },
+    {
+      "from": "Limiter Service",
+      "to": "Metrics Collector"
+    }
+  ],
+  "graphChecks": [
+    {
+      "name": "API Client role represented",
+      "required": true
+    },
+    {
+      "name": "API Gateway role represented",
+      "required": true
+    },
+    {
+      "name": "Limiter Service role represented",
+      "required": true
+    },
+    {
+      "name": "Bucket Store role represented",
+      "required": true
+    },
+    {
+      "name": "Policy Service role represented",
+      "required": true
+    },
+    {
+      "name": "Policy Database role represented",
+      "required": true
+    },
+    {
+      "name": "Policy Cache role represented",
+      "required": false
+    },
+    {
+      "name": "Protected API role represented",
+      "required": true
+    },
+    {
+      "name": "Metrics Collector role represented",
+      "required": false
+    }
+  ]
+}

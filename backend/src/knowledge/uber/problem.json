@@ -1,42 +1,73 @@
 {
   "id": "uber",
-
   "title": "Design Uber",
-
   "problemDifficulty": "Hard",
-
-  "description": "Design a globally distributed ride-hailing platform like Uber that matches riders with nearby drivers in real time while supporting trip tracking, payments and notifications.",
-
+  "description": "Design a ride-hailing service that finds eligible nearby drivers, safely assigns one driver to a trip and tracks the trip lifecycle.",
   "functionalRequirements": [
-    "User registration and login",
-    "Driver registration",
-    "Request a ride",
-    "Match rider with nearest driver",
-    "Real-time driver location updates",
-    "Trip tracking",
-    "Trip cancellation",
-    "Fare estimation",
-    "Payments",
-    "Ride history",
-    "Push notifications"
+    "Request, accept or cancel a ride",
+    "Receive driver location updates and estimate pickup time",
+    "Assign a driver without simultaneous conflicting assignments",
+    "Track trip transitions and request idempotent payment after completion"
   ],
-
   "nonFunctionalRequirements": [
-    "100 Million Daily Active Users",
-    "Real-time location updates",
-    "Low matching latency",
-    "High availability",
-    "Horizontal scalability",
-    "Fault tolerance",
-    "Accurate geospatial search"
+    "Matching server p95 below 1 second at the stated regional peak",
+    "99.9% ride-request API availability target",
+    "No two nonterminal trips may own the same driver; temporary offers have separate lease semantics"
   ],
-
   "constraints": [
-    "Millions of moving drivers",
-    "GPS inaccuracies",
-    "Peak traffic surges",
-    "Global deployment",
-    "Network interruptions",
-    "High write throughput"
-  ]
+    "10 million DAU and 20 million ride requests/day with a 5x request peak",
+    "Size for 500000 simultaneously updating drivers at one location update every 5 seconds",
+    "Treat latest locations as expiring state; historical GPS traces are an optional separate storage workload"
+  ],
+  "outOfScope": [
+    "Exact proprietary dispatch or pricing models",
+    "Turn-by-turn navigation internals",
+    "Autonomous driving and detailed card-processing implementation"
+  ],
+  "scale": {
+    "assumption": "Synthetic interview workload, not a claim about any named company's actual traffic.",
+    "rates": [
+      {
+        "name": "Ride requests",
+        "dailyVolume": 20000000,
+        "averagePerSecond": 231.48,
+        "peakMultiplier": 5,
+        "peakPerSecond": 1157.41
+      },
+      {
+        "name": "Location updates at sustained sizing concurrency",
+        "dailyVolume": 8640000000,
+        "averagePerSecond": 100000.0,
+        "peakMultiplier": 2,
+        "peakPerSecond": 200000.0
+      }
+    ],
+    "storageEstimates": [
+      {
+        "name": "30-day ride-request records including cancelled requests",
+        "recordsPerDay": 20000000,
+        "bytesPerRecord": 1024,
+        "days": 30,
+        "replicationFactor": 3,
+        "rawBytes": 614400000000,
+        "replicatedBytes": 1843200000000
+      }
+    ],
+    "stateEstimates": [
+      {
+        "name": "Latest positions for 500000 concurrently active drivers",
+        "entities": 500000,
+        "bytesPerEntity": 300,
+        "replicationFactor": 3,
+        "rawBytes": 150000000,
+        "replicatedBytes": 450000000
+      }
+    ],
+    "notes": [
+      "The location daily volume is a capacity envelope assuming the stated concurrency all day, not an assertion about actual driver activity.",
+      "A latest-position state estimate excludes geospatial-index, allocator and replication overhead beyond the explicit factor.",
+      "Historical GPS traces, ETA model data and card-provider storage are not in the trip byte estimate."
+    ],
+    "dailyActiveUsers": 10000000
+  }
 }

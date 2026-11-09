@@ -1,0 +1,122 @@
+{
+  "components": [
+    {
+      "name": "API Client",
+      "purpose": "Sends authenticated requests to protected APIs."
+    },
+    {
+      "name": "API Gateway",
+      "purpose": "Applies tenant/principal identity and asks for a budget decision."
+    },
+    {
+      "name": "Limiter Service",
+      "purpose": "Computes allow/deny decisions using an atomic state transition."
+    },
+    {
+      "name": "Bucket Store",
+      "purpose": "Holds atomic, expiring bucket state; Redis is one possible implementation."
+    },
+    {
+      "name": "Policy Service",
+      "purpose": "Owns policy validation, versions and rollout."
+    },
+    {
+      "name": "Policy Database",
+      "purpose": "Durable policy records and change history."
+    },
+    {
+      "name": "Policy Cache",
+      "purpose": "Caches bounded, versioned policies near enforcement."
+    },
+    {
+      "name": "Protected API",
+      "purpose": "Receives allowed requests only; handles dependency errors separately from quota denials."
+    },
+    {
+      "name": "Metrics Collector",
+      "purpose": "Aggregates low-cardinality decision and latency counters without private keys."
+    }
+  ],
+  "tradeoffs": [
+    {
+      "topic": "Rate algorithm",
+      "alternatives": [
+        "Token bucket",
+        "Sliding-window counter",
+        "Exact sliding-window log"
+      ],
+      "guidance": "Define burst and error semantics; do not require all algorithms."
+    },
+    {
+      "topic": "State placement",
+      "alternatives": [
+        "Single regional owner per key",
+        "Regional token allocations"
+      ],
+      "guidance": "The latter needs a quantified global overshoot budget."
+    },
+    {
+      "topic": "Outage behavior",
+      "alternatives": [
+        "Fail open for low-risk reads",
+        "Fail closed for abuse-sensitive writes"
+      ],
+      "guidance": "A timeout is an operational error, not proof that the client exhausted a quota."
+    }
+  ],
+  "dataModel": [
+    {
+      "entity": "Policy",
+      "key": "tenant_id + policy_id + version",
+      "fields": [
+        "rate_per_second",
+        "burst_capacity",
+        "route_scope",
+        "failure_policy",
+        "effective_at"
+      ],
+      "notes": "Audit changes and define migration of old balances."
+    },
+    {
+      "entity": "Bucket",
+      "key": "tenant_id + principal_id + policy_id",
+      "fields": [
+        "tokens",
+        "last_refill_at",
+        "policy_version",
+        "expires_at"
+      ],
+      "notes": "Example token-bucket state; transition atomically with bounded expiry."
+    },
+    {
+      "entity": "ShardAssignment",
+      "key": "bucket_hash_range",
+      "fields": [
+        "owner_region",
+        "owner_shard",
+        "version"
+      ],
+      "notes": "Version ownership changes to avoid two independent full budgets."
+    }
+  ],
+  "flows": [
+    {
+      "name": "Decision",
+      "steps": [
+        "Gateway derives a bounded key from authenticated identity and a canonical policy",
+        "Limiter reads a cached policy version",
+        "State owner atomically refills, checks and consumes budget",
+        "Return allow or deny with a calculated retry delay",
+        "Gateway forwards allowed requests and records a bounded decision metric"
+      ]
+    },
+    {
+      "name": "Policy rollout",
+      "steps": [
+        "Validate and store a new policy version",
+        "Distribute or refresh cached policy versions",
+        "Migrate existing bucket balances under the documented rule"
+      ]
+    }
+  ]
+}

@@ -1,42 +1,71 @@
 {
   "id": "google_drive",
-
   "title": "Design Google Drive",
-
   "problemDifficulty": "Medium",
-
-  "description": "Design a globally distributed cloud storage platform like Google Drive supporting file storage, synchronization, sharing and version history across multiple devices.",
-
+  "description": "Design a cloud file-storage and synchronization service with resumable uploads, versioned metadata and explicit sharing permissions.",
   "functionalRequirements": [
-    "Upload files",
-    "Download files",
-    "Delete files",
-    "Create folders",
-    "Move and rename files",
-    "File synchronization",
-    "File sharing",
-    "Access permissions",
-    "File version history",
-    "Search files"
+    "Upload, download and organize files and folders",
+    "Resume interrupted uploads without duplicating committed files",
+    "Synchronize version changes across devices",
+    "Share files with explicit read/write permissions and retain version history"
   ],
-
   "nonFunctionalRequirements": [
-    "100 Million DAU",
-    "High availability",
-    "Horizontal scalability",
-    "High durability",
-    "Low latency metadata operations",
-    "Fault tolerance",
-    "Strong consistency for metadata"
+    "Metadata operation server p95 below 200 ms in a region",
+    "99.9% metadata API availability target",
+    "Durable file contents and conditional metadata updates prevent silent overwrites"
   ],
-
   "constraints": [
-    "Files up to several GB",
-    "Billions of stored files",
-    "Global users",
-    "Duplicate uploads",
-    "Multiple devices per user",
-    "Concurrent updates",
-    "Network interruptions"
-  ]
+    "5 million DAU, 1 million uploads/day and 5 million downloads/day with a 5x peak",
+    "Mean uploaded/downloaded file is 10 MiB, maximum 10 GiB; 4 MiB chunks are an example",
+    "Concurrent edits and revoked sharing permissions must have explicit semantics"
+  ],
+  "outOfScope": [
+    "Collaborative document editing or operational transformation",
+    "Cross-tenant deduplication of private content",
+    "Full-text search internals"
+  ],
+  "scale": {
+    "assumption": "Synthetic interview workload, not a claim about any named company's actual traffic.",
+    "rates": [
+      {
+        "name": "Uploads",
+        "dailyVolume": 1000000,
+        "averagePerSecond": 11.57,
+        "peakMultiplier": 5,
+        "peakPerSecond": 57.87
+      },
+      {
+        "name": "Downloads",
+        "dailyVolume": 5000000,
+        "averagePerSecond": 57.87,
+        "peakMultiplier": 5,
+        "peakPerSecond": 289.35
+      },
+      {
+        "name": "Metadata operations",
+        "dailyVolume": 50000000,
+        "averagePerSecond": 578.7,
+        "peakMultiplier": 5,
+        "peakPerSecond": 2893.52
+      }
+    ],
+    "storageEstimates": [
+      {
+        "name": "30-day new-upload cohort, excluding older live files and versions",
+        "recordsPerDay": 1000000,
+        "bytesPerRecord": 10485760,
+        "days": 30,
+        "replicationFactor": 3,
+        "rawBytes": 314572800000000,
+        "replicatedBytes": 943718400000000
+      }
+    ],
+    "stateEstimates": [],
+    "notes": [
+      "The 30-day cohort is a capacity example, not a rule that all live files expire after 30 days.",
+      "Version history, deleted-file retention, indexes and existing live content need additional budget.",
+      "The example replication factor is a sizing assumption; an object store may use erasure coding instead."
+    ],
+    "dailyActiveUsers": 5000000
+  }
 }

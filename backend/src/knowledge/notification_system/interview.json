@@ -1,0 +1,257 @@
+{
+  "estimatedDuration": 45,
+  "difficultyLevels": [
+    "SDE1",
+    "SDE2",
+    "Senior"
+  ],
+  "stages": [
+    {
+      "name": "Requirements",
+      "entryQuestion": "Before designing a notification platform, what scope and scale assumptions would you clarify?",
+      "objective": "Agree on product behavior, measurable quality targets and the stated exercise workload.",
+      "completionCriteria": [
+        {
+          "name": "Functional scope",
+          "required": true,
+          "concepts": [
+            "Core operations and users",
+            "Explicit exclusions"
+          ],
+          "guidance": "Clarify transactional versus bulk priority, selected channels, acceptance semantics and user preferences."
+        },
+        {
+          "name": "Quality targets",
+          "required": true,
+          "concepts": [
+            "Latency and availability targets",
+            "Consistency and durability expectations"
+          ],
+          "guidance": "Separate durable API acceptance from provider acceptance and final delivery; define latency and retention for each."
+        },
+        {
+          "name": "Capacity estimates",
+          "required": true,
+          "concepts": [
+            "Daily volume divided by 86400",
+            "Peak multiplier and storage budget"
+          ],
+          "guidance": "Use the fictional baseline or state a justified alternative; derive average and peak rates and distinguish payload bytes from replication and indexes."
+        }
+      ]
+    },
+    {
+      "name": "High Level Design",
+      "entryQuestion": "Walk me through durable acceptance, routing and channel delivery.",
+      "objective": "Keep provider latency off the acceptance path and isolate channels.",
+      "completionCriteria": [
+        {
+          "name": "Durable acceptance",
+          "required": true,
+          "concepts": [
+            "Intent store",
+            "Recoverable dispatch event"
+          ],
+          "guidance": "Persist a stable intent ID and recoverable dispatch work before acknowledging; a transactional outbox or equivalent is acceptable."
+        },
+        {
+          "name": "Routing and preferences",
+          "required": true,
+          "concepts": [
+            "Preference evaluation",
+            "Channel routing"
+          ],
+          "guidance": "Resolve recipients and allowed channels using current preferences, including quiet hours."
+        },
+        {
+          "name": "Channel isolation",
+          "required": true,
+          "concepts": [
+            "Channel queues",
+            "Provider adapters"
+          ],
+          "guidance": "Use bounded per-channel work and provider adapters with independent quotas and failure domains."
+        }
+      ]
+    },
+    {
+      "name": "Core Flow",
+      "entryQuestion": "How does a notification behave when a provider times out and the sender retries?",
+      "objective": "Explain identity, retry uncertainty and per-channel completion.",
+      "completionCriteria": [
+        {
+          "name": "Intent idempotency",
+          "required": true,
+          "concepts": [
+            "Tenant-scoped idempotency key",
+            "Request fingerprint"
+          ],
+          "guidance": "Scope a caller-provided key to its tenant and compare the request fingerprint so a retried intent is not duplicated."
+        },
+        {
+          "name": "Attempt lifecycle",
+          "required": true,
+          "concepts": [
+            "Per-channel attempt state",
+            "Provider delivery receipt"
+          ],
+          "guidance": "Track pending, leased, attempted and terminal outcomes per channel; distinguish provider acceptance from confirmed delivery."
+        },
+        {
+          "name": "Retry uncertainty",
+          "required": true,
+          "concepts": [
+            "Backoff with jitter",
+            "Ambiguous provider outcome"
+          ],
+          "guidance": "Use bounded exponential backoff with jitter and provider idempotency keys when supported; acknowledge that an ambiguous timeout may still duplicate delivery."
+        },
+        {
+          "name": "Eligibility at send time",
+          "required": true,
+          "concepts": [
+            "Send-time preference check",
+            "Scheduled delivery"
+          ],
+          "guidance": "Recheck opt-out and quiet-hour policy before the actual attempt, not just when the intent is created."
+        }
+      ]
+    },
+    {
+      "name": "Data Model",
+      "entryQuestion": "What keys and tables would track notification intents, attempts, preferences and receipts?",
+      "objective": "Model durable state transitions and a bounded deduplication window.",
+      "completionCriteria": [
+        {
+          "name": "Intent schema",
+          "required": true,
+          "concepts": [
+            "Tenant intent key",
+            "Immutable template version"
+          ],
+          "guidance": "Store tenant, intent ID, idempotency key, recipient reference, template version and request hash; protect sensitive parameters."
+        },
+        {
+          "name": "Attempt schema",
+          "required": true,
+          "concepts": [
+            "Channel attempt key",
+            "next_attempt_at index"
+          ],
+          "guidance": "Represent each channel/provider attempt with attempt number, lease expiry, retry time and provider reference."
+        },
+        {
+          "name": "Preferences and receipts",
+          "required": true,
+          "concepts": [
+            "Preference version",
+            "Unique provider receipt ID"
+          ],
+          "guidance": "Version user preferences and deduplicate asynchronous provider receipts; enforce tenant isolation."
+        }
+      ]
+    },
+    {
+      "name": "Reliability",
+      "entryQuestion": "How would you handle provider outages, worker crashes, opt-outs and permanently invalid addresses?",
+      "objective": "Prevent endless retries and isolate degraded providers.",
+      "completionCriteria": [
+        {
+          "name": "Lease and replay",
+          "required": true,
+          "concepts": [
+            "Worker lease expiry",
+            "Durable replay"
+          ],
+          "guidance": "Recover abandoned work from durable state and make completion idempotent after a worker crashes."
+        },
+        {
+          "name": "Failure classification",
+          "required": true,
+          "concepts": [
+            "Transient versus permanent failure",
+            "Dead-letter queue"
+          ],
+          "guidance": "Retry transient errors, stop on permanent failures, dead-letter exhausted attempts and support controlled replay."
+        },
+        {
+          "name": "Provider protection",
+          "required": true,
+          "concepts": [
+            "Per-provider quotas",
+            "Circuit breaker and reconciliation"
+          ],
+          "guidance": "Respect provider quotas and retry delays, use circuit breaking, and avoid a fallback provider causing duplicate sends."
+        }
+      ]
+    },
+    {
+      "name": "Scaling",
+      "entryQuestion": "How would you handle a tenfold burst while one channel provider is throttling?",
+      "objective": "Scale worker pools and preserve priority under backpressure.",
+      "completionCriteria": [
+        {
+          "name": "Attempt capacity",
+          "required": true,
+          "concepts": [
+            "Intents versus attempts",
+            "Retry headroom"
+          ],
+          "guidance": "Derive 231.48 intents/s and 347.22 channel attempts/s average, with 3472.22 peak attempts/s before retries."
+        },
+        {
+          "name": "Queue partitioning",
+          "required": true,
+          "concepts": [
+            "Tenant fairness",
+            "Transactional priority"
+          ],
+          "guidance": "Partition by channel and tenant or priority; prevent one bulk campaign from starving transactional traffic."
+        },
+        {
+          "name": "Storage budget",
+          "required": true,
+          "concepts": [
+            "Retention budget",
+            "Attempt and receipt overhead"
+          ],
+          "guidance": "Estimate 140 GB of 7-day raw intent records and 420 GB with three copies, before indexes and individual attempt rows."
+        }
+      ]
+    },
+    {
+      "name": "Tradeoffs",
+      "entryQuestion": "Which delivery guarantees and cost tradeoffs would you expose to callers?",
+      "objective": "Explain practical provider and product boundaries.",
+      "completionCriteria": [
+        {
+          "name": "Guarantee tradeoff",
+          "required": true,
+          "concepts": [
+            "Processing versus external delivery",
+            "Provider idempotency limits"
+          ],
+          "guidance": "Explain at-least-once internal processing versus best-effort external deduplication; do not promise universal exactly-once sends."
+        },
+        {
+          "name": "Latency tradeoff",
+          "required": true,
+          "concepts": [
+            "Priority versus batch efficiency",
+            "Provider cost"
+          ],
+          "guidance": "Compare immediate transactional delivery with scheduled or bulk work under provider cost and quota limits."
+        },
+        {
+          "name": "Privacy and operations",
+          "required": true,
+          "concepts": [
+            "Sensitive-content minimization",
+            "Queue age and provider error metrics"
+          ],
+          "guidance": "Minimize retention and payload logging; monitor oldest queued age, terminal failures and provider throttles without recipient labels."
+        }
+      ]
+    }
+  ]
+}

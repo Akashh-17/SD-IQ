@@ -1,92 +1,148 @@
 {
   "nodeMapping": {
+    "client": "Mobile Client",
     "api": "API Gateway",
-    "lb": "Load Balancer",
-    "cache": "Redis",
+    "users": "User Service",
+    "posts": "Post Service",
+    "feed": "Feed Service",
+    "media": "Media Service",
     "db": "Database",
-    "queue": "Kafka",
-    "cdn": "CDN"
+    "objects": "Object Storage",
+    "queue": "Event Queue",
+    "cache": "Feed Cache",
+    "cdn": "CDN",
+    "rank": "Ranking Service"
   },
-
   "recommendedNodes": [
-    "Load Balancer",
+    "Mobile Client",
     "API Gateway",
-    "Redis",
+    "User Service",
+    "Post Service",
+    "Feed Service",
+    "Media Service",
     "Database",
-    "CDN"
-  ],
-
-  "optionalNodes": [
-    "Kafka",
-    "Notification Service",
-    "Recommendation Service",
-    "Search Service",
     "Object Storage"
   ],
-
+  "optionalNodes": [
+    "Event Queue",
+    "Feed Cache",
+    "CDN",
+    "Ranking Service"
+  ],
   "recommendedConnections": [
     {
-      "from": "Load Balancer",
+      "from": "Mobile Client",
       "to": "API Gateway"
     },
     {
       "from": "API Gateway",
-      "to": "Redis"
+      "to": "User Service"
     },
     {
       "from": "API Gateway",
+      "to": "Post Service"
+    },
+    {
+      "from": "API Gateway",
+      "to": "Feed Service"
+    },
+    {
+      "from": "Post Service",
       "to": "Database"
     },
     {
-      "from": "API Gateway",
-      "to": "Kafka"
+      "from": "User Service",
+      "to": "Database"
     },
     {
-      "from": "Kafka",
-      "to": "Notification Service"
+      "from": "Post Service",
+      "to": "Event Queue"
     },
     {
-      "from": "API Gateway",
+      "from": "Event Queue",
+      "to": "Media Service"
+    },
+    {
+      "from": "Media Service",
+      "to": "Object Storage"
+    },
+    {
+      "from": "Event Queue",
+      "to": "Feed Service"
+    },
+    {
+      "from": "Feed Service",
+      "to": "Database"
+    },
+    {
+      "from": "Feed Service",
+      "to": "Feed Cache"
+    },
+    {
+      "from": "Feed Service",
+      "to": "Ranking Service"
+    },
+    {
+      "from": "Mobile Client",
+      "to": "Object Storage"
+    },
+    {
+      "from": "Mobile Client",
       "to": "CDN"
+    },
+    {
+      "from": "CDN",
+      "to": "Object Storage"
     }
   ],
-
   "graphChecks": [
     {
-      "name": "Load Balancer Present",
+      "name": "Mobile Client role represented",
       "required": true
     },
     {
-      "name": "API Gateway Present",
+      "name": "API Gateway role represented",
       "required": true
     },
     {
-      "name": "Database Present",
+      "name": "User Service role represented",
       "required": true
     },
     {
-      "name": "Redis Present",
+      "name": "Post Service role represented",
       "required": true
     },
     {
-      "name": "CDN Present",
+      "name": "Feed Service role represented",
       "required": true
     },
     {
-      "name": "Queue Present",
+      "name": "Media Service role represented",
+      "required": true
+    },
+    {
+      "name": "Database role represented",
+      "required": true
+    },
+    {
+      "name": "Object Storage role represented",
+      "required": true
+    },
+    {
+      "name": "Event Queue role represented",
       "required": false
     },
     {
-      "name": "API Connected to Database",
-      "required": true
+      "name": "Feed Cache role represented",
+      "required": false
     },
     {
-      "name": "API Connected to Redis",
-      "required": true
+      "name": "CDN role represented",
+      "required": false
     },
     {
-      "name": "API Connected to CDN",
-      "required": true
+      "name": "Ranking Service role represented",
+      "required": false
     }
   ]
 }

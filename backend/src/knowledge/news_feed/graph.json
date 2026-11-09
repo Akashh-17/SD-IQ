@@ -1,0 +1,148 @@
+{
+  "nodeMapping": {
+    "client": "Feed Client",
+    "api": "API Gateway",
+    "posts": "Post Service",
+    "post_db": "Post Database",
+    "social": "Social Graph Service",
+    "social_db": "Relationship Database",
+    "queue": "Fanout Queue",
+    "workers": "Fanout Workers",
+    "cache": "Home Feed Store",
+    "feed": "Feed Service",
+    "authors": "High-degree Author Streams",
+    "rank": "Ranking Service"
+  },
+  "recommendedNodes": [
+    "Feed Client",
+    "API Gateway",
+    "Post Service",
+    "Post Database",
+    "Social Graph Service",
+    "Relationship Database",
+    "Fanout Queue",
+    "Fanout Workers",
+    "Home Feed Store",
+    "Feed Service",
+    "High-degree Author Streams"
+  ],
+  "optionalNodes": [
+    "Ranking Service"
+  ],
+  "recommendedConnections": [
+    {
+      "from": "Feed Client",
+      "to": "API Gateway"
+    },
+    {
+      "from": "API Gateway",
+      "to": "Post Service"
+    },
+    {
+      "from": "Post Service",
+      "to": "Post Database"
+    },
+    {
+      "from": "Post Service",
+      "to": "Fanout Queue"
+    },
+    {
+      "from": "Fanout Queue",
+      "to": "Fanout Workers"
+    },
+    {
+      "from": "Fanout Workers",
+      "to": "Social Graph Service"
+    },
+    {
+      "from": "Social Graph Service",
+      "to": "Relationship Database"
+    },
+    {
+      "from": "Fanout Workers",
+      "to": "Home Feed Store"
+    },
+    {
+      "from": "API Gateway",
+      "to": "Social Graph Service"
+    },
+    {
+      "from": "API Gateway",
+      "to": "Feed Service"
+    },
+    {
+      "from": "Feed Service",
+      "to": "Home Feed Store"
+    },
+    {
+      "from": "Feed Service",
+      "to": "High-degree Author Streams"
+    },
+    {
+      "from": "High-degree Author Streams",
+      "to": "Post Database"
+    },
+    {
+      "from": "Feed Service",
+      "to": "Social Graph Service"
+    },
+    {
+      "from": "Feed Service",
+      "to": "Post Service"
+    },
+    {
+      "from": "Feed Service",
+      "to": "Ranking Service"
+    }
+  ],
+  "graphChecks": [
+    {
+      "name": "Feed Client role represented",
+      "required": true
+    },
+    {
+      "name": "API Gateway role represented",
+      "required": true
+    },
+    {
+      "name": "Post Service role represented",
+      "required": true
+    },
+    {
+      "name": "Post Database role represented",
+      "required": true
+    },
+    {
+      "name": "Social Graph Service role represented",
+      "required": true
+    },
+    {
+      "name": "Relationship Database role represented",
+      "required": true
+    },
+    {
+      "name": "Fanout Queue role represented",
+      "required": true
+    },
+    {
+      "name": "Fanout Workers role represented",
+      "required": true
+    },
+    {
+      "name": "Home Feed Store role represented",
+      "required": true
+    },
+    {
+      "name": "Feed Service role represented",
+      "required": true
+    },
+    {
+      "name": "High-degree Author Streams role represented",
+      "required": true
+    },
+    {
+      "name": "Ranking Service role represented",
+      "required": false
+    }
+  ]
+}

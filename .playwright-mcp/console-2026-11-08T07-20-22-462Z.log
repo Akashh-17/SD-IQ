@@ -1,0 +1,11 @@
+[     310ms] Error: supabaseUrl is required.
+    at Dy (http://127.0.0.1:5440/assets/index-BLpUBstC.js:29:49243)
+    at new ky (http://127.0.0.1:5440/assets/index-BLpUBstC.js:29:49595)
+    at Ay (http://127.0.0.1:5440/assets/index-BLpUBstC.js:29:53152)
+    at http://127.0.0.1:5440/assets/index-BLpUBstC.js:29:53638
+[    3030ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://127.0.0.1:5331/node_modules/.vite/deps/react-dom_client.js?v=88c1f93b:14335
+[   93853ms] Error: supabaseUrl is required.
+    at Dy (http://127.0.0.1:5440/assets/index-BLpUBstC.js:29:49243)
+    at new ky (http://127.0.0.1:5440/assets/index-BLpUBstC.js:29:49595)
+    at Ay (http://127.0.0.1:5440/assets/index-BLpUBstC.js:29:53152)
+    at http://127.0.0.1:5440/assets/index-BLpUBstC.js:29:53638

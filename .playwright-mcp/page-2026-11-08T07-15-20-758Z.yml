@@ -1,0 +1,378 @@
+- generic [ref=f13e3]:
+  - link "Skip to content" [ref=f13e4] [cursor=pointer]:
+    - /url: "#landing-main"
+  - banner [ref=f13e5]:
+    - generic [ref=f13e6]:
+      - link "SystemIQ home" [ref=f13e7] [cursor=pointer]:
+        - /url: /
+        - generic "SystemIQ" [ref=f13e8]:
+          - generic [aria-hidden] [ref=f13e14]: SystemIQ.
+      - navigation "Main navigation" [ref=f13e15]:
+        - link "How it works" [ref=f13e16] [cursor=pointer]:
+          - /url: "#how-it-works"
+        - link "Live preview" [ref=f13e17] [cursor=pointer]:
+          - /url: "#live-interview"
+        - link "Problems" [ref=f13e18] [cursor=pointer]:
+          - /url: "#problems"
+        - link "FAQ" [ref=f13e19] [cursor=pointer]:
+          - /url: "#faq"
+      - generic [ref=f13e20]:
+        - button "Sign in" [ref=f13e21] [cursor=pointer]
+        - button "Start practicing" [ref=f13e22] [cursor=pointer]
+  - main [ref=f13e25]:
+    - region [ref=f13e26]:
+      - generic [ref=f13e27]:
+        - paragraph [ref=f13e28]: A better way to practice system design
+        - heading "System design. Meet your AI interviewer." [level=1] [ref=f13e30]:
+          - generic [ref=f13e31]: System design.
+          - generic [ref=f13e32]: Meet your
+          - generic [ref=f13e33]: AI interviewer.
+        - paragraph [ref=f13e34]: Talk through the hard parts. Draw the bigger picture. Get feedback that makes your next interview better than your last.
+        - generic [ref=f13e35]:
+          - button "Start a mock interview" [ref=f13e36] [cursor=pointer]
+          - button "start interview --problem tinyurl" [ref=f13e39] [cursor=pointer]:
+            - generic [aria-hidden] [ref=f13e40]: $
+        - generic [ref=f13e44]:
+          - generic [ref=f13e45]: Your own pace
+          - generic [ref=f13e48]: Real design problems
+          - generic [ref=f13e51]: Clear next steps
+      - generic [ref=f13e54]:
+        - generic [ref=f13e55]:
+          - paragraph [ref=f13e56]: 01 / An idea takes shape
+          - button "Architecture ready" [disabled] [ref=f13e57]
+        - generic [ref=f13e58]:
+          - generic [ref=f13e59]:
+            - generic [ref=f13e60]: architecture.canvas
+            - generic [ref=f13e63]: Connected
+          - 'img "Example architecture: a client sends requests through a load balancer and API to a cache, durable database and asynchronous queue." [ref=f13e65]':
+            - generic [aria-hidden] [ref=f13e66]:
+              - generic [ref=f13e74]:
+                - generic [ref=f13e77]: Client
+                - generic [ref=f13e78]: request
+              - generic [ref=f13e80]:
+                - generic [ref=f13e83]: Load balancer
+                - generic [ref=f13e84]: distribute
+              - generic [ref=f13e86]:
+                - generic [ref=f13e89]: API
+                - generic [ref=f13e90]: resolve
+              - generic [ref=f13e92]:
+                - generic [ref=f13e95]: Cache
+                - generic [ref=f13e96]: fast path
+              - generic [ref=f13e98]:
+                - generic [ref=f13e101]: Database
+                - generic [ref=f13e102]: durable
+              - generic [ref=f13e104]:
+                - generic [ref=f13e107]: Queue
+                - generic [ref=f13e108]: async work
+          - generic [ref=f13e109]:
+            - generic [ref=f13e110]: ↳Think in connections, not components.
+            - generic [ref=f13e111]: 06 nodes / 05 edges
+        - generic [ref=f13e112]:
+          - generic [ref=f13e116]:
+            - paragraph [ref=f13e117]: Your AI interviewer
+            - paragraph [ref=f13e118]:
+              - generic [ref=f13e119]:
+                - generic [ref=f13e120]: Your cache is fast. What happens when it fails?
+                - text: Your cache is fast. What happens when it fails?
+          - code [ref=f13e121]: follow_up
+    - region "Built with" [ref=f13e122]:
+      - paragraph [ref=f13e123]: Built on a thoughtful stack
+      - list [ref=f13e124]:
+        - listitem [ref=f13e125]: LangGraph
+        - listitem [ref=f13e128]: React Flow
+        - listitem [ref=f13e131]: Redis
+        - listitem [ref=f13e134]: PostgreSQL
+        - listitem [ref=f13e137]: Supabase
+    - region "How it works" [ref=f13e140]:
+      - generic [ref=f13e142]:
+        - generic [ref=f13e143]:
+          - paragraph [ref=f13e144]: 02 / THE PRACTICE LOOP
+          - heading "Better interviews. One decision at a time." [level=2] [ref=f13e145]: Better interviews.One decision at a time.
+        - paragraph [ref=f13e146]: No memorized script. A problem, a conversation, a canvas, and a little more clarity than you started with.
+      - generic [ref=f13e148]:
+        - generic [ref=f13e149]:
+          - generic [aria-hidden] [ref=f13e150]: "01"
+          - generic [ref=f13e151]:
+            - code [ref=f13e152]: classify_intent
+            - heading "Start with a good problem." [level=3] [ref=f13e153]
+            - paragraph [ref=f13e154]: A short link. A chat app. A feed for millions. Choose a system that stretches the way you think.
+            - generic [ref=f13e155]: Explore each step at your pace.
+        - generic [ref=f13e159]:
+          - paragraph [ref=f13e160]: Choose your next challenge
+          - generic [ref=f13e161]:
+            - generic [ref=f13e162]: "01"
+            - generic [ref=f13e163]:
+              - paragraph [ref=f13e164]: URL shortener
+              - paragraph [ref=f13e165]: TinyURL
+            - generic [ref=f13e166]: Easy
+          - generic [ref=f13e167]:
+            - generic [ref=f13e168]: "02"
+            - generic [ref=f13e169]:
+              - paragraph [ref=f13e170]: Chat application
+              - paragraph [ref=f13e171]: WhatsApp
+            - generic [ref=f13e172]: Medium
+          - generic [ref=f13e173]:
+            - generic [ref=f13e174]: "03"
+            - generic [ref=f13e175]:
+              - paragraph [ref=f13e176]: News feed
+              - paragraph [ref=f13e177]: Fanout at scale
+            - generic [ref=f13e178]: Hard
+        - list "How SystemIQ works" [ref=f13e182]:
+          - listitem [ref=f13e183]:
+            - button "Step 01 Pick a problem A short link. A chat app. A feed for millions. Choose a system that stretches the way you think." [ref=f13e184] [cursor=pointer]:
+              - generic [ref=f13e185]: Step
+              - generic [ref=f13e186]: "01"
+              - generic [ref=f13e188]:
+                - generic [ref=f13e189]: Pick a problem
+                - generic [ref=f13e190]: A short link. A chat app. A feed for millions. Choose a system that stretches the way you think.
+          - listitem [ref=f13e191]:
+            - button "Step 02 Talk it through Explain your decisions to an AI interviewer that asks follow-ups. There is room to hesitate, reconsider, and try again." [ref=f13e192] [cursor=pointer]:
+              - generic [ref=f13e193]: Step
+              - generic [ref=f13e194]: "02"
+              - generic [ref=f13e195]:
+                - generic [ref=f13e196]: Talk it through
+                - generic [ref=f13e197]: Explain your decisions to an AI interviewer that asks follow-ups. There is room to hesitate, reconsider, and try again.
+          - listitem [ref=f13e198]:
+            - button "Step 03 Draw your architecture Connect the components on a whiteboard. Your diagram becomes part of the conversation, not an afterthought." [ref=f13e199] [cursor=pointer]:
+              - generic [ref=f13e200]: Step
+              - generic [ref=f13e201]: "03"
+              - generic [ref=f13e202]:
+                - generic [ref=f13e203]: Draw your architecture
+                - generic [ref=f13e204]: Connect the components on a whiteboard. Your diagram becomes part of the conversation, not an afterthought.
+          - listitem [ref=f13e205]:
+            - button "Step 04 Get scored See stage scores, gaps and concrete feedback. Know what held up, what broke down, and what to practice next." [ref=f13e206] [cursor=pointer]:
+              - generic [ref=f13e207]: Step
+              - generic [ref=f13e208]: "04"
+              - generic [ref=f13e209]:
+                - generic [ref=f13e210]: Get scored
+                - generic [ref=f13e211]: See stage scores, gaps and concrete feedback. Know what held up, what broke down, and what to practice next.
+      - button "See the conversation" [ref=f13e213] [cursor=pointer]
+    - region "Live interview preview" [ref=f13e216]:
+      - generic [ref=f13e218]:
+        - generic [ref=f13e219]:
+          - paragraph [ref=f13e220]: 03 / IN THE ROOM
+          - heading "An interview that thinks with you." [level=2] [ref=f13e221]: An interview thatthinks with you.
+        - paragraph [ref=f13e222]: Watch an illustrative session unfold. A question becomes a decision. A decision becomes an architecture.
+      - generic [ref=f13e224]:
+        - generic [ref=f13e225]:
+          - generic [ref=f13e226]:
+            - generic [ref=f13e227]: Design a URL shortener
+            - generic [ref=f13e230]: Scripted preview
+          - generic [ref=f13e231]:
+            - generic [ref=f13e232]: 01 / 08
+            - button "Replay live interview preview" [ref=f13e233] [cursor=pointer]
+            - button "Next preview moment" [ref=f13e236] [cursor=pointer]
+        - generic [ref=f13e239]:
+          - generic "Illustrative conversation" [ref=f13e240]:
+            - generic [ref=f13e241]:
+              - generic [ref=f13e242]: The conversation
+              - generic [ref=f13e243]: text + voice
+            - generic [ref=f13e244]:
+              - paragraph [ref=f13e245]: AI interviewer
+              - paragraph [ref=f13e247]:
+                - generic [ref=f13e248]:
+                  - generic [ref=f13e249]: Let's design a URL shortener. What should we optimize for?
+                  - text: Let's design a URL shortener. What should we optimize for?
+            - generic [aria-hidden] [ref=f13e250]:
+              - paragraph [ref=f13e251]: You
+              - paragraph [ref=f13e253]: Fast redirects and durable links. Let's assume 100 million redirects a day, with creation far less frequent.
+            - generic [ref=f13e254]:
+              - code [ref=f13e255]: classify_intent
+              - paragraph [ref=f13e256]: Think out loud. The interviewer follows your reasoning.
+          - generic [ref=f13e257]:
+            - generic [ref=f13e258]:
+              - generic [ref=f13e259]: The whiteboard
+              - generic [ref=f13e260]: Sketch in progress
+            - 'img "Example architecture: a client sends requests through a load balancer and API to a cache, durable database and asynchronous queue." [ref=f13e263]':
+              - generic [aria-hidden] [ref=f13e264]:
+                - generic [ref=f13e265]: Client
+                - generic [ref=f13e270]: Load balancer
+                - generic [ref=f13e275]: API
+                - generic [ref=f13e280]: Cache
+                - generic [ref=f13e285]: Database
+                - generic [ref=f13e290]: Queue
+            - generic [ref=f13e295]:
+              - generic [ref=f13e296]: 01 nodes / 00 connections
+              - generic [ref=f13e297]: example architecture
+            - paragraph [ref=f13e303]: Start simple. Add a component when you can explain why it belongs.
+        - generic [ref=f13e304]:
+          - generic [ref=f13e305]:
+            - generic [ref=f13e306]: Stage by stage
+            - generic [ref=f13e307]: 1 / 7
+          - list "Interview stages" [ref=f13e308]:
+            - listitem [ref=f13e309]:
+              - generic [ref=f13e310]: "01"
+              - generic [ref=f13e311]: Requirements
+            - listitem [ref=f13e312]:
+              - generic [ref=f13e313]: "02"
+              - generic [ref=f13e314]: High Level Design
+            - listitem [ref=f13e315]:
+              - generic [ref=f13e316]: "03"
+              - generic [ref=f13e317]: Core Flow
+            - listitem [ref=f13e318]:
+              - generic [ref=f13e319]: "04"
+              - generic [ref=f13e320]: Data Model
+            - listitem [ref=f13e321]:
+              - generic [ref=f13e322]: "05"
+              - generic [ref=f13e323]: Reliability
+            - listitem [ref=f13e324]:
+              - generic [ref=f13e325]: "06"
+              - generic [ref=f13e326]: Scaling
+            - listitem [ref=f13e327]:
+              - generic [ref=f13e328]: "07"
+              - generic [ref=f13e329]: Tradeoffs
+      - paragraph [ref=f13e330]: A scripted example. Your real interview follows your decisions.
+    - region "Practice problems" [ref=f13e331]:
+      - generic [ref=f13e333]:
+        - generic [ref=f13e334]:
+          - paragraph [ref=f13e335]: 04 / THE PROBLEM SPACE
+          - heading "Small URLs. Big design decisions." [level=2] [ref=f13e336]: Small URLs.Big design decisions.
+        - paragraph [ref=f13e337]: Eight problems. Different constraints. Plenty of room to get better at the parts that matter.
+      - generic [ref=f13e338]:
+        - generic [ref=f13e339]: 08 problems / 07 stages / your own pace
+        - generic [ref=f13e340]:
+          - button "Previous problems" [ref=f13e341] [cursor=pointer]
+          - button "More problems" [ref=f13e344] [cursor=pointer]
+      - list "Available problem examples" [ref=f13e347]:
+        - listitem [ref=f13e348]:
+          - button "Practice 01 URL shortener A short link. A very long read path. Easy" [ref=f13e350] [cursor=pointer]:
+            - generic [ref=f13e351]: Practice
+            - generic [ref=f13e352]: "01"
+            - generic [ref=f13e357]: URL shortener
+            - generic [ref=f13e358]: A short link. A very long read path.
+            - generic [ref=f13e359]: Easy
+        - listitem [ref=f13e363]:
+          - button "Practice 02 Chat application Keep conversations in sync. Medium" [ref=f13e365] [cursor=pointer]:
+            - generic [ref=f13e366]: Practice
+            - generic [ref=f13e367]: "02"
+            - generic [ref=f13e372]: Chat application
+            - generic [ref=f13e373]: Keep conversations in sync.
+            - generic [ref=f13e374]: Medium
+        - listitem [ref=f13e378]:
+          - button "Practice 03 Rate limiter Decide who gets through. Fairly. Medium" [ref=f13e380] [cursor=pointer]:
+            - generic [ref=f13e381]: Practice
+            - generic [ref=f13e382]: "03"
+            - generic [ref=f13e387]: Rate limiter
+            - generic [ref=f13e388]: Decide who gets through. Fairly.
+            - generic [ref=f13e389]: Medium
+        - listitem [ref=f13e393]:
+          - button "Practice 04 Notifications The right message, at the right moment. Medium" [ref=f13e395] [cursor=pointer]:
+            - generic [ref=f13e396]: Practice
+            - generic [ref=f13e397]: "04"
+            - generic [ref=f13e402]: Notifications
+            - generic [ref=f13e403]: The right message, at the right moment.
+            - generic [ref=f13e404]: Medium
+        - listitem [ref=f13e408]:
+          - button "Practice 05 File storage Store it. Sync it. Find it again. Medium" [ref=f13e410] [cursor=pointer]:
+            - generic [ref=f13e411]: Practice
+            - generic [ref=f13e412]: "05"
+            - generic [ref=f13e417]: File storage
+            - generic [ref=f13e418]: Store it. Sync it. Find it again.
+            - generic [ref=f13e419]: Medium
+        - listitem [ref=f13e423]:
+          - button "Practice 06 Photo sharing From one upload to a million views. Medium" [ref=f13e425] [cursor=pointer]:
+            - generic [ref=f13e426]: Practice
+            - generic [ref=f13e427]: "06"
+            - generic [ref=f13e432]: Photo sharing
+            - generic [ref=f13e433]: From one upload to a million views.
+            - generic [ref=f13e434]: Medium
+        - listitem [ref=f13e438]:
+          - button "Practice 07 News feed Whose updates make the front page? Hard" [ref=f13e440] [cursor=pointer]:
+            - generic [ref=f13e441]: Practice
+            - generic [ref=f13e442]: "07"
+            - generic [ref=f13e447]: News feed
+            - generic [ref=f13e448]: Whose updates make the front page?
+            - generic [ref=f13e449]: Hard
+        - listitem [ref=f13e453]:
+          - button "Practice 08 Ride matching Match moving people in real time. Hard" [ref=f13e455] [cursor=pointer]:
+            - generic [ref=f13e456]: Practice
+            - generic [ref=f13e457]: "08"
+            - generic [ref=f13e462]: Ride matching
+            - generic [ref=f13e463]: Match moving people in real time.
+            - generic [ref=f13e464]: Hard
+    - region "What you get" [ref=f13e468]:
+      - generic [ref=f13e470]:
+        - generic [ref=f13e471]:
+          - paragraph [ref=f13e472]: 05 / WHAT YOU TAKE WITH YOU
+          - heading "Feedback you can build on." [level=2] [ref=f13e473]: Feedback you canbuild on.
+        - paragraph [ref=f13e474]: An interview should leave you with more than a number. Find the next decision worth revisiting.
+      - generic [ref=f13e475]:
+        - generic [ref=f13e477]:
+          - generic [ref=f13e479]:
+            - generic [ref=f13e480]:
+              - generic [ref=f13e481]:
+                - generic [ref=f13e482]: High level design
+                - generic [ref=f13e483]: 8/10
+              - meter "High level design example score" [ref=f13e484]
+            - generic [ref=f13e486]:
+              - generic [ref=f13e487]:
+                - generic [ref=f13e488]: Reliability
+                - generic [ref=f13e489]: 6/10
+              - meter "Reliability example score" [ref=f13e490]
+            - generic [ref=f13e492]:
+              - generic [ref=f13e493]:
+                - generic [ref=f13e494]: Tradeoffs
+                - generic [ref=f13e495]: 7/10
+              - meter "Tradeoffs example score" [ref=f13e496]
+          - code [ref=f13e498]: stage_scores
+          - heading "Know where you stand." [level=3] [ref=f13e499]
+          - paragraph [ref=f13e500]: Stage-by-stage scores show where your reasoning is strong and where the next question should take you.
+          - paragraph [ref=f13e501]: Illustrative scores shown above
+        - generic [ref=f13e503]:
+          - generic [ref=f13e504]:
+            - generic [ref=f13e505]: architecture_review
+            - paragraph [ref=f13e509]: The cache belongs on the read path.
+            - paragraph [ref=f13e512]: "Next: explain the database fallback."
+          - code [ref=f13e515]: diagram_feedback
+          - heading "See the bigger picture." [level=3] [ref=f13e516]
+          - paragraph [ref=f13e517]: Your whiteboard gets a second look. Find missing connections, unclear choices and useful follow-up questions.
+        - generic [ref=f13e519]:
+          - generic [ref=f13e520]:
+            - generic [ref=f13e521]:
+              - generic [ref=f13e522]: "01"
+              - generic [ref=f13e523]: Requirements clarified
+            - generic [ref=f13e526]:
+              - generic [ref=f13e527]: "02"
+              - generic [ref=f13e528]: Tradeoffs explained
+            - generic [ref=f13e531]:
+              - generic [ref=f13e532]: "03"
+              - generic [ref=f13e533]: Next attempt planned
+          - code [ref=f13e536]: practice_history
+          - heading "Keep a trail of progress." [level=3] [ref=f13e537]
+          - paragraph [ref=f13e538]: Return to past interviews and reports. Compare your decisions, spot recurring gaps, and choose what to practice next.
+    - region "Frequently asked questions" [ref=f13e539]:
+      - generic [ref=f13e542]:
+        - paragraph [ref=f13e543]: 06 / A FEW GOOD QUESTIONS
+        - heading "Before you start thinking out loud." [level=2] [ref=f13e544]: Before youstart thinking out loud.
+      - generic [ref=f13e545]:
+        - generic [ref=f13e546]:
+          - heading [level=3] [ref=f13e547]:
+            - button "Is this a real interview or a practice session?" [expanded] [ref=f13e548] [cursor=pointer]
+          - region "Is this a real interview or a practice session?" [ref=f13e552]:
+            - paragraph [ref=f13e553]: A practice session with an AI interviewer. You choose a system design problem, explain your decisions, and work through follow-up questions. It is a space to experiment before a real interview.
+        - heading [level=3] [ref=f13e555]:
+          - button "What can I practice?" [ref=f13e556] [cursor=pointer]
+        - heading [level=3] [ref=f13e561]:
+          - button "Can I draw my architecture?" [ref=f13e562] [cursor=pointer]
+        - heading [level=3] [ref=f13e567]:
+          - button "How does scoring work?" [ref=f13e568] [cursor=pointer]
+        - heading [level=3] [ref=f13e573]:
+          - button "Can I speak instead of typing?" [ref=f13e574] [cursor=pointer]
+        - heading [level=3] [ref=f13e579]:
+          - button "Do I need the perfect answer before I start?" [ref=f13e580] [cursor=pointer]
+    - region "Start practicing" [ref=f13e584]:
+      - generic [ref=f13e585]:
+        - paragraph [ref=f13e586]: Your next great answer starts here.
+        - heading "Make your thinking worth following." [level=2] [ref=f13e587]: Make your thinkingworth following.
+        - paragraph [ref=f13e588]: Pick a problem. Take a breath. Build something you can explain.
+        - button "Start a mock interview" [ref=f13e589] [cursor=pointer]
+    - generic [ref=f13e592]:
+      - link "SystemIQ home" [ref=f13e593] [cursor=pointer]:
+        - /url: /
+        - generic "SystemIQ" [ref=f13e594]:
+          - generic [aria-hidden] [ref=f13e600]: SystemIQ.
+      - paragraph [ref=f13e601]: A practice space for clearer thinking.
+      - generic [ref=f13e602]:
+        - link "Questions?" [ref=f13e603] [cursor=pointer]:
+          - /url: "#faq"
+        - code [ref=f13e604]: think → build → repeat

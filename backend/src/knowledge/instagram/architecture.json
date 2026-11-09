@@ -1,109 +1,148 @@
 {
   "components": [
     {
+      "name": "Mobile Client",
+      "purpose": "Publishes content and requests feed pages and media."
+    },
+    {
       "name": "API Gateway",
-      "purpose": "Entry point for all client requests."
-    },
-    {
-      "name": "Load Balancer",
-      "purpose": "Distributes traffic across backend services."
-    },
-    {
-      "name": "Auth Service",
-      "purpose": "Handles user authentication and authorization."
+      "purpose": "Authenticates operations and routes metadata requests."
     },
     {
       "name": "User Service",
-      "purpose": "Manages user profiles and follower relationships."
+      "purpose": "Owns profiles, privacy settings and follow relationships."
     },
     {
       "name": "Post Service",
-      "purpose": "Handles post creation, metadata and retrieval."
+      "purpose": "Publishes versioned posts after durable media upload and owns access-checked post/engagement metadata."
     },
     {
       "name": "Feed Service",
-      "purpose": "Generates personalized user feeds."
+      "purpose": "Builds and serves eligible follower feed references."
     },
     {
       "name": "Media Service",
-      "purpose": "Processes uploaded images and videos."
+      "purpose": "Validates uploads and produces photo/video derivatives."
+    },
+    {
+      "name": "Database",
+      "purpose": "Durable posts, follows, likes, comments and visibility versions."
     },
     {
       "name": "Object Storage",
-      "purpose": "Stores photos and videos."
+      "purpose": "Stores original and derived media assets."
+    },
+    {
+      "name": "Event Queue",
+      "purpose": "Buffers media and fanout work with replayable event IDs."
+    },
+    {
+      "name": "Feed Cache",
+      "purpose": "Stores bounded feed references; visibility remains authoritative elsewhere."
     },
     {
       "name": "CDN",
-      "purpose": "Delivers media with low latency worldwide."
+      "purpose": "Delivers public media or authorized private assets to clients."
     },
     {
-      "name": "Redis",
-      "purpose": "Caches feeds, profiles and popular posts."
-    },
-    {
-      "name": "Kafka",
-      "purpose": "Processes asynchronous events such as notifications and feed generation."
-    },
-    {
-      "name": "Notification Service",
-      "purpose": "Sends push notifications for likes, comments and follows."
-    },
-    {
-      "name": "Recommendation Service",
-      "purpose": "Ranks and personalizes user feeds."
-    },
-    {
-      "name": "Search Service",
-      "purpose": "Supports user and hashtag search."
+      "name": "Ranking Service",
+      "purpose": "Optional ranking beyond a chronological baseline."
     }
   ],
-
   "tradeoffs": [
     {
-      "topic": "Feed Generation",
+      "topic": "Feed assembly",
       "alternatives": [
-        "Fan-out on Write",
-        "Fan-out on Read",
-        "Hybrid Feed"
+        "Fanout on write",
+        "Fanout on read",
+        "Hybrid fanout"
+      ],
+      "guidance": "Credit any strategy that handles the stated load and high-degree accounts."
+    },
+    {
+      "topic": "Ordering",
+      "alternatives": [
+        "Reverse chronological",
+        "Lightweight heuristic ranking"
+      ],
+      "guidance": "A machine-learning system is not required."
+    },
+    {
+      "topic": "Media processing",
+      "alternatives": [
+        "Process derivatives before publish",
+        "Publish an original and add derivatives later"
+      ],
+      "guidance": "Prevent broken references and define latency versus quality."
+    }
+  ],
+  "dataModel": [
+    {
+      "entity": "Post",
+      "key": "post_id",
+      "fields": [
+        "author_id",
+        "created_at",
+        "media_manifest",
+        "visibility_version",
+        "deleted_at"
+      ],
+      "notes": "Index author plus ordering key; filter current visibility."
+    },
+    {
+      "entity": "Follow",
+      "key": "follower_id + author_id",
+      "fields": [
+        "followed_at",
+        "state_version"
+      ],
+      "notes": "Maintain both follower and following access paths."
+    },
+    {
+      "entity": "FeedEntry",
+      "key": "recipient_id + ordering_key + post_id",
+      "fields": [
+        "author_id",
+        "source_version"
+      ],
+      "notes": "Bound the cache; entries are references, not permission grants."
+    },
+    {
+      "entity": "Reaction",
+      "key": "post_id + user_id + reaction_type",
+      "fields": [
+        "created_at"
+      ],
+      "notes": "Unique keys make retried likes idempotent."
+    },
+    {
+      "entity": "Comment",
+      "key": "post_id + created_at + comment_id",
+      "fields": [
+        "author_id",
+        "body_reference",
+        "visibility_version",
+        "deleted_at"
+      ],
+      "notes": "Use a stable cursor and access/deletion checks; do not expose comments on a post the reader cannot access."
+    }
+  ],
+  "flows": [
+    {
+      "name": "Publish",
+      "steps": [
+        "Authorize an upload and store the media durably",
+        "Publish post metadata and a recoverable fanout event",
+        "Workers create derivatives and feed references idempotently",
+        "Feed reads filter visibility and return bounded references"
       ]
     },
     {
-      "topic": "Media Storage",
-      "alternatives": [
-        "Amazon S3",
-        "Google Cloud Storage",
-        "Azure Blob Storage"
-      ]
-    },
-    {
-      "topic": "Caching",
-      "alternatives": [
-        "Redis",
-        "Memcached"
-      ]
-    },
-    {
-      "topic": "Messaging",
-      "alternatives": [
-        "Kafka",
-        "RabbitMQ",
-        "Amazon SQS"
-      ]
-    },
-    {
-      "topic": "Database",
-      "alternatives": [
-        "MySQL",
-        "PostgreSQL",
-        "Cassandra",
-        "DynamoDB"
-      ]
-    },
-    {
-      "topic": "Search",
-      "alternatives": [
-        "Elasticsearch",
-        "OpenSearch"
+      "name": "Media read",
+      "steps": [
+        "Client receives a media manifest from feed metadata",
+        "Client fetches the asset from CDN or authorized object storage",
+        "CDN serves or retrieves the object without proxying all bytes through the API"
       ]
     }
   ]

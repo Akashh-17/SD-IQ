@@ -1,0 +1,141 @@
+{
+  "components": [
+    {
+      "name": "Producing Service",
+      "purpose": "Submits a tenant-scoped idempotent notification intent."
+    },
+    {
+      "name": "Notification API",
+      "purpose": "Validates and durably accepts notification intents."
+    },
+    {
+      "name": "Notification Database",
+      "purpose": "Stores intents, outbox work, attempts and terminal states."
+    },
+    {
+      "name": "Routing Service",
+      "purpose": "Chooses eligible channels, priority and send time."
+    },
+    {
+      "name": "Preference Service",
+      "purpose": "Owns versioned opt-outs, quiet hours and channel preferences."
+    },
+    {
+      "name": "Channel Queues",
+      "purpose": "Separate bounded delivery queues by channel and priority."
+    },
+    {
+      "name": "Delivery Workers",
+      "purpose": "Lease work, recheck eligibility and drive provider attempts."
+    },
+    {
+      "name": "Provider Adapters",
+      "purpose": "Apply provider quotas, idempotency and request translation."
+    },
+    {
+      "name": "External Providers",
+      "purpose": "Accept email, SMS or push requests with provider-specific guarantees."
+    },
+    {
+      "name": "Receipt Handler",
+      "purpose": "Validates callbacks and idempotently records provider delivery events."
+    },
+    {
+      "name": "Dead-letter Queue",
+      "purpose": "Holds exhausted or poison work for controlled investigation and replay."
+    }
+  ],
+  "tradeoffs": [
+    {
+      "topic": "External delivery guarantee",
+      "alternatives": [
+        "Provider-supported idempotency",
+        "At-least-once attempts with a documented duplicate risk"
+      ],
+      "guidance": "An API timeout cannot prove whether a provider already sent the notification."
+    },
+    {
+      "topic": "Queue topology",
+      "alternatives": [
+        "Per-channel queues",
+        "Per-channel and per-priority queues"
+      ],
+      "guidance": "Balance isolation with operational complexity."
+    },
+    {
+      "topic": "Provider strategy",
+      "alternatives": [
+        "Single provider with controlled retry",
+        "Carefully reconciled provider failover"
+      ],
+      "guidance": "Failover can improve availability but also duplicate an already-accepted send."
+    }
+  ],
+  "dataModel": [
+    {
+      "entity": "Intent",
+      "key": "tenant_id + notification_id",
+      "fields": [
+        "idempotency_key",
+        "request_hash",
+        "recipient_reference",
+        "template_version",
+        "created_at"
+      ],
+      "notes": "Unique tenant idempotency keys prevent duplicate accepted intents."
+    },
+    {
+      "entity": "Attempt",
+      "key": "notification_id + channel + attempt_number",
+      "fields": [
+        "state",
+        "provider_reference",
+        "lease_expires_at",
+        "next_attempt_at"
+      ],
+      "notes": "Use a due-work index and conditional state transitions."
+    },
+    {
+      "entity": "Preference",
+      "key": "tenant_id + recipient_id",
+      "fields": [
+        "version",
+        "opt_out",
+        "quiet_hours",
+        "timezone",
+        "allowed_channels"
+      ],
+      "notes": "Recheck the relevant version before dispatch."
+    },
+    {
+      "entity": "Receipt",
+      "key": "provider_id + provider_event_id",
+      "fields": [
+        "attempt_id",
+        "event_type",
+        "observed_at"
+      ],
+      "notes": "Validate and deduplicate callbacks, including out-of-order events."
+    }
+  ],
+  "flows": [
+    {
+      "name": "Accept and deliver",
+      "steps": [
+        "API validates the tenant-scoped idempotency key and request fingerprint",
+        "Atomically store intent and recoverable dispatch work",
+        "Router applies preferences and emits per-channel work",
+        "Worker leases work, rechecks eligibility and obeys provider quotas",
+        "Record provider acceptance and reconcile final receipts"
+      ]
+    },
+    {
+      "name": "Failure",
+      "steps": [
+        "Classify a provider error as transient, permanent or uncertain",
+        "Retry with bounded backoff or reconcile an uncertain provider reference",
+        "Dead-letter exhausted work with safe operator metadata, not raw message contents"
+      ]
+    }
+  ]
+}

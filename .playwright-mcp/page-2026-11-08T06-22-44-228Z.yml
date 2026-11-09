@@ -1,0 +1,440 @@
+- generic [active] [ref=e1]:
+  - main [ref=e2]:
+    - dialog "Intro animation" [ref=e3]:
+      - generic [ref=e5]:
+        - generic [ref=e7]:
+          - text: Cash
+          - emphasis [ref=e8]: ETH
+        - generic [ref=e9]: A buyer-signed invoice
+      - generic [aria-hidden] [ref=e10]:
+        - generic [ref=e11]:
+          - generic [ref=e12]: Invoice
+          - generic [ref=e13]: INV-2207
+        - generic [ref=e14]:
+          - generic [ref=e15]:
+            - generic [ref=e16]: FROM
+            - generic [ref=e17]: Seller agent
+            - generic [ref=e18]: 0x7f3a…c21e
+          - generic [ref=e19]:
+            - generic [ref=e20]: BILL TO
+            - generic [ref=e21]: Buyer agent
+            - generic [ref=e22]: 0x91b0…4e07
+        - generic [ref=e23]:
+          - generic [ref=e24]:
+            - generic [ref=e25]: Research datasets · 12 mo
+            - generic [ref=e26]: 6,000.00
+          - generic [ref=e27]:
+            - generic [ref=e28]: Compute credits
+            - generic [ref=e29]: 3,000.00
+          - generic [ref=e30]:
+            - generic [ref=e31]: Integration support
+            - generic [ref=e32]: 1,000.00
+        - generic [ref=e33]:
+          - generic [ref=e34]: Total due · Net 30
+          - generic [ref=e35]: $10,000.00
+        - generic [ref=e36]:
+          - generic [ref=e37]: ✓ EIP-712 signed by buyer
+          - generic [ref=e38]: USDC
+        - generic [ref=e39]: VERIFIEDFINANCEABLE
+      - generic [ref=e41]: LIQUIDITY POOL · 1INCH AQUA
+      - generic [aria-hidden] [ref=e45]: $
+      - generic [aria-hidden] [ref=e46]: ℏ
+      - generic [aria-hidden] [ref=e47]: $
+      - generic [aria-hidden] [ref=e48]: Ξ
+      - generic [aria-hidden] [ref=e49]: $
+      - generic [aria-hidden] [ref=e50]: ℏ
+      - generic [aria-hidden] [ref=e51]: $
+      - generic [aria-hidden] [ref=e52]: Ξ
+      - generic [aria-hidden] [ref=e53]: $
+      - generic [aria-hidden] [ref=e54]: ℏ
+      - generic [aria-hidden] [ref=e55]: $
+      - generic [aria-hidden] [ref=e56]: Ξ
+      - generic [aria-hidden] [ref=e57]: $
+      - generic [aria-hidden] [ref=e58]: ℏ
+      - generic [aria-hidden] [ref=e59]: $
+      - generic [aria-hidden] [ref=e60]: Ξ
+      - generic [aria-hidden] [ref=e61]: $
+      - generic [aria-hidden] [ref=e62]: ℏ
+      - generic [aria-hidden] [ref=e63]: $
+      - generic [aria-hidden] [ref=e64]: Ξ
+      - generic [ref=e65]:
+        - generic [ref=e66]: $0.00
+        - generic [ref=e67]: working capital your agents can spend
+      - button "Skip intro →" [ref=e68] [cursor=pointer]
+    - region "Hero" [ref=e69]:
+      - generic [ref=e70]:
+        - link "CashETH home" [ref=e71] [cursor=pointer]:
+          - /url: /
+          - generic [ref=e72]: CashETH
+        - navigation "Primary" [ref=e73]:
+          - link "How it works" [ref=e74] [cursor=pointer]:
+            - /url: "#flow"
+          - link "Credit" [ref=e75] [cursor=pointer]:
+            - /url: "#ceiling"
+          - link "Repayment" [ref=e76] [cursor=pointer]:
+            - /url: "#waterfall"
+          - link "Docs" [ref=e77] [cursor=pointer]:
+            - /url: /docs
+          - link "Dashboard" [ref=e78] [cursor=pointer]:
+            - /url: /dashboard
+        - generic [ref=e79]:
+          - button "Toggle color theme" [ref=e80] [cursor=pointer]
+          - link "Get started →" [ref=e82] [cursor=pointer]:
+            - /url: /docs
+            - text: Get started
+            - generic [ref=e83]: →
+      - generic [ref=e84]:
+        - generic [ref=e85]:
+          - heading "Invoices your agents can spend." [level=1] [ref=e86]
+          - paragraph [ref=e87]: An MCP that turns a buyer-signed invoice into USDC working capital your AI agents can spend - settled on Hedera.
+          - generic [ref=e88]:
+            - link "Get started →" [ref=e89] [cursor=pointer]:
+              - /url: /docs
+              - text: Get started
+              - generic [ref=e90]: →
+            - link "$ npm run demo" [ref=e91] [cursor=pointer]:
+              - /url: /docs#quickstart
+              - generic [ref=e92]: $
+              - text: npm run demo
+        - generic [ref=e94]:
+          - generic [ref=e95]:
+            - generic:
+              - generic [ref=e105] [cursor=pointer]
+              - generic [ref=e106] [cursor=pointer]
+              - generic [ref=e107] [cursor=pointer]
+              - generic [ref=e108] [cursor=pointer]
+              - generic [ref=e109] [cursor=pointer]
+              - generic [ref=e110] [cursor=pointer]
+              - generic [ref=e111] [cursor=pointer]
+              - generic [ref=e112] [cursor=pointer]
+              - generic [ref=e113] [cursor=pointer]
+              - generic [ref=e114] [cursor=pointer]
+              - generic [ref=e115] [cursor=pointer]
+              - generic [ref=e116] [cursor=pointer]
+              - generic [ref=e117] [cursor=pointer]
+              - generic [ref=e118] [cursor=pointer]
+              - generic [ref=e119] [cursor=pointer]
+              - generic [ref=e120] [cursor=pointer]
+              - generic [ref=e121] [cursor=pointer]
+              - generic [ref=e122] [cursor=pointer]
+              - generic [ref=e123] [cursor=pointer]
+              - generic [ref=e124] [cursor=pointer]
+              - generic [ref=e125] [cursor=pointer]
+              - generic [ref=e126] [cursor=pointer]
+              - generic [ref=e127] [cursor=pointer]
+              - generic [ref=e128] [cursor=pointer]
+              - generic [ref=e129] [cursor=pointer]
+              - generic [ref=e130] [cursor=pointer]
+              - generic [ref=e131] [cursor=pointer]
+              - generic [ref=e132] [cursor=pointer]
+              - generic [ref=e133] [cursor=pointer]
+              - generic [ref=e134] [cursor=pointer]
+              - generic [ref=e135] [cursor=pointer]
+              - generic [ref=e136] [cursor=pointer]
+              - generic [ref=e137] [cursor=pointer]
+              - generic [ref=e138] [cursor=pointer]
+              - generic [ref=e139] [cursor=pointer]
+              - generic [ref=e140] [cursor=pointer]
+              - generic [ref=e141] [cursor=pointer]
+              - generic [ref=e142] [cursor=pointer]
+              - generic [ref=e143] [cursor=pointer]
+              - generic [ref=e144] [cursor=pointer]
+              - generic [ref=e145] [cursor=pointer]
+              - generic [ref=e146] [cursor=pointer]
+              - generic [ref=e147] [cursor=pointer]
+              - generic [ref=e148] [cursor=pointer]
+              - generic [ref=e149] [cursor=pointer]
+              - generic [ref=e150] [cursor=pointer]
+              - generic [ref=e151] [cursor=pointer]
+              - generic [ref=e152] [cursor=pointer]
+              - generic [ref=e153] [cursor=pointer]
+              - generic [ref=e154] [cursor=pointer]
+              - generic [ref=e155] [cursor=pointer]
+              - generic [ref=e156] [cursor=pointer]
+              - generic [ref=e157] [cursor=pointer]
+              - generic [ref=e158] [cursor=pointer]
+              - generic [ref=e159] [cursor=pointer]
+              - generic [ref=e160] [cursor=pointer]
+              - generic [ref=e161] [cursor=pointer]
+              - generic [ref=e162] [cursor=pointer]
+              - generic [ref=e163] [cursor=pointer]
+              - generic [ref=e164] [cursor=pointer]
+              - generic [ref=e165] [cursor=pointer]
+              - generic [ref=e166] [cursor=pointer]
+              - generic [ref=e167] [cursor=pointer]
+              - generic [ref=e168] [cursor=pointer]
+              - generic [ref=e169] [cursor=pointer]
+              - generic [ref=e170] [cursor=pointer]
+              - generic [ref=e171] [cursor=pointer]
+              - generic [ref=e172] [cursor=pointer]
+              - generic [ref=e173] [cursor=pointer]
+              - generic [ref=e174] [cursor=pointer]
+              - generic [ref=e175] [cursor=pointer]
+              - generic [ref=e176] [cursor=pointer]
+              - generic [ref=e177] [cursor=pointer]
+              - generic [ref=e178] [cursor=pointer]
+              - generic [ref=e179] [cursor=pointer]
+              - generic [ref=e180] [cursor=pointer]
+              - generic [ref=e181] [cursor=pointer]
+              - generic [ref=e182] [cursor=pointer]
+              - generic [ref=e183] [cursor=pointer]
+              - generic [ref=e184] [cursor=pointer]
+              - generic [ref=e185] [cursor=pointer]
+              - generic [ref=e186] [cursor=pointer]
+              - generic [ref=e187] [cursor=pointer]
+              - generic [ref=e188] [cursor=pointer]
+              - generic: ℏ HTS
+              - generic: $ USDC
+              - generic: ℏ HCS
+              - generic: 1inch
+              - generic: Seller agent
+              - generic: Buyer agent
+              - generic [ref=e224] [cursor=pointer]:
+                - generic [ref=e225]: Orchestrator
+                - img [aria-hidden] [ref=e226]:
+                  - generic [ref=e227]: ♪
+                  - generic [ref=e228]: ♫
+              - generic [ref=e245] [cursor=pointer]:
+                - generic [ref=e246]: Lenders
+                - img [aria-hidden] [ref=e247]:
+                  - generic [ref=e248]: $
+                  - generic [ref=e263]: $
+                  - generic [ref=e278]: $
+              - generic: Worker agents
+              - generic [ref=e322] [cursor=pointer]:
+                - generic [ref=e323]: x402 merchant
+                - img [aria-hidden] [ref=e324]:
+                  - generic [ref=e326]: x402
+                  - generic [ref=e331]: 402 · API
+              - generic: INVOICE
+            - generic:
+              - generic: ℏ
+              - text: PLATFORM = HEDERA TESTNET · EVM 296
+          - generic [ref=e333]:
+            - generic [ref=e334]:
+              - generic [ref=e335]: "01"
+              - generic [ref=e336]: Upload
+              - generic [ref=e337]: Seller
+            - generic [ref=e338]:
+              - button "Step 1" [ref=e339] [cursor=pointer]
+              - button "Step 2" [ref=e341] [cursor=pointer]
+              - button "Step 3" [ref=e343] [cursor=pointer]
+              - button "Step 4" [ref=e345] [cursor=pointer]
+              - button "Step 5" [ref=e347] [cursor=pointer]
+              - button "Step 6" [ref=e349] [cursor=pointer]
+              - button "Step 7" [ref=e351] [cursor=pointer]
+              - button "Step 8" [ref=e353] [cursor=pointer]
+            - generic [ref=e355]:
+              - button "Previous step" [ref=e356] [cursor=pointer]: ‹
+              - button "Play or pause" [ref=e357] [cursor=pointer]: ❚❚
+              - button "Next step" [ref=e358] [cursor=pointer]: ›
+    - region [ref=e359]:
+      - generic [ref=e360]:
+        - generic [ref=e361]: HOW IT WORKS
+        - heading "From invoice to spendable capital in four moves." [level=2] [ref=e363]
+      - generic [ref=e364]:
+        - generic [ref=e366]:
+          - generic [ref=e367]:
+            - generic [ref=e368]:
+              - generic [ref=e369]: Seller agent
+              - generic [ref=e387]: uploads
+              - generic [ref=e390]:
+                - generic [ref=e391]:
+                  - generic [ref=e392]: Invoice
+                  - generic [ref=e393]: INV-2207
+                - generic [ref=e396]:
+                  - generic [ref=e397]: Net 30
+                  - generic [ref=e398]: $10,000
+                - generic [ref=e399]: ✓ EIP-712 signed
+              - generic [ref=e400]: signs
+              - generic [ref=e403]: Buyer agent
+            - generic [ref=e422]: "Registered on Hedera · receivable NFT #1"
+          - generic:
+            - generic:
+              - img [aria-hidden]:
+                - generic: $
+                - generic: $
+                - generic: $
+            - generic:
+              - generic:
+                - generic: Lender A · 7.00%
+                - generic: $4,000
+              - generic:
+                - generic: Lender B · 8.50%
+                - generic: $2,000
+              - generic:
+                - generic: Lender C · 13.00%
+                - generic: not needed
+            - generic: 1inch Aqua · cheapest first
+            - generic:
+              - generic:
+                - generic: Working capital
+                - generic: $6,000 USDC
+              - generic:
+                - generic: $0
+                - generic: 75% cap
+                - generic: $10,000
+          - generic:
+            - generic:
+              - generic:
+                - generic: Worker agents
+                - generic: pay per request over x402
+            - generic:
+              - generic:
+                - generic: Research API
+                - generic: $0.25
+                - generic: ✓ settled
+              - generic:
+                - generic: GPU compute
+                - generic: $1.20
+                - generic: ✓ settled
+              - generic:
+                - generic: Market data
+                - generic: $0.40
+                - generic: ✓ settled
+              - generic:
+                - generic: Compute · over budget
+                - generic: $5,500
+                - generic: ✕ blocked
+            - generic: Budgets can never exceed what lenders funded
+          - generic:
+            - generic:
+              - generic:
+                - generic: Buyer pays the router
+                - generic: $10,000
+            - generic:
+              - generic:
+                - generic:
+                  - generic: 1 · Lender A
+                  - generic: $4,023
+                - generic:
+                  - generic: 1 · Lender B
+                  - generic: $2,014
+                - generic:
+                  - generic: 2 · Seller
+                  - generic: $3,963
+            - generic:
+              - generic: ✓
+              - text: Repaid · buyer reputation updated
+          - generic [ref=e423]:
+            - button "01 Invoice in" [ref=e424] [cursor=pointer]
+            - button "02 Capital out" [ref=e426] [cursor=pointer]
+            - button "03 Agents spend" [ref=e428] [cursor=pointer]
+            - button "04 Repaid" [ref=e430] [cursor=pointer]
+        - generic [ref=e432]:
+          - generic [ref=e433]:
+            - generic [ref=e434]: "01"
+            - heading "Invoice in" [level=3] [ref=e435]
+            - paragraph [ref=e436]: Your seller agent uploads an invoice. The buyer's agent signs it - that signature is what makes it financeable.
+            - generic [ref=e437]:
+              - code [ref=e438]: upload_receivable
+              - code [ref=e439]: confirm_receivable
+          - generic [ref=e440]:
+            - generic [ref=e441]: "02"
+            - heading "Capital out" [level=3] [ref=e442]
+            - paragraph [ref=e443]: Lenders compete through 1inch Aqua. The cheapest capital fills first, up to 75% of the invoice.
+            - code [ref=e445]: open_facility
+          - generic [ref=e446]:
+            - generic [ref=e447]: "03"
+            - heading "Agents spend" [level=3] [ref=e448]
+            - paragraph [ref=e449]: Worker agents pay for APIs and compute over x402 - always inside budgets carved from what was funded.
+            - generic [ref=e450]:
+              - code [ref=e451]: reserve_spend
+              - code [ref=e452]: pay_x402
+          - generic [ref=e453]:
+            - generic [ref=e454]: "04"
+            - heading "Lenders repaid" [level=3] [ref=e455]
+            - paragraph [ref=e456]: When the buyer pays, the router repays lenders first. Whatever is left goes back to your agent.
+            - code [ref=e458]: repay_receivable
+    - region [ref=e459]:
+      - generic [ref=e460]:
+        - generic [ref=e461]:
+          - generic [ref=e462]: CREDIT CEILING
+          - heading "More agents never means more credit." [level=2] [ref=e464]
+        - generic [ref=e466]:
+          - generic [ref=e468]:
+            - generic [ref=e469]: Receivable
+            - generic [ref=e470]: $10,000
+          - generic [ref=e474]:
+            - generic [ref=e475]:
+              - generic [ref=e476]: Funded · cheapest first
+              - generic [ref=e477]: $6,000
+            - generic [ref=e478]:
+              - generic [ref=e479]: A · 7.00%
+              - generic [ref=e480]: B · 8.50%
+          - generic [ref=e482]:
+            - generic [ref=e483]:
+              - generic [ref=e484]: Agent budgets
+              - generic [ref=e485]: ≤ funded
+            - generic [ref=e486]:
+              - generic [ref=e487]: Research
+              - generic [ref=e488]: Compute
+              - generic [ref=e489]: Data
+              - generic [ref=e490]: Reserve
+          - generic [ref=e492]: 75% advance · borrowing base $7,500
+    - region [ref=e494]:
+      - generic [ref=e495]:
+        - generic [ref=e497]:
+          - generic [ref=e498]:
+            - generic [ref=e499]: Buyer pays the router
+            - generic [ref=e500]: $10,000
+          - generic [ref=e502]:
+            - generic [ref=e503]:
+              - generic [ref=e504]: Lender A
+              - generic [ref=e506]: 4,023.01
+            - generic [ref=e507]:
+              - generic [ref=e508]: Lender B
+              - generic [ref=e510]: 2,013.97
+            - generic [ref=e511]:
+              - generic [ref=e512]: Seller agent
+              - generic [ref=e514]: 3,963.01
+        - generic [ref=e515]:
+          - generic [ref=e516]: REPAYMENT
+          - heading "Lenders first. Automatically." [level=2] [ref=e518]
+          - code [ref=e519]: fee = principal × apr × max(elapsed, 30d) / 365d
+    - region "Principles" [ref=e520]:
+      - generic [ref=e521]:
+        - generic [ref=e522]:
+          - generic [ref=e523]: "01"
+          - generic [ref=e524]: The buyer's signature is the root of trust.
+        - generic [ref=e525]:
+          - generic [ref=e526]: "02"
+          - generic [ref=e527]: Every limit is checked twice.
+        - generic [ref=e528]:
+          - generic [ref=e529]: "03"
+          - generic [ref=e530]: AI explains. It never approves.
+      - generic [ref=e531]:
+        - generic [ref=e532]: BUILT WITH
+        - generic [ref=e533]:
+          - generic [ref=e534]: ℏ
+          - text: Hedera
+        - generic [ref=e535]:
+          - generic [ref=e536]: 1"
+          - text: 1inch Aqua
+        - generic [ref=e537]:
+          - generic [ref=e538]: $
+          - text: USDC
+        - generic [ref=e539]:
+          - generic [ref=e540]: "402"
+          - text: x402
+        - generic [ref=e541]:
+          - generic [ref=e542]: M
+          - text: MCP
+    - generic [ref=e544]:
+      - generic [ref=e545]:
+        - heading "Cash me if you can." [level=2] [ref=e546]
+        - generic [ref=e547]:
+          - link "Read the docs →" [ref=e548] [cursor=pointer]:
+            - /url: /docs
+            - text: Read the docs
+            - generic [ref=e549]: →
+          - link "$ npm run demo" [ref=e550] [cursor=pointer]:
+            - /url: /docs#quickstart
+            - generic [ref=e551]: $
+            - text: npm run demo
+      - generic [ref=e552]:
+        - generic [ref=e553]: CashETH
+        - link "Tried it? Give feedback →" [ref=e554] [cursor=pointer]:
+          - /url: https://github.com/Harshavardhan-28/CashETH-EthGlobal-Mumbai/issues/new?template=feedback.yml
+        - generic [ref=e555]: Hedera testnet demo · not production credit
+  - alert [ref=e556]

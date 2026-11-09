@@ -1,319 +1,255 @@
 {
   "estimatedDuration": 45,
-
   "difficultyLevels": [
-    "Junior",
     "SDE1",
     "SDE2",
     "Senior"
   ],
-
   "stages": [
     {
       "name": "Requirements",
-
-      "objective": "Gather all functional and non-functional requirements before starting the design.",
-
-      "entryQuestion": "Before we begin the design, do you have any requirement clarification questions?",
-
+      "entryQuestion": "Before designing a cloud drive, what scope and scale assumptions would you clarify?",
+      "objective": "Agree on product behavior, measurable quality targets and the stated exercise workload.",
       "completionCriteria": [
         {
-          "name": "Functional Requirements",
+          "name": "Functional scope",
           "required": true,
           "concepts": [
-            "File Upload",
-            "File Download",
-            "Folder Management",
-            "File Sharing",
-            "Version History",
-            "File Synchronization"
-          ]
+            "Core operations and users",
+            "Explicit exclusions"
+          ],
+          "guidance": "Include folders, resumable upload, version history, device sync and permission checks; distinguish binary-file conflicts from collaborative editing."
         },
         {
-          "name": "Non Functional Requirements",
+          "name": "Quality targets",
           "required": true,
           "concepts": [
-            "Availability",
-            "Durability",
-            "Scalability",
-            "Latency"
-          ]
+            "Latency and availability targets",
+            "Consistency and durability expectations"
+          ],
+          "guidance": "Prefer no silent data loss and access-controlled metadata; make synchronization freshness explicit."
         },
         {
-          "name": "Constraints",
+          "name": "Capacity estimates",
           "required": true,
           "concepts": [
-            "100 Million DAU",
-            "Large Files",
-            "Global Users",
-            "Multiple Devices"
-          ]
+            "Daily volume divided by 86400",
+            "Peak multiplier and storage budget"
+          ],
+          "guidance": "Use the fictional baseline or state a justified alternative; derive average and peak rates and distinguish payload bytes from replication and indexes."
         }
       ]
     },
-
     {
       "name": "High Level Design",
-
-      "objective": "Understand the overall architecture and major components.",
-
-      "entryQuestion": "Great. Walk me through your high-level architecture.",
-
+      "entryQuestion": "Walk me through the metadata path and the file-byte path separately.",
+      "objective": "Keep large file bytes out of the metadata database and API hot path.",
       "completionCriteria": [
         {
-          "name": "Client",
-
+          "name": "Metadata ownership",
           "required": true,
-
           "concepts": [
-            "Desktop Client",
-            "Mobile Client"
-          ]
+            "Metadata service",
+            "Authorization boundary"
+          ],
+          "guidance": "Use a metadata service for file identity, folders, versions and access checks."
         },
         {
-          "name": "Gateway",
-
+          "name": "Content path",
           "required": true,
-
           "concepts": [
-            "API Gateway"
-          ]
+            "Object storage",
+            "Signed upload session"
+          ],
+          "guidance": "Use durable object storage and scoped upload/download authorization; direct client transfer is valid."
         },
         {
-          "name": "Metadata Service",
-
+          "name": "Change propagation",
           "required": true,
-
           "concepts": [
-            "Metadata Service"
-          ]
-        },
-        {
-          "name": "Storage",
-
-          "required": true,
-
-          "concepts": [
-            "Object Storage"
-          ]
-        },
-        {
-          "name": "Database",
-
-          "required": true,
-
-          "concepts": [
-            "Metadata Database"
-          ]
+            "Change log",
+            "Device sync notification"
+          ],
+          "guidance": "Use a durable change feed and a notification hint so devices can recover missed events."
         }
       ]
     },
-
     {
-      "name": "Upload Flow",
-
-      "objective": "Evaluate how files are uploaded efficiently.",
-
-      "entryQuestion": "Walk me through the complete upload flow.",
-
+      "name": "Core Flow",
+      "entryQuestion": "How does an interrupted upload become one committed file version and synchronize safely?",
+      "objective": "Cover resumable upload and version-checked synchronization.",
       "completionCriteria": [
         {
-          "name": "Chunk Upload",
-
+          "name": "Resumable transfer",
           "required": true,
-
           "concepts": [
-            "Chunking",
-            "Parallel Upload"
-          ]
+            "Chunk manifest",
+            "Part checksum and retry"
+          ],
+          "guidance": "Track upload session parts and checksums, retry missing chunks and bound session lifetime."
         },
         {
-          "name": "Deduplication",
-
+          "name": "Atomic publication",
           "required": true,
-
           "concepts": [
-            "Hashing",
-            "Duplicate Detection"
-          ]
+            "Upload completion idempotency",
+            "Content before metadata publication"
+          ],
+          "guidance": "Publish a metadata version only after referenced content is durable; retried completion must be idempotent."
         },
         {
-          "name": "Resume Upload",
-
+          "name": "Version conflict",
+          "required": true,
+          "concepts": [
+            "Conditional version update",
+            "Conflict copy"
+          ],
+          "guidance": "Use an expected version or equivalent concurrency check; preserve a conflicting copy rather than silently overwriting a binary file."
+        },
+        {
+          "name": "Optional deduplication",
           "required": false,
-
           "concepts": [
-            "Checkpoint",
-            "Retry"
-          ]
+            "Scoped content hash",
+            "Deduplication privacy"
+          ],
+          "guidance": "Deduplicate within an authorized tenant or user boundary, if included; avoid revealing another user's content existence."
         }
       ]
     },
-
     {
-      "name": "Synchronization",
-
-      "objective": "Evaluate synchronization across devices.",
-
-      "entryQuestion": "How would you synchronize files across multiple devices?",
-
+      "name": "Data Model",
+      "entryQuestion": "How would you model folders, versions, access permissions and the sync cursor?",
+      "objective": "Define metadata keys and the access paths needed for file listing and sync.",
       "completionCriteria": [
         {
-          "name": "Change Detection",
-
+          "name": "File metadata",
           "required": true,
-
           "concepts": [
-            "File Metadata",
-            "Version Number"
-          ]
+            "file_id and parent_folder_id",
+            "Version manifest"
+          ],
+          "guidance": "Model stable file IDs, parent folder, owner, current version and blob/chunk references."
         },
         {
-          "name": "Conflict Resolution",
-
+          "name": "Access control records",
           "required": true,
-
           "concepts": [
-            "Last Writer Wins",
-            "Merge"
-          ]
+            "File permission grant",
+            "Revocation version"
+          ],
+          "guidance": "Represent sharing grants and check permission on metadata and content authorization."
         },
         {
-          "name": "Notifications",
-
+          "name": "Change history",
           "required": true,
-
           "concepts": [
-            "Push Sync",
-            "Polling"
-          ]
+            "Tenant change sequence",
+            "Parent-folder index and tombstones"
+          ],
+          "guidance": "Persist ordered changes and tombstones with per-device cursors; a folder listing index must not require scanning all files."
         }
       ]
     },
-
     {
-      "name": "Database",
-
-      "objective": "Evaluate metadata storage design.",
-
-      "entryQuestion": "How would you design the metadata database?",
-
+      "name": "Reliability",
+      "entryQuestion": "How do offline devices recover, and what happens when a shared file is deleted or access is revoked?",
+      "objective": "Keep content, sync recovery and authorization correct through failures.",
       "completionCriteria": [
         {
-          "name": "Schema",
-
+          "name": "Missed changes",
           "required": true,
-
           "concepts": [
-            "Users",
-            "Files",
-            "Folders",
-            "Permissions"
-          ]
+            "Cursor replay",
+            "Full-resync fallback"
+          ],
+          "guidance": "Replay changes after a cursor, detect a cursor older than retention and perform a bounded resync."
         },
         {
-          "name": "Indexes",
-
+          "name": "Content recovery",
           "required": true,
-
           "concepts": [
-            "user_id",
-            "parent_folder"
-          ]
+            "Checksum verification",
+            "Orphan cleanup"
+          ],
+          "guidance": "Verify checksums, handle orphan chunks and retry failed object transfers without exposing partial files."
         },
         {
-          "name": "Versioning",
-
+          "name": "Revocation safety",
           "required": true,
-
           "concepts": [
-            "Version Table"
-          ]
+            "Short-lived authorized download",
+            "Permission cache invalidation"
+          ],
+          "guidance": "Bound signed-URL lifetimes and invalidate permission caches; explain the allowed access window."
         }
       ]
     },
-
     {
       "name": "Scaling",
-
-      "objective": "Evaluate scalability of the architecture.",
-
-      "entryQuestion": "How would this system scale to hundreds of millions of users?",
-
+      "entryQuestion": "What capacity and partitioning plan supports the stated metadata and file traffic?",
+      "objective": "Size bytes separately from metadata requests and partition by ownership.",
       "completionCriteria": [
         {
-          "name": "Caching",
-
+          "name": "Byte budget",
           "required": true,
-
           "concepts": [
-            "Redis"
-          ]
-        },
-        {
-          "name": "CDN",
-
-          "required": true,
-
-          "concepts": [
-            "CDN"
-          ]
+            "MiB versus decimal TB",
+            "Version and replication overhead"
+          ],
+          "guidance": "Estimate 10.49 TB/day of logical uploads and a 30-day new-upload cohort of about 314.57 TB before copies and versions."
         },
         {
           "name": "Partitioning",
-
           "required": true,
-
           "concepts": [
-            "Metadata Sharding"
-          ]
+            "Tenant or owner shard",
+            "Large-folder pagination"
+          ],
+          "guidance": "Partition metadata by tenant or ownership boundary and explain shared-folder hotspots."
         },
         {
-          "name": "Replication",
-
+          "name": "Distribution",
           "required": true,
-
           "concepts": [
-            "Replication"
-          ]
+            "Direct object transfer",
+            "Per-tenant quotas"
+          ],
+          "guidance": "Use object-store multipart transfer and authorized CDN downloads; bound concurrent chunks and retry storms."
         }
       ]
     },
-
     {
       "name": "Tradeoffs",
-
-      "objective": "Assess architectural reasoning and tradeoffs.",
-
-      "entryQuestion": "Let's discuss some tradeoffs in your design.",
-
+      "entryQuestion": "How would you choose consistency, conflict resolution and deduplication boundaries?",
+      "objective": "Explain the consequences for user data and sharing.",
       "completionCriteria": [
         {
-          "name": "Consistency",
-
+          "name": "Metadata consistency",
           "required": true,
-
           "concepts": [
-            "Metadata Consistency"
-          ]
+            "Strong version publication",
+            "Eventual change hints"
+          ],
+          "guidance": "Compare conditional strong metadata writes with eventual notifications; do not require global strong consistency for all file bytes."
         },
         {
-          "name": "Availability",
-
+          "name": "Conflict tradeoff",
           "required": true,
-
           "concepts": [
-            "Availability"
-          ]
+            "Conflict preservation",
+            "Explicit overwrite policy"
+          ],
+          "guidance": "Compare conflict copies with last-writer-wins and explain why binary merges are not generally safe."
         },
         {
-          "name": "Storage",
-
+          "name": "Deduplication tradeoff",
           "required": true,
-
           "concepts": [
-            "Object Storage vs Block Storage"
-          ]
+            "Tenant-scoped deduplication",
+            "Reference counting or mark-and-sweep"
+          ],
+          "guidance": "Balance storage savings with access isolation, hashing cost and garbage collection."
         }
       ]
     }

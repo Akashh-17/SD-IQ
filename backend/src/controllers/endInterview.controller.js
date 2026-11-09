@@ -1,3 +1,4 @@
+import { logError } from "../utils/logger.js";
 import { agent } from "./interview.controller.js";
 import { ReportService } from "../services/report/report.service.js";
 
@@ -6,6 +7,10 @@ export async function endInterview(req, res) {
     try {
 
         const { interviewId } = req.body;
+
+        if (await ReportService.findSaved(interviewId)) {
+            return res.status(200).json({ status: "ready" });
+        }
 
         // =====================================================
         // Load LangGraph State
@@ -31,38 +36,19 @@ export async function endInterview(req, res) {
 
         }
 
-        // =====================================================
-        // Generate Report
-        // Safe to repeat: returns the saved report if the interview
-        // already ended (e.g. the candidate said "wrap up"), and
-        // waits if another request is generating it right now.
-        // =====================================================
+        const result = await ReportService.start(interviewId, graphState.values);
 
-        await ReportService.generate(
-
-            interviewId,
-
-            graphState.values
-
-        );
-
-        res.json({
-
-            success: true,
-
-            interviewId
-
-        });
+        res.status(result.status === "ready" ? 200 : 202).json(result);
 
     }
 
     catch (err) {
 
-        console.error(err);
+        logError(err);
 
         res.status(500).json({
 
-            message: err.message
+            message: "Unable to start report generation. Please try again."
 
         });
 

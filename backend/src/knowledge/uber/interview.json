@@ -1,320 +1,255 @@
 {
-  "estimatedDuration": 55,
-
+  "estimatedDuration": 45,
   "difficultyLevels": [
-    "Junior",
     "SDE1",
     "SDE2",
     "Senior"
   ],
-
   "stages": [
     {
       "name": "Requirements",
-
-      "objective": "Gather all functional and non-functional requirements before beginning the design.",
-
-      "entryQuestion": "Before designing Uber, what clarification questions would you ask?",
-
+      "entryQuestion": "Before designing a ride-hailing service, what scope and scale assumptions would you clarify?",
+      "objective": "Agree on product behavior, measurable quality targets and the stated exercise workload.",
       "completionCriteria": [
         {
-          "name": "Functional Requirements",
+          "name": "Functional scope",
           "required": true,
           "concepts": [
-            "Ride Request",
-            "Ride Matching",
-            "Live Tracking",
-            "Payments",
-            "Notifications",
-            "Ride History"
-          ]
+            "Core operations and users",
+            "Explicit exclusions"
+          ],
+          "guidance": "Clarify rider/driver actions, cancellation, assignment and payment boundaries; location and matching freshness differ from trip durability."
         },
         {
-          "name": "Non Functional Requirements",
+          "name": "Quality targets",
           "required": true,
           "concepts": [
-            "Low Latency",
-            "Availability",
-            "Scalability",
-            "Fault Tolerance"
-          ]
+            "Latency and availability targets",
+            "Consistency and durability expectations"
+          ],
+          "guidance": "Set matching latency and stale-location limits, and require exclusive assignment despite retries and partitions."
         },
         {
-          "name": "Constraints",
+          "name": "Capacity estimates",
           "required": true,
           "concepts": [
-            "Millions of Drivers",
-            "Real-time GPS",
-            "Peak Traffic",
-            "Global Users"
-          ]
+            "Daily volume divided by 86400",
+            "Peak multiplier and storage budget"
+          ],
+          "guidance": "Use the fictional baseline or state a justified alternative; derive average and peak rates and distinguish payload bytes from replication and indexes."
         }
       ]
     },
-
     {
       "name": "High Level Design",
-
-      "objective": "Evaluate the overall architecture.",
-
-      "entryQuestion": "Walk me through your high-level design.",
-
+      "entryQuestion": "Walk me through location ingestion, driver search and authoritative trip assignment.",
+      "objective": "Separate ephemeral geospatial state from durable trip and payment state.",
       "completionCriteria": [
         {
-          "name": "Client",
+          "name": "Location boundary",
           "required": true,
           "concepts": [
-            "Driver App",
-            "Rider App"
-          ]
+            "Location service",
+            "Expiring geospatial index"
+          ],
+          "guidance": "Ingest timestamped locations and update a geospatial index with expiry; do not write every fix synchronously to the trip row."
         },
         {
-          "name": "Gateway",
+          "name": "Matching boundary",
           "required": true,
           "concepts": [
-            "API Gateway"
-          ]
+            "Matching service",
+            "ETA estimation"
+          ],
+          "guidance": "Find eligible candidates and estimate pickup time; nearest straight-line distance alone is not necessarily best."
         },
         {
-          "name": "Trip Service",
+          "name": "Trip authority",
           "required": true,
           "concepts": [
-            "Trip Service"
-          ]
-        },
-        {
-          "name": "Matching Service",
-          "required": true,
-          "concepts": [
-            "Matching Service"
-          ]
-        },
-        {
-          "name": "Location Service",
-          "required": true,
-          "concepts": [
-            "Location Service"
-          ]
+            "Trip state machine",
+            "Durable trip database"
+          ],
+          "guidance": "Make a trip service own assignment, state transitions and payment requests in a durable store."
         }
       ]
     },
-
     {
-      "name": "Location Tracking",
-
-      "objective": "Evaluate real-time driver location updates.",
-
-      "entryQuestion": "How would drivers continuously update their location?",
-
+      "name": "Core Flow",
+      "entryQuestion": "How do you match a rider when nearby drivers can accept other rides at the same time?",
+      "objective": "Combine geospatial candidate search with concurrency-safe dispatch.",
       "completionCriteria": [
         {
-          "name": "Realtime",
+          "name": "Fresh candidates",
           "required": true,
           "concepts": [
-            "WebSocket",
-            "gRPC",
-            "Streaming"
-          ]
+            "Geohash, H3, R-tree or equivalent",
+            "Timestamp and eligibility filter"
+          ],
+          "guidance": "Use a spatial grid/index or another justified method, filter stale GPS and consider accuracy and road travel time."
         },
         {
-          "name": "Geo Index",
+          "name": "Exclusive assignment",
           "required": true,
           "concepts": [
-            "Geohash",
-            "H3",
-            "QuadTree"
-          ]
+            "Compare-and-set driver lease",
+            "Assignment fencing token"
+          ],
+          "guidance": "Use conditional offer reservations and fence stale acceptance. An expiring offer is not an accepted trip: retain authoritative driver ownership for accepted/in-progress trips until a terminal transition or explicit reconciled recovery."
         },
         {
-          "name": "Frequency",
+          "name": "Dispatch retries",
           "required": true,
           "concepts": [
-            "GPS Updates"
-          ]
+            "Offer expiry",
+            "Idempotent acceptance"
+          ],
+          "guidance": "Handle acceptance timeout, duplicate offers and cancellation while moving to another driver without double booking."
+        },
+        {
+          "name": "Trip transitions",
+          "required": true,
+          "concepts": [
+            "Versioned trip transitions",
+            "Terminal-state handling"
+          ],
+          "guidance": "Define legal requested, offered, accepted, in-progress, completed and cancelled transitions."
         }
       ]
     },
-
     {
-      "name": "Ride Matching",
-
-      "objective": "Evaluate driver dispatch algorithms.",
-
-      "entryQuestion": "How would you find the best driver for a rider?",
-
+      "name": "Data Model",
+      "entryQuestion": "How would you model authoritative trips and assignments separately from live driver locations?",
+      "objective": "Choose keys for trip history, driver exclusivity and idempotent payment.",
       "completionCriteria": [
         {
-          "name": "Nearest Driver",
+          "name": "Trip schema",
           "required": true,
           "concepts": [
-            "Geospatial Search"
-          ]
+            "trip_id and state_version",
+            "Rider and driver history indexes"
+          ],
+          "guidance": "Store rider, driver, state, state version and timestamps with indexed history access."
         },
         {
-          "name": "Dispatch",
+          "name": "Assignment record",
           "required": true,
           "concepts": [
-            "Dispatch Algorithm"
-          ]
+            "One active assignment per driver",
+            "Lease version"
+          ],
+          "guidance": "Track offer expiry separately from durable accepted occupancy, with trip ID and a fencing/version token; enforce at most one nonterminal trip per driver."
         },
         {
-          "name": "ETA",
+          "name": "Payment request",
           "required": true,
           "concepts": [
-            "ETA"
-          ]
+            "Idempotency key",
+            "Payment ledger state"
+          ],
+          "guidance": "Use a stable payment operation ID and separate payment state from GPS and matching."
         }
       ]
     },
-
     {
-      "name": "Trip Lifecycle",
-
-      "objective": "Evaluate complete trip management.",
-
-      "entryQuestion": "Walk me through the lifecycle of a trip.",
-
+      "name": "Reliability",
+      "entryQuestion": "What happens when GPS is stale, a matching server crashes or payment callbacks are retried?",
+      "objective": "Preserve assignment safety while allowing bounded degraded behavior.",
       "completionCriteria": [
         {
-          "name": "States",
+          "name": "Stale locations",
           "required": true,
           "concepts": [
-            "Requested",
-            "Accepted",
-            "In Progress",
-            "Completed"
-          ]
+            "Location sequence or timestamp",
+            "Location TTL"
+          ],
+          "guidance": "Expire inactive drivers, reject out-of-order fixes and account for GPS uncertainty."
         },
         {
-          "name": "Cancellation",
+          "name": "Assignment recovery",
           "required": true,
           "concepts": [
-            "Driver Cancel",
-            "Rider Cancel"
-          ]
+            "Fencing on recovery",
+            "Reconciliation"
+          ],
+          "guidance": "Expire abandoned offers and fence stale workers; renew or reconcile accepted trip ownership rather than declaring a busy driver available merely because a timer expired."
         },
         {
-          "name": "Payments",
+          "name": "Payment correctness",
           "required": true,
           "concepts": [
-            "Payment Service"
-          ]
+            "Idempotent payment operation",
+            "Retry and reconciliation"
+          ],
+          "guidance": "Use idempotent provider requests and callbacks; trip completion must not charge twice."
         }
       ]
     },
-
-    {
-      "name": "Database",
-
-      "objective": "Evaluate data modelling.",
-
-      "entryQuestion": "How would you design the database schema?",
-
-      "completionCriteria": [
-        {
-          "name": "Entities",
-          "required": true,
-          "concepts": [
-            "Users",
-            "Drivers",
-            "Trips",
-            "Payments"
-          ]
-        },
-        {
-          "name": "Indexes",
-          "required": true,
-          "concepts": [
-            "Driver Location",
-            "Trip ID"
-          ]
-        },
-        {
-          "name": "History",
-          "required": true,
-          "concepts": [
-            "Trip History"
-          ]
-        }
-      ]
-    },
-
     {
       "name": "Scaling",
-
-      "objective": "Evaluate scalability.",
-
-      "entryQuestion": "How would Uber scale globally?",
-
+      "entryQuestion": "How would you partition the location and dispatch workload across regions and dense cities?",
+      "objective": "Scale geospatial reads, hot areas and durable writes independently.",
       "completionCriteria": [
         {
-          "name": "Cache",
+          "name": "Location capacity",
           "required": true,
           "concepts": [
-            "Redis"
-          ]
+            "Update frequency arithmetic",
+            "Ephemeral latest-position state"
+          ],
+          "guidance": "500000 drivers / 5 seconds is 100000 updates/s; a 2x burst is 200000 updates/s. Do not confuse this with trip request throughput."
         },
         {
-          "name": "Queue",
+          "name": "Regional ownership",
           "required": true,
           "concepts": [
-            "Kafka"
-          ]
+            "Regional dispatch owner",
+            "Spatial hotspot subdivision"
+          ],
+          "guidance": "Partition by city/region and subdivide hot cells while searching neighboring cells and handling boundaries."
         },
         {
-          "name": "Partitioning",
+          "name": "Durable throughput",
           "required": true,
           "concepts": [
-            "Sharding"
-          ]
-        },
-        {
-          "name": "Replication",
-          "required": true,
-          "concepts": [
-            "Replication"
-          ]
+            "Trip write rate",
+            "Separate telemetry pipeline"
+          ],
+          "guidance": "Size 231.48 average and 1157.41 peak ride requests/s separately from location traffic; buffer optional history asynchronously."
         }
       ]
     },
-
     {
       "name": "Tradeoffs",
-
-      "objective": "Assess architectural reasoning.",
-
-      "entryQuestion": "Let's discuss the tradeoffs in your design.",
-
+      "entryQuestion": "What would you trade between matching quality, latency and assignment consistency during failures?",
+      "objective": "Defend a concrete regional dispatch policy.",
       "completionCriteria": [
         {
-          "name": "Consistency",
+          "name": "Matching quality tradeoff",
           "required": true,
           "concepts": [
-            "Consistency"
-          ]
+            "Distance versus ETA",
+            "Greedy versus small-batch matching"
+          ],
+          "guidance": "Compare nearest-candidate dispatch with ETA-aware or batched matching and state a latency budget."
         },
         {
-          "name": "Availability",
+          "name": "Consistency tradeoff",
           "required": true,
           "concepts": [
-            "Availability"
-          ]
+            "Eventual location state",
+            "Consistent driver reservation"
+          ],
+          "guidance": "Distinguish eventually fresh locations from exclusive authoritative assignment; explain the partition policy."
         },
         {
-          "name": "Geo Index",
+          "name": "Operations tradeoff",
           "required": true,
           "concepts": [
-            "Geohash",
-            "H3"
-          ]
-        },
-        {
-          "name": "Dispatch",
-          "required": true,
-          "concepts": [
-            "Nearest Driver",
-            "ETA"
-          ]
+            "Match latency and cancellation metrics",
+            "Recovery cost and safety"
+          ],
+          "guidance": "Choose key health signals such as stale-driver rate, match latency, expired offers and duplicate-payment prevention."
         }
       ]
     }

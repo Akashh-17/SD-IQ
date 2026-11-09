@@ -1,0 +1,22 @@
+.auth-shell { display: grid; min-height: 100dvh; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); background: rgb(var(--color-bg)); color: rgb(var(--color-text)); }
+.auth-panel { display: flex; min-width: 0; min-height: 100dvh; flex-direction: column; }
+.auth-brand { display: flex; min-height: 100px; align-items: center; justify-content: space-between; gap: 16px; padding: 24px 40px; }
+.auth-form-area { display: flex; flex: 1; align-items: center; justify-content: center; padding: 36px 40px 48px; }
+.auth-form-content { width: 100%; max-width: 400px; }
+.auth-panel-footer { padding: 24px 40px; font-family: 'Geist Mono', ui-monospace, monospace; font-size: 10px; color: rgb(var(--color-muted)); }
+.auth-product { display: flex; min-width: 0; align-items: center; justify-content: center; padding: 64px 48px; border-left: 1px solid rgb(var(--color-border)); background: rgb(var(--color-surface)); }
+.auth-preview-canvas { overflow: hidden; background: rgb(var(--color-bg)); }
+.auth-preview-diagram { position: relative; padding: 40px 22px; background-image: radial-gradient(rgb(var(--color-muted) / 0.13) 1px, transparent 1px); background-size: 20px 20px; }
+.auth-preview-nodes { position: relative; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: center; gap: 20px; }
+.auth-preview-node { display: flex; min-height: 98px; flex-direction: column; align-items: center; justify-content: center; gap: 12px; padding: 10px 4px; }
+.auth-preview-connections { position: absolute; inset: 0; display: grid; grid-template-columns: 1fr 1fr; align-items: center; padding-inline: 19%; }
+.auth-preview-line { height: 1px; background: rgb(var(--color-control-border)); }
+.auth-status-placeholder { min-height: 330px; padding-top: 24px; }
+@media (max-width: 1023px) {
+    .auth-shell { grid-template-columns: minmax(0, 1fr); }
+    .auth-product { display: none; }
+    .auth-brand { min-height: 88px; padding: 20px 24px; }
+    .auth-form-area { padding: 24px 24px 40px; }
+    .auth-panel-footer { padding: 24px; text-align: center; }
+}
+@media (max-width: 380px) { .auth-brand { padding-inline: 20px; } .auth-form-area { padding-inline: 20px; } }

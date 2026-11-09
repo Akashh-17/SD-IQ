@@ -1,10 +1,11 @@
+import type { Node, Edge } from "reactflow";
 import axios from "axios";
 import { supabase } from "../lib/supabase";
 import { API_URL } from "../config";
 
 export async function saveGraph(
     interviewId: string,
-    graph: any
+    graph: { nodes: Node[]; edges: Edge[] }
 ) {
 
     const {

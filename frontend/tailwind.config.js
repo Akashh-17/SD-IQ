@@ -1,36 +1,37 @@
 /** @type {import('tailwindcss').Config} */
+const color = name => `rgb(var(--color-${name}) / <alpha-value>)`;
+
 export default {
   content: ['./index.html', './src/**/*.{ts,tsx}'],
   theme: {
     extend: {
       colors: {
-        base: {
-          950: '#0a0a0b',
-          900: '#0e0e10',
-          850: '#131316',
-          800: '#18181b',
-          700: '#232327',
-          600: '#2e2e33',
-        },
-        amber: {
-          400: '#f2b705',
-          500: '#eab308',
-          600: '#ca8a04',
-        },
+        bg: color('bg'), surface: color('surface'), elevated: color('elevated'),
+        border: color('border'), text: color('text'), muted: color('muted'),
+        accent: color('accent'), success: color('success'), warning: color('warning'), danger: color('danger'),
+        'on-accent': color('on-accent'),
+        // Compatibility for existing pages as they migrate to semantic tokens.
+        base: { DEFAULT: color('bg'), 950: color('bg'), 900: color('surface'), 850: color('surface'), 800: color('elevated'), 700: color('border'), 600: color('control-border') },
+        amber: { 400: color('accent'), 500: color('accent-hover'), 600: color('accent-hover') },
       },
       fontFamily: {
-        display: ['"Sora"', 'ui-sans-serif', 'system-ui'],
-        body: ['"Inter"', 'ui-sans-serif', 'system-ui'],
-        mono: ['"JetBrains Mono"', 'ui-monospace', 'SFMono-Regular'],
+        display: ['Geist', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        body: ['Geist', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        mono: ['"Geist Mono"', 'ui-monospace', 'SFMono-Regular', 'monospace'],
       },
-      boxShadow: {
-        glow: '0 0 0 1px rgba(242,183,5,0.15), 0 8px 30px -8px rgba(242,183,5,0.25)',
-        card: '0 1px 0 0 rgba(255,255,255,0.04) inset, 0 20px 40px -20px rgba(0,0,0,0.6)',
+      fontSize: {
+        display: ['var(--type-display)', { lineHeight: '0.98', letterSpacing: '-0.065em', fontWeight: '550' }],
+        h1: ['var(--type-h1)', { lineHeight: '1.06', letterSpacing: '-0.05em', fontWeight: '550' }],
+        h2: ['var(--type-h2)', { lineHeight: '1.12', letterSpacing: '-0.04em', fontWeight: '550' }],
+        h3: ['var(--type-h3)', { lineHeight: '1.2', letterSpacing: '-0.025em', fontWeight: '550' }],
+        h4: ['var(--type-h4)', { lineHeight: '1.3', letterSpacing: '-0.015em', fontWeight: '550' }],
+        body: ['var(--type-body)', { lineHeight: '1.65' }],
+        mono: ['var(--type-mono)', { lineHeight: '1.6', letterSpacing: '-0.02em' }],
       },
-      backgroundImage: {
-        grid: 'linear-gradient(to right, rgba(255,255,255,0.035) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.035) 1px, transparent 1px)',
-      },
+      borderRadius: { card: 'var(--radius-card)', control: 'var(--radius-control)', pill: 'var(--radius-pill)' },
+      boxShadow: { glow: 'var(--shadow-glow)', card: 'var(--shadow-card)', floating: 'var(--shadow-floating)' },
+      backgroundImage: { grid: 'radial-gradient(rgb(var(--color-muted) / 0.14) 1px, transparent 1px)' },
     },
   },
   plugins: [],
-}
+};

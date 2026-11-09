@@ -1,3 +1,4 @@
+import { logError } from "../utils/logger.js";
 import { GraphService } from "../services/graph/graph.service.js";
 import { InterviewService } from "../services/interview/interview.service.js";
 
@@ -56,7 +57,7 @@ export async function saveGraph(req, res) {
 
     catch (err) {
 
-        console.error(err);
+        logError(err);
 
         res.status(500).json({
 

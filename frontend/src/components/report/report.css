@@ -1,0 +1,50 @@
+.report-page { color: rgb(var(--color-text)); color-scheme: dark; }
+.report-score-arc { animation: report-score-in 1.05s cubic-bezier(.2,.8,.2,1) both; }
+.report-stage-animate .report-stage-fill [role="progressbar"] > div { transform-origin: left; animation: report-bar-in .65s cubic-bezier(.2,.8,.2,1) var(--report-delay,0ms) both; }
+.report-diagram .react-flow__controls { overflow: hidden; border: 1px solid rgb(var(--color-border)); border-radius: var(--radius-control); box-shadow: none; }
+.report-diagram .react-flow__controls-button { width: 28px; height: 28px; color: rgb(var(--color-text)); fill: currentColor; background: rgb(var(--color-surface)); border-color: rgb(var(--color-border)); }
+.report-diagram .react-flow__controls-button:hover { background: rgb(var(--color-elevated)); }
+.report-diagram .react-flow__attribution { font-size: 8px; background: rgb(var(--color-surface)); color: rgb(var(--color-muted)); }
+.report-diagram .react-flow__handle { width: 6px; height: 6px; border-color: rgb(var(--color-muted)); background: rgb(var(--color-surface)); }
+.report-snapshot-node { border-color: rgb(var(--color-border)); background: rgb(var(--color-surface)); box-shadow: 0 3px 12px rgb(0 0 0 / .12); }
+@keyframes report-score-in { from { stroke-dashoffset: 100; } to { stroke-dashoffset: var(--score-offset); } }
+@keyframes report-bar-in { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+@media (prefers-reduced-motion: reduce) { .report-score-arc, .report-stage-fill [role="progressbar"] > div { animation: none; } }
+@media print {
+    @page { margin: 14mm; }
+    body:has(.report-page) { background: white !important; color: #17201b; }
+    body:has(.report-page) #workspace-sidebar,
+    body:has(.report-page) #workspace-sidebar + div > header,
+    body:has(.report-page) .skip-link,
+    body:has(.report-page) [role="tooltip"],
+    body:has(.report-page) [role="status"],
+    body:has(.report-page) [role="alert"],
+    .report-page .report-no-print { display: none !important; }
+    body:has(.report-page) #root,
+    body:has(.report-page) #root > div,
+    body:has(.report-page) #workspace-sidebar + div { padding: 0 !important; background: white !important; }
+    body:has(.report-page) #workspace-main > div { max-width: none !important; padding: 0 !important; opacity: 1 !important; transform: none !important; }
+    .report-page {
+        --color-bg: 255 255 255; --color-surface: 255 255 255; --color-elevated: 238 241 238;
+        --color-border: 200 207 201; --color-text: 23 32 27; --color-muted: 70 82 74;
+        --color-accent: 54 91 24; --color-success: 29 100 57; --color-warning: 130 76 10; --color-danger: 150 42 42;
+        color-scheme: light; width: 100%; max-width: none; font-size: 10pt;
+        print-color-adjust: exact; -webkit-print-color-adjust: exact;
+    }
+    .report-page .report-reveal { opacity: 1 !important; transform: none !important; }
+    .report-page .card { box-shadow: none !important; background: white !important; }
+    .report-page .report-hero { break-inside: avoid; padding: 22px; }
+    .report-page .report-hero > .relative { grid-template-columns: minmax(0,1fr) 190px !important; gap: 20px; }
+    .report-page .report-hero h1 { font-size: 25pt; }
+    .report-page .report-hero-glow { display: none; }
+    .report-page .report-gauge { width: 180px; height: 180px; }
+    .report-page .report-gauge .sr-only { position: static !important; width: auto !important; height: auto !important; margin: 0 !important; overflow: visible !important; clip: auto !important; white-space: normal; }
+    .report-page .report-gauge span[aria-hidden="true"] { display: none; }
+    .report-page .report-score-arc, .report-page .report-stage-fill [role="progressbar"] > div { animation: none !important; }
+    .report-page .report-expand[hidden], .report-page .report-message[hidden] { display: block !important; }
+    .report-page .report-stage-fill, .report-page li, .report-page .report-message { break-inside: avoid; }
+    .report-page .report-diagram-layout { display: block; }
+    .report-page .report-diagram { border-right: 0; border-bottom: 1px solid rgb(var(--color-border)); break-inside: avoid; }
+    .report-page mark { background: transparent; color: inherit; padding: 0; }
+    .report-page .report-footer { font-size: 8pt; }
+}

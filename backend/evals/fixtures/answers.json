@@ -1,0 +1,609 @@
+[
+  {
+    "id": "url_shortener-requirements-strong",
+    "problemId": "url_shortener",
+    "stage": "Requirements",
+    "kind": "strong",
+    "question": "Which core behaviors, workload and quality targets would you agree on for this short-link service?",
+    "answer": "I would support creating links, redirects, unique custom aliases and expiration or deletion. Analytics is asynchronous and optional. Using the exercise baseline, one million creations and one hundred million redirects per day means roughly 11.57 creates/s and 1157.41 redirects/s; a fivefold peak means about 5787 redirects/s. I would target regional server p95 below 50 ms and 99.9% redirect availability, while acknowledging creates only after durable storage. I would clarify acceptable deletion-cache staleness and estimate 500-byte mappings plus indexes and replicas.",
+    "expected": {
+      "minScore": 7,
+      "maxScore": 10,
+      "answeredCurrentQuestion": true,
+      "maxStdDev": 1.5,
+      "mustMentionConcepts": [
+        {
+          "name": "redirects",
+          "aliases": [
+            "redirect",
+            "redirects"
+          ]
+        },
+        {
+          "name": "capacity",
+          "aliases": [
+            "peak",
+            "traffic",
+            "capacity",
+            "requests per second"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "url_shortener-requirements-partial",
+    "problemId": "url_shortener",
+    "stage": "Requirements",
+    "kind": "partial",
+    "question": "Which core behaviors, workload and quality targets would you agree on for this short-link service?",
+    "answer": "I would support creation and redirects, with optional click analytics. Redirects should be fast and mappings durable. I would clarify deletion behavior later; I have not sized the peak traffic or chosen a measurable latency target yet.",
+    "expected": {
+      "minScore": 4,
+      "maxScore": 7,
+      "answeredCurrentQuestion": true,
+      "maxStdDev": 1.5,
+      "mustMentionConcepts": [
+        {
+          "name": "redirects",
+          "aliases": [
+            "redirect",
+            "redirects"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "url_shortener-requirements-weak",
+    "problemId": "url_shortener",
+    "stage": "Requirements",
+    "kind": "weak",
+    "question": "Which core behaviors, workload and quality targets would you agree on for this short-link service?",
+    "answer": "I would let anyone create and follow a short link. I would keep mappings only in process memory, with no durability or expiration policy; I have not estimated traffic.",
+    "expected": {
+      "minScore": 0,
+      "maxScore": 4,
+      "answeredCurrentQuestion": true,
+      "maxStdDev": 1.5,
+      "mustMentionConcepts": [
+        {
+          "name": "redirects",
+          "aliases": [
+            "redirect",
+            "redirects"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "rate_limiter-high-level-design-strong",
+    "problemId": "rate_limiter",
+    "stage": "High Level Design",
+    "kind": "strong",
+    "question": "Walk through the limiter request path and distinguish budget state from the policy control plane.",
+    "answer": "The gateway derives a tenant, principal and canonical route policy key from authenticated identity. It calls a limiter that caches versioned policies from a policy service backed by a durable database. The same bucket key routes to an authoritative atomic budget store. That store refills, checks and consumes a budget in one operation; the limiter returns allow or deny and a retry delay. Allowed traffic reaches the protected API. Policy rollout and metrics stay outside the synchronous decision path. Colocating roles is fine; I would measure the regional decision path against the 5 ms target and bound state-store timeouts.",
+    "expected": {
+      "minScore": 7,
+      "maxScore": 10,
+      "answeredCurrentQuestion": true,
+      "maxStdDev": 1.5,
+      "mustMentionConcepts": [
+        {
+          "name": "gateway",
+          "aliases": [
+            "gateway",
+            "enforcement"
+          ]
+        },
+        {
+          "name": "policy",
+          "aliases": [
+            "policy",
+            "policies",
+            "control plane"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "rate_limiter-high-level-design-partial",
+    "problemId": "rate_limiter",
+    "stage": "High Level Design",
+    "kind": "partial",
+    "question": "Walk through the limiter request path and distinguish budget state from the policy control plane.",
+    "answer": "The API gateway calls a limiter before forwarding allowed requests. I would store bucket balances centrally and cache policies in the gateway. This separates enforcement from policy administration, but I have not yet explained atomic bucket updates or policy-version rollout.",
+    "expected": {
+      "minScore": 4,
+      "maxScore": 7,
+      "answeredCurrentQuestion": true,
+      "maxStdDev": 1.5,
+      "mustMentionConcepts": [
+        {
+          "name": "gateway",
+          "aliases": [
+            "gateway",
+            "enforcement"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "rate_limiter-high-level-design-off_topic",
+    "problemId": "rate_limiter",
+    "stage": "High Level Design",
+    "kind": "off_topic",
+    "question": "Walk through the limiter request path and distinguish budget state from the policy control plane.",
+    "answer": "My weekend hike was lovely. I packed a picnic, saw birds and took photos of the mountains.",
+    "expected": {
+      "minScore": 0,
+      "maxScore": 2,
+      "answeredCurrentQuestion": false,
+      "maxStdDev": 1.5,
+      "mustMentionConcepts": [
+        {
+          "name": "relevance mismatch",
+          "aliases": [
+            "off topic",
+            "unrelated",
+            "irrelevant",
+            "does not address",
+            "does not answer",
+            "not addressing",
+            "hike",
+            "hiking",
+            "weekend",
+            "personal"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "notification_system-core-flow-strong",
+    "problemId": "notification_system",
+    "stage": "Core Flow",
+    "kind": "strong",
+    "question": "How do caller retries and an ambiguous provider timeout affect a multi-channel notification?",
+    "answer": "I scope a caller idempotency key to its tenant and compare the request fingerprint, storing one durable intent plus recoverable dispatch work. Each selected channel has separate leased attempt state and a stable provider operation key when the provider supports it. Before sending I recheck opt-out and quiet hours. Transient failures get bounded exponential backoff with jitter; permanent errors terminate. A timeout after submission is uncertain, so I reconcile its provider reference before failing over. Provider acceptance is not delivery; validated receipts are deduplicated. I cannot promise exactly-once external delivery when a provider lacks idempotency support.",
+    "expected": {
+      "minScore": 7,
+      "maxScore": 10,
+      "answeredCurrentQuestion": true,
+      "maxStdDev": 1.5,
+      "mustMentionConcepts": [
+        {
+          "name": "idempotency",
+          "aliases": [
+            "idempotency",
+            "idempotent",
+            "deduplication",
+            "deduplicate"
+          ]
+        },
+        {
+          "name": "retry policy",
+          "aliases": [
+            "retry",
+            "retries",
+            "backoff"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "notification_system-core-flow-partial",
+    "problemId": "notification_system",
+    "stage": "Core Flow",
+    "kind": "partial",
+    "question": "How do caller retries and an ambiguous provider timeout affect a multi-channel notification?",
+    "answer": "I would deduplicate accepted intents using a tenant-scoped idempotency key and retry failed provider calls with exponential backoff. Each channel should have its own status. I have not distinguished uncertain timeouts from definite failures or specified how opt-outs and delivery receipts are handled.",
+    "expected": {
+      "minScore": 4,
+      "maxScore": 7,
+      "answeredCurrentQuestion": true,
+      "maxStdDev": 1.5,
+      "mustMentionConcepts": [
+        {
+          "name": "idempotency",
+          "aliases": [
+            "idempotency",
+            "idempotent",
+            "deduplication",
+            "deduplicate"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "notification_system-core-flow-weak",
+    "problemId": "notification_system",
+    "stage": "Core Flow",
+    "kind": "weak",
+    "question": "How do caller retries and an ambiguous provider timeout affect a multi-channel notification?",
+    "answer": "I would retry every failed or timed-out request immediately forever. I would create a new notification each time and assume that a timeout proves the provider never sent it.",
+    "expected": {
+      "minScore": 0,
+      "maxScore": 4,
+      "answeredCurrentQuestion": true,
+      "maxStdDev": 1.5,
+      "mustMentionConcepts": [
+        {
+          "name": "idempotency",
+          "aliases": [
+            "idempotency",
+            "idempotent",
+            "deduplication",
+            "deduplicate"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "url_shortener-data-model-strong",
+    "problemId": "url_shortener",
+    "stage": "Data Model",
+    "kind": "strong",
+    "question": "What mapping schema, indexes and lifecycle records support code lookup and safe alias creation?",
+    "answer": "My Link record is keyed by short_code and stores target_url, owner_id, created_at, expires_at and deleted_at. A unique index or conditional insert makes concurrent custom aliases mutually exclusive. Code lookup is indexed, while an owner_id index supports management rather than redirect lookup. An owner_id plus idempotency_key record binds a create retry to its request hash and original result. Reads reject expired or tombstoned mappings even before background cleanup, and cache TTL cannot extend past expiry. I would budget the target URL field and indexes separately from replication; a key-value store with equivalent conditional writes is also valid.",
+    "expected": {
+      "minScore": 7,
+      "maxScore": 10,
+      "answeredCurrentQuestion": true,
+      "maxStdDev": 1.5,
+      "mustMentionConcepts": [
+        {
+          "name": "unique index",
+          "aliases": [
+            "unique",
+            "uniqueness",
+            "conditional insert",
+            "primary key"
+          ]
+        },
+        {
+          "name": "lookup",
+          "aliases": [
+            "lookup",
+            "index",
+            "indexing"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "url_shortener-data-model-partial",
+    "problemId": "url_shortener",
+    "stage": "Data Model",
+    "kind": "partial",
+    "question": "What mapping schema, indexes and lifecycle records support code lookup and safe alias creation?",
+    "answer": "I would store short_code, target_url and expires_at in a table with a unique short_code index for redirects and alias conflicts. I have not modeled create-request idempotency, deletion tombstones or cache-expiry coordination yet.",
+    "expected": {
+      "minScore": 4,
+      "maxScore": 7,
+      "answeredCurrentQuestion": true,
+      "maxStdDev": 1.5,
+      "mustMentionConcepts": [
+        {
+          "name": "unique index",
+          "aliases": [
+            "unique",
+            "uniqueness",
+            "conditional insert",
+            "primary key"
+          ]
+        },
+        {
+          "name": "expiry",
+          "aliases": [
+            "expiry",
+            "expiration",
+            "expires",
+            "expires_at",
+            "expired"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "url_shortener-data-model-off_topic",
+    "problemId": "url_shortener",
+    "stage": "Data Model",
+    "kind": "off_topic",
+    "question": "What mapping schema, indexes and lifecycle records support code lookup and safe alias creation?",
+    "answer": "My weekend hike was lovely. I packed a picnic, saw birds and took photos of the mountains.",
+    "expected": {
+      "minScore": 0,
+      "maxScore": 2,
+      "answeredCurrentQuestion": false,
+      "maxStdDev": 1.5,
+      "mustMentionConcepts": [
+        {
+          "name": "relevance mismatch",
+          "aliases": [
+            "off topic",
+            "unrelated",
+            "irrelevant",
+            "does not address",
+            "does not answer",
+            "not addressing",
+            "hike",
+            "hiking",
+            "weekend",
+            "personal"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "rate_limiter-reliability-strong",
+    "problemId": "rate_limiter",
+    "stage": "Reliability",
+    "kind": "strong",
+    "question": "What happens when the bucket store times out, replicas lag or clocks move backwards?",
+    "answer": "I give the state lookup a small bounded timeout. Sensitive writes fail closed with a dependency error rather than pretending the caller exhausted its budget; low-risk reads may fail open under an explicit policy and monitored overshoot budget. Atomic decisions use one authoritative owner per key, and replica failover must preserve or bound lost budget state. I clamp negative elapsed time so a backward clock cannot create tokens, and I use policy versions with bounded cache freshness. Reconnects use jitter and I distinguish actual denials from infrastructure errors. A regional allowance strategy is acceptable only with documented global error bounds.",
+    "expected": {
+      "minScore": 7,
+      "maxScore": 10,
+      "answeredCurrentQuestion": true,
+      "maxStdDev": 1.5,
+      "mustMentionConcepts": [
+        {
+          "name": "failure policy",
+          "aliases": [
+            "fail open",
+            "fail closed",
+            "outage",
+            "failure policy"
+          ]
+        },
+        {
+          "name": "replication",
+          "aliases": [
+            "replica",
+            "replication",
+            "failover"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "rate_limiter-reliability-partial",
+    "problemId": "rate_limiter",
+    "stage": "Reliability",
+    "kind": "partial",
+    "question": "What happens when the bucket store times out, replicas lag or clocks move backwards?",
+    "answer": "I would time out bucket-store calls and fail closed for sensitive writes, while reporting an infrastructure error separately from a rate denial. I have not designed replica failover, policy-cache refresh or clock-skew handling yet.",
+    "expected": {
+      "minScore": 4,
+      "maxScore": 7,
+      "answeredCurrentQuestion": true,
+      "maxStdDev": 1.5,
+      "mustMentionConcepts": [
+        {
+          "name": "failure policy",
+          "aliases": [
+            "fail open",
+            "fail closed",
+            "outage",
+            "failure policy"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "rate_limiter-reliability-weak",
+    "problemId": "rate_limiter",
+    "stage": "Reliability",
+    "kind": "weak",
+    "question": "What happens when the bucket store times out, replicas lag or clocks move backwards?",
+    "answer": "I would always allow every request when the store fails, even on sensitive writes, and report every timeout as a true rate-limit denial. Replica lag and backward clocks do not need handling.",
+    "expected": {
+      "minScore": 0,
+      "maxScore": 4,
+      "answeredCurrentQuestion": true,
+      "maxStdDev": 1.5,
+      "mustMentionConcepts": [
+        {
+          "name": "failure policy",
+          "aliases": [
+            "fail open",
+            "fail closed",
+            "outage",
+            "timeout",
+            "failure"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "notification_system-scaling-strong",
+    "problemId": "notification_system",
+    "stage": "Scaling",
+    "kind": "strong",
+    "question": "How would you size and partition channel delivery during a tenfold burst and provider throttling?",
+    "answer": "Twenty million intents/day is about 231.48/s. At 1.5 selected channels, thirty million baseline attempts/day is 347.22/s, or 3472.22/s at tenfold peak before retries. I would add at least twenty percent retry headroom and size catch-up after a provider outage separately. Channel and priority queues isolate slow providers, with per-tenant fairness so bulk traffic cannot starve transactional notifications. Worker concurrency must respect provider quotas and oldest queued age. Seven days of 1000-byte intent records is 140 GB raw or 420 GB at three copies, excluding attempts, receipts and indexes. I would bound retry queues and autoscale on lag rather than just incoming intent rate.",
+    "expected": {
+      "minScore": 7,
+      "maxScore": 10,
+      "answeredCurrentQuestion": true,
+      "maxStdDev": 1.5,
+      "mustMentionConcepts": [
+        {
+          "name": "queue isolation",
+          "aliases": [
+            "queue",
+            "queues",
+            "channel",
+            "channels"
+          ]
+        },
+        {
+          "name": "capacity",
+          "aliases": [
+            "capacity",
+            "attempts",
+            "volume",
+            "throughput"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "notification_system-scaling-partial",
+    "problemId": "notification_system",
+    "stage": "Scaling",
+    "kind": "partial",
+    "question": "How would you size and partition channel delivery during a tenfold burst and provider throttling?",
+    "answer": "I would separate email, SMS and push queues and add workers when queue age increases, while respecting provider throttling. I would prioritize transactional traffic. I have not quantified channel expansion, retry headroom or retention storage.",
+    "expected": {
+      "minScore": 4,
+      "maxScore": 7,
+      "answeredCurrentQuestion": true,
+      "maxStdDev": 1.5,
+      "mustMentionConcepts": [
+        {
+          "name": "queue isolation",
+          "aliases": [
+            "queue",
+            "queues",
+            "channel",
+            "channels"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "notification_system-scaling-off_topic",
+    "problemId": "notification_system",
+    "stage": "Scaling",
+    "kind": "off_topic",
+    "question": "How would you size and partition channel delivery during a tenfold burst and provider throttling?",
+    "answer": "My weekend hike was lovely. I packed a picnic, saw birds and took photos of the mountains.",
+    "expected": {
+      "minScore": 0,
+      "maxScore": 2,
+      "answeredCurrentQuestion": false,
+      "maxStdDev": 1.5,
+      "mustMentionConcepts": [
+        {
+          "name": "relevance mismatch",
+          "aliases": [
+            "off topic",
+            "unrelated",
+            "irrelevant",
+            "does not address",
+            "does not answer",
+            "not addressing",
+            "hike",
+            "hiking",
+            "weekend",
+            "personal"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "url_shortener-tradeoffs-strong",
+    "problemId": "url_shortener",
+    "stage": "Tradeoffs",
+    "kind": "strong",
+    "question": "Compare your code strategy and redirect caching policy with alternatives, including deletion and availability.",
+    "answer": "I would choose random Base62 codes plus conditional insertion and retry collisions; allocated unique IDs plus encoding is a valid alternative but adds allocator coordination and predictable sequences. Encoding alone is not uniqueness or secrecy. For editable or expiring links I prefer bounded 302 caching, since an indefinitely cached 301 can outlive deletion; immutable links could justify 301 or CDN caching with explicit invalidation. I acknowledge creates after durable storage and use bounded cache fallback to protect the database during an outage. I would monitor redirect latency, failures, cache hit rate and collision retries, balancing availability against bounded freshness rather than reciting CAP alone.",
+    "expected": {
+      "minScore": 7,
+      "maxScore": 10,
+      "answeredCurrentQuestion": true,
+      "maxStdDev": 1.5,
+      "mustMentionConcepts": [
+        {
+          "name": "code allocation",
+          "aliases": [
+            "collision",
+            "random",
+            "allocator",
+            "sequential",
+            "code generation"
+          ]
+        },
+        {
+          "name": "deletion freshness",
+          "aliases": [
+            "deletion",
+            "expiry",
+            "expiration",
+            "stale",
+            "freshness"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "url_shortener-tradeoffs-partial",
+    "problemId": "url_shortener",
+    "stage": "Tradeoffs",
+    "kind": "partial",
+    "question": "Compare your code strategy and redirect caching policy with alternatives, including deletion and availability.",
+    "answer": "I would choose random codes with collision retries instead of a central ID allocator to avoid allocation coordination. I would use a redirect cache to reduce latency. I have not justified 301 versus 302, deletion freshness or behavior during a cache outage.",
+    "expected": {
+      "minScore": 4,
+      "maxScore": 7,
+      "answeredCurrentQuestion": true,
+      "maxStdDev": 1.5,
+      "mustMentionConcepts": [
+        {
+          "name": "code allocation",
+          "aliases": [
+            "collision",
+            "random",
+            "allocator",
+            "sequential",
+            "code generation"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "url_shortener-tradeoffs-weak",
+    "problemId": "url_shortener",
+    "stage": "Tradeoffs",
+    "kind": "weak",
+    "question": "Compare your code strategy and redirect caching policy with alternatives, including deletion and availability.",
+    "answer": "I would use sequential codes and cache every redirect with a permanent 301 forever, even after deletion. I would skip collision and outage analysis because caching guarantees availability.",
+    "expected": {
+      "minScore": 0,
+      "maxScore": 4,
+      "answeredCurrentQuestion": true,
+      "maxStdDev": 1.5,
+      "mustMentionConcepts": [
+        {
+          "name": "code allocation",
+          "aliases": [
+            "collision",
+            "random",
+            "allocator",
+            "sequential",
+            "code generation"
+          ]
+        }
+      ]
+    }
+  }
+]

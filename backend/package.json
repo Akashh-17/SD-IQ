@@ -4,8 +4,15 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon server.js"
+    "test": "vitest run",
+    "dev": "nodemon server.js",
+    "test:watch": "vitest",
+    "dev:mock": "node src/services/mock/dev.js",
+    "lint": "node test/check-syntax.js",
+    "type-check": "node test/check-syntax.js",
+    "build": "node test/check-syntax.js",
+    "validate:knowledge": "node scripts/validate-knowledge.js",
+    "eval": "node evals/run.js"
   },
   "keywords": [],
   "author": "",
@@ -24,9 +31,14 @@
     "groq-sdk": "^1.3.0",
     "multer": "^2.2.0",
     "pg": "^8.20.0",
+    "pino": "^10.4.0",
+    "prom-client": "^15.1.3",
     "zod": "^4.3.6"
   },
   "devDependencies": {
-    "nodemon": "^3.1.14"
+    "nodemon": "^3.1.14",
+    "pino-pretty": "^13.2.0",
+    "supertest": "^7.3.2",
+    "vitest": "^5.1.0"
   }
 }

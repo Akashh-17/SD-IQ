@@ -1,414 +1,64 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import {
-    CircleDot,
-    Clock3,
-    LogOut,
-} from "lucide-react";
-
-import Logo from "./branding/Logo";
+import { Check, HelpCircle, LoaderCircle, LogOut, PanelRightClose, PanelRightOpen } from "lucide-react";
+import LogoMark from "./branding/LogoMark";
 import { endInterview } from "../services/endInterview.service";
 import { getInterviewState } from "../services/interviewState.service";
-import ConfirmModal from "./ConfirmModal";
+import { Badge, Button, Dialog, Stepper, Tooltip } from "./ui";
+import { ROOM_STEPS, stageIndex, useRoom, type RoomSnapshot } from "./chat/room.context";
+import ElapsedTimer from "./chat/ElapsedTimer";
 
-const INTERVIEW_DURATION = 45 * 60;
-
-export default function Topbar() {
-
-    const navigate = useNavigate();
-
+export default function InterviewTopbar() {
     const { interviewId } = useParams();
-
+    const navigate = useNavigate();
+    const room = useRoom();
+    const loadInitial = room?.loadInitial, flushGraph = room?.flushGraph;
+    const [local, setLocal] = useState<RoomSnapshot | null>(null);
+    const [confirm, setConfirm] = useState(false);
     const [loading, setLoading] = useState(false);
-
-    const [endTime, setEndTime] = useState<number | null>(null);
-
-    const [remaining, setRemaining] = useState(INTERVIEW_DURATION);
-
-    const [showEndModal, setShowEndModal] = useState(false);
-
+    const [error, setError] = useState("");
+    const requested = useRef(false);
     const autoEnded = useRef(false);
-
-    // =====================================================
-    // Load Interview
-    // =====================================================
-
+    const steps = useRef<HTMLDivElement>(null);
     useEffect(() => {
-
-        if (!interviewId)
-
-            return;
-
-        const id = interviewId; // capture and narrow for TS
-
-        async function loadInterview() {
-
-            try {
-
-                const state = await getInterviewState(id);
-
-                setEndTime(
-
-                    state.interview.startedAt +
-
-                    INTERVIEW_DURATION * 1000
-
-                );
-
-            }
-
-            catch (err) {
-
-                console.error(err);
-
-            }
-
-        }
-
-        loadInterview();
-
-    }, [interviewId]);
-
-    // =====================================================
-    // Countdown
-    // =====================================================
-
+        if (!interviewId) return;
+        let active = true;
+        (loadInitial ? loadInitial() : getInterviewState(interviewId)).then(snapshot => { if (active) setLocal(snapshot); }).catch(() => {});
+        return () => { active = false; };
+    }, [interviewId, loadInitial]);
+    const snapshot = room?.snapshot ?? local;
+    const stage = snapshot?.interview?.stage;
+    const current = stageIndex(stage);
     useEffect(() => {
-
-        if (!endTime)
-
-            return;
-
-        function tick() {
-
-            const seconds = Math.max(
-
-                Math.floor(
-
-                    (endTime! - Date.now()) / 1000
-
-                ),
-
-                0
-
-            );
-
-            setRemaining(seconds);
-
-        }
-
-        tick();
-
-        const interval = setInterval(
-
-            tick,
-
-            1000
-
-        );
-
-        return () => clearInterval(interval);
-
-    }, [endTime]);
-
-    // =====================================================
-    // Auto End Interview
-    // =====================================================
-
-    useEffect(() => {
-
-        if (
-
-            remaining !== 0 ||
-
-            autoEnded.current ||
-
-            !interviewId
-
-        )
-
-            return;
-
-        const id = interviewId; // capture and narrow for TS
-
-        autoEnded.current = true;
-
-        async function finishInterview() {
-
-            try {
-
-                setLoading(true);
-
-                await endInterview(
-
-                    id
-
-                );
-
-                navigate(
-
-                    `/report/${id}`
-
-                );
-
-            }
-
-            catch (err) {
-
-                console.error(err);
-
-                autoEnded.current = false;
-
-            }
-
-            finally {
-
-                setLoading(false);
-
-            }
-
-        }
-
-        finishInterview();
-
-    }, [
-
-        remaining,
-
-        interviewId,
-
-        navigate
-
-    ]);
-
-    // =====================================================
-    // Format Timer
-    // =====================================================
-
-    function format(seconds: number) {
-
-        const mins = Math.floor(
-
-            seconds / 60
-
-        );
-
-        const secs = seconds % 60;
-
-        return `${String(mins).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
-
-    }
-
-    const urgent = remaining <= 300;
-
-    const warning = remaining <= 900;
-
-    // =====================================================
-    // Manual End Interview
-    // =====================================================
-
-    async function handleEndInterview() {
-
-        if (
-
-            !interviewId ||
-
-            loading
-
-        )
-
-            return;
-
+        const active = steps.current?.querySelector<HTMLElement>('[aria-current="step"]');
+        if (active && steps.current) steps.current.scrollLeft = Math.max(0, active.offsetLeft - steps.current.clientWidth / 2 + active.clientWidth / 2);
+    }, [current]);
+    const finish = useCallback(async () => {
+        if (!interviewId || requested.current) return;
+        requested.current = true; setLoading(true); setError("");
         try {
-
-            setLoading(true);
-
-            await endInterview(
-
-                interviewId
-
-            );
-
-            navigate(
-
-                `/report/${interviewId}`
-
-            );
-
-        }
-
-        catch (err) {
-
-            console.error(err);
-
-        }
-
-        finally {
-
-            setLoading(false);
-
-            setShowEndModal(false);
-
-        }
-
-    }
-
-    return (
-
-        <header
-            className="
-                flex
-                h-12
-                shrink-0
-                items-center
-                justify-between
-                border-b
-                border-white/10
-                bg-[#0B0C0F]
-                px-5
-            "
-        >
-
-            {/* Left */}
-
-            <div className="flex items-center gap-5">
-
-                <div className="origin-left scale-75">
-
-                    <Logo />
-
-                </div>
-
-                <div className="h-5 w-px bg-white/10" />
-
-                <div className="flex items-center gap-2 text-sm">
-
-                    <CircleDot
-                        size={10}
-                        className="fill-green-500 text-green-500 animate-pulse"
-                    />
-
-                    <span className="font-medium text-white">
-
-                        Live Interview
-
-                    </span>
-
-                    <span className="text-gray-600">
-
-                        •
-
-                    </span>
-
-                    <span className="text-gray-400">
-
-                        System Design
-
-                    </span>
-
-                </div>
-
+            await flushGraph?.();
+            await endInterview(interviewId);
+            navigate(`/report/${interviewId}`);
+        } catch { requested.current = false; setError("We couldn’t end the interview. Please try again."); }
+        finally { setLoading(false); }
+    }, [interviewId, flushGraph, navigate]);
+    const deadline = useCallback(() => { if (!autoEnded.current) { autoEnded.current = true; void finish(); } }, [finish]);
+    const save = room?.saveStatus ?? "loading";
+    return <header className="room-topbar shrink-0 border-b border-border bg-surface">
+        <div className="flex flex-wrap items-center justify-between gap-3 px-4 py-3 sm:px-5">
+            <div className="flex min-w-0 flex-1 items-center gap-3"><LogoMark /><div className="min-w-0"><p className="font-mono text-[8px] uppercase tracking-[0.14em] text-muted">Your interview room</p><h1 className="mt-1 truncate text-sm font-medium">{snapshot?.interview?.title || "System design interview"}</h1></div>{snapshot?.interview?.difficulty && <span className="hidden sm:inline-flex"><Badge mono>{snapshot.interview.difficulty}</Badge></span>}</div>
+            <div className="flex shrink-0 items-center gap-2"><span role="status" aria-label={save === "saved" ? "Diagram saved" : save === "saving" ? "Saving diagram" : save === "error" ? "Diagram save failed" : "Loading diagram"} className={`inline-flex items-center gap-1.5 font-mono text-[9px] ${save === "error" ? "text-danger" : "text-muted"}`}>{save === "saved" ? <Check size={12} className="text-success" aria-hidden="true" /> : save !== "error" ? <LoaderCircle size={12} className="motion-safe:animate-spin" aria-hidden="true" /> : null}<span className="hidden sm:inline">{save === "saved" ? "Saved" : save === "saving" ? "Saving…" : save === "error" ? "Save failed" : "Loading…"}</span></span>
+                <ElapsedTimer startedAt={snapshot?.interview?.startedAt} onDeadline={deadline} />
+                {room && <Tooltip content={room.collapsed ? "Show chat" : "Collapse chat"}><Button variant="ghost" size="icon" className="!h-8 !w-8" aria-label={room.collapsed ? "Show chat" : "Collapse chat"} aria-expanded={!room.collapsed} onClick={room.toggleChat}>{room.collapsed ? <PanelRightOpen size={15} aria-hidden="true" /> : <PanelRightClose size={15} aria-hidden="true" />}</Button></Tooltip>}
+                {room && <Tooltip content="Keyboard shortcuts · ?"><Button variant="ghost" size="icon" className="hidden !h-8 !w-8 sm:inline-flex" aria-label="Keyboard shortcuts" onClick={room.showHelp}><HelpCircle size={15} aria-hidden="true" /></Button></Tooltip>}
+                <Button variant="danger" size="sm" loading={loading} onClick={() => setConfirm(true)}><LogOut size={13} aria-hidden="true" />End interview</Button>
             </div>
-            {/* Right */}
-
-            <div className="flex items-center gap-3">
-
-                <div
-                    className={`
-                        flex
-                        h-8
-                        items-center
-                        gap-2
-                        rounded-lg
-                        border
-                        px-3
-                        text-sm
-                        font-mono
-                        transition-colors
-
-                        ${urgent
-                            ? "border-red-500/40 bg-red-500/10 text-red-400"
-                            : warning
-                                ? "border-yellow-500/40 bg-yellow-500/10 text-yellow-400"
-                                : "border-white/10 bg-[#17181C] text-white"
-                        }
-                    `}
-                >
-
-                    <Clock3 size={14} />
-
-                    {format(remaining)}
-
-                </div>
-
-                <button
-
-                    onClick={() => setShowEndModal(true)}
-
-                    disabled={loading}
-
-                    className="
-                        flex
-                        h-8
-                        items-center
-                        gap-2
-                        rounded-lg
-                        border
-                        border-red-500/30
-                        bg-red-500/5
-                        px-3
-                        text-sm
-                        font-medium
-                        text-red-400
-                        transition-all
-                        hover:border-red-500
-                        hover:bg-red-500
-                        hover:text-white
-                        disabled:cursor-not-allowed
-                        disabled:opacity-50
-                    "
-
-                >
-
-                    <LogOut size={15} />
-
-                    {
-
-                        loading
-
-                            ? "Ending..."
-
-                            : "End"
-
-                    }
-
-                </button>
-
-            </div>
-            
-            <ConfirmModal
-
-                open={showEndModal}
-
-                loading={loading}
-
-                title="End Interview?"
-
-                description="Once you end the interview your final report will be generated and you won't be able to continue the session."
-
-                confirmText="End Interview"
-
-                cancelText="Continue"
-
-                onCancel={() => setShowEndModal(false)}
-
-                onConfirm={handleEndInterview}
-
-            />
-
-        </header>
-
-
-    );
-
+        </div>
+        <div className="flex min-w-0 flex-wrap items-center justify-between gap-3 border-t border-border/60 px-4 py-2.5 sm:px-5"><div ref={steps} tabIndex={0} aria-label="Interview stage progress" className="room-stage-scroll min-w-0 flex-1 overflow-x-auto"><div className="min-w-[570px]"><Stepper steps={ROOM_STEPS.map(label => ({ id: label, label }))} activeStep={current} label="Interview stages" /></div></div><span className="hidden max-w-36 truncate font-mono text-[9px] text-muted lg:inline">{stage || "Connecting…"}</span></div>
+        {error && !confirm && <p role="alert" className="px-5 pb-3 text-xs text-danger">{error}</p>}
+        <Dialog open={confirm} onClose={() => { if (!loading) setConfirm(false); }} title="End this interview?" description="We’ll save your latest diagram and prepare your report. You’ll be taken to the report page right away." footer={<><Button variant="secondary" disabled={loading} onClick={() => setConfirm(false)}>Keep practicing</Button><Button variant="danger" loading={loading} onClick={() => void finish()}>End interview</Button></>}>
+            <p className="text-sm leading-relaxed text-muted">Ready to turn this conversation into your next step?</p>{error && <p role="alert" className="mt-4 text-sm text-danger">{error}</p>}
+        </Dialog>
+    </header>;
 }

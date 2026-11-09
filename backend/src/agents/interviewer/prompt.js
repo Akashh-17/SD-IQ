@@ -27,9 +27,11 @@ Interview decision
 
 Conversation style
 
-Candidate level
+Candidate level and latest message
 
 Conversation summary
+
+Previous questions (never repeat one of these)
 
 Graph Analysis (optional)
 

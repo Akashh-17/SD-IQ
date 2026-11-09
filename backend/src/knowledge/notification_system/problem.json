@@ -1,0 +1,73 @@
+{
+  "id": "notification_system",
+  "title": "Design a Notification System",
+  "problemDifficulty": "Medium",
+  "description": "Design a multi-tenant notification platform with email, SMS and push channels, durable acceptance, per-user preferences and provider-aware retries.",
+  "functionalRequirements": [
+    "Accept idempotent notification intents with recipient and channel selection",
+    "Apply user preferences, opt-outs and quiet hours before dispatch",
+    "Deliver through channel-specific provider adapters",
+    "Expose accepted, attempted, delivered or failed status without claiming exactly-once delivery"
+  ],
+  "nonFunctionalRequirements": [
+    "Acceptance API p95 below 200 ms within a region",
+    "99.9% acceptance API availability target",
+    "Transactional notifications should reach the first provider attempt within 5 seconds at normal load"
+  ],
+  "constraints": [
+    "5 million daily active recipients and 20 million notification intents/day; size for a 10x burst",
+    "Assume 1.5 selected channel attempts per intent before provider retries",
+    "Retain 7 days of 1000-byte logical intent/status records in the example capacity budget"
+  ],
+  "outOfScope": [
+    "Building an email or mobile push network",
+    "Marketing audience segmentation and template-editor UI",
+    "A guarantee of exactly-once delivery through every external provider"
+  ],
+  "scale": {
+    "assumption": "Synthetic interview workload, not a claim about any named company's actual traffic.",
+    "rates": [
+      {
+        "name": "Notification intents",
+        "dailyVolume": 20000000,
+        "averagePerSecond": 231.48,
+        "peakMultiplier": 10,
+        "peakPerSecond": 2314.81
+      },
+      {
+        "name": "Selected channel attempts before retries",
+        "dailyVolume": 30000000,
+        "averagePerSecond": 347.22,
+        "peakMultiplier": 10,
+        "peakPerSecond": 3472.22
+      }
+    ],
+    "storageEstimates": [
+      {
+        "name": "Seven days of logical intent/status records",
+        "recordsPerDay": 20000000,
+        "bytesPerRecord": 1000,
+        "days": 7,
+        "replicationFactor": 3,
+        "rawBytes": 140000000000,
+        "replicatedBytes": 420000000000
+      }
+    ],
+    "stateEstimates": [
+      {
+        "name": "Preference records for daily active recipients",
+        "entities": 5000000,
+        "bytesPerEntity": 200,
+        "replicationFactor": 3,
+        "rawBytes": 1000000000,
+        "replicatedBytes": 3000000000
+      }
+    ],
+    "notes": [
+      "The 1.5 channel multiplier is applied once: 20 million intents become 30 million baseline attempts/day.",
+      "Budget at least 20% additional attempt capacity for retries in this exercise, and discuss longer provider outages separately.",
+      "Attempt rows, template parameters, indexes and callback logs need additional storage; avoid retaining raw private content unnecessarily."
+    ],
+    "dailyActiveUsers": 5000000
+  }
+}

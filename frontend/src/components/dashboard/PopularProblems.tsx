@@ -1,160 +1,38 @@
-import { useEffect, useState } from "react";
-import { ArrowRight } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { ArrowRight, Crosshair } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { getProblems } from "../../services/problem.service";
+import { startInterview } from "../../services/interview.service";
+import { Badge, Button, Card, CodeChip } from "../ui";
+import type { HistoryItem } from "../history/history.model";
+import { recommendProblem } from "./recommendation";
 
-export default function PopularProblems() {
-
+export default function PopularProblems({ history }: { history: HistoryItem[] }) {
     const navigate = useNavigate();
-
-    const [problems, setProblems] = useState<any[]>([]);
-
-    useEffect(() => {
-
-        async function load() {
-
-            try {
-
-                const data = await getProblems();
-
-                setProblems(data.slice(0, 5));
-
-            }
-
-            catch (err) {
-
-                console.error(err);
-
-            }
-
-        }
-
-        load();
-
-    }, []);
-
-    return (
-
-        <div className="mt-6 rounded-2xl border border-dashed border-white/10 bg-base p-6">
-
-            {/* Header */}
-
-            <div className="mb-6 flex items-center justify-between">
-
-                <div>
-
-                    <h2 className="text-2xl font-bold text-white">
-
-                        Practice Problems
-
-                    </h2>
-
-                    <p className="mt-1 text-sm text-gray-500">
-
-                        Pick your next interview challenge.
-
-                    </p>
-
-                </div>
-
-                <button
-
-                    onClick={() => navigate("/problems")}
-
-                    className="text-sm font-medium text-[#F5B301] hover:underline"
-
-                >
-
-                    Browse All →
-
-                </button>
-
-            </div>
-
-            <div className="space-y-3">
-
-                {
-
-                    problems.map((problem) => (
-
-                        <button
-
-                            key={problem.id}
-
-                            onClick={() =>
-
-                                navigate(
-
-                                    `/problems/${problem.id}`
-
-                                )
-
-                            }
-
-                            className="group flex w-full items-center justify-between rounded-xl border border-white/5 bg-[#111214] px-4 py-4 transition-all duration-300 hover:border-[#F5B301] hover:bg-[#17181C]"
-
-                        >
-
-                            <div className="flex flex-col items-start">
-
-                                <span className="font-semibold text-white">
-
-                                    {problem.title}
-
-                                </span>
-
-                                <div className="mt-2 flex items-center gap-2">
-
-                                    <span className="rounded-full bg-white/5 px-3 py-1 text-xs text-gray-300">
-
-                                        {problem.difficulty}
-
-                                    </span>
-
-                                    <span className="rounded-full bg-indigo-500/15 px-3 py-1 text-xs text-indigo-300">
-
-                                        {
-
-                                            problem.category ??
-
-                                            "System Design"
-
-                                        }
-
-                                    </span>
-
-                                </div>
-
-                            </div>
-
-                            <div className="flex items-center gap-3">
-
-                                <span className="text-sm font-medium text-[#F5B301]">
-
-                                    Start
-
-                                </span>
-
-                                <ArrowRight
-
-                                    size={18}
-
-                                    className="text-[#F5B301] transition-transform duration-300 group-hover:translate-x-1"
-
-                                />
-
-                            </div>
-
-                        </button>
-
-                    ))
-
-                }
-
-            </div>
-
-        </div>
-
-    );
-
+    const choice = recommendProblem(history);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(false);
+    const mounted = useRef(true);
+    const pending = useRef(false);
+    useEffect(() => { mounted.current = true; return () => { mounted.current = false; }; }, []);
+    async function practice() {
+        if (pending.current) return;
+        pending.current = true;
+        setLoading(true);
+        setError(false);
+        try {
+            const result = await startInterview(choice.id, choice.level);
+            if (!result?.interviewId) throw new Error("Interview unavailable");
+            if (mounted.current) navigate(`/interview/${encodeURIComponent(result.interviewId)}`);
+        } catch { if (mounted.current) setError(true); }
+        finally { pending.current = false; if (mounted.current) setLoading(false); }
+    }
+    return <Card className="min-w-0 p-6">
+        <div className="flex items-center justify-between gap-3"><p className="section-kicker">Your next iteration</p><Crosshair size={18} className="text-accent" aria-hidden="true" /></div>
+        <h2 className="mt-5 text-h3">{choice.weakest ? `Give ${choice.weakest.stage.toLowerCase()} another look.` : "Start simple. Think deeply."}</h2>
+        <p className="mt-3 text-sm leading-relaxed text-muted">{choice.weakest ? `Your ${choice.weakest.stage} average is ${choice.weakest.score.toFixed(1)}/10. Try a different set of constraints and focus on explaining that part of the design.` : "Complete a scored interview to unlock a recommendation based on your weakest stage. Until then, here’s a useful starting point."}</p>
+        <div className="my-6 rounded-control border border-border bg-bg p-4"><p className="mb-3 text-base font-medium">{choice.title}</p><div className="flex flex-wrap gap-2"><Badge mono>{choice.difficulty}</Badge><CodeChip>{choice.level}</CodeChip></div></div>
+        {error && <p role="alert" className="mb-4 text-sm text-danger">We couldn’t start this session. Please try again.</p>}
+        <Button fullWidth loading={loading} onClick={() => void practice()}>{loading ? "Starting interview…" : "Practice this problem"}<ArrowRight size={15} aria-hidden="true" /></Button>
+        <Button fullWidth variant="ghost" className="mt-2" disabled={loading} onClick={() => navigate("/problems")}>Choose a problem or level</Button>
+    </Card>;
 }

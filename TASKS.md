@@ -97,6 +97,17 @@ The intent schema returns `"WRAPUP"`, but the decision engine checks for `"WRAP_
 
 ---
 
+## 🎯 Demo hardening
+
+- [x] **D1** LLM calls time out after 30s (`LLM_TIMEOUT_MS`) and retry twice. The default model is now `openai/gpt-4o-mini`; the old bare `gpt-4o-mini` wasn't a valid OpenRouter id.
+- [x] **D2** The interviewer gets only the fields its prompt uses, instead of the entire state. In a mid-interview example the context went from about 36,000 to 1,350 characters. It also now receives the candidate's message for `ANSWER` decisions; `candidateQuestion` was never filled in before.
+- [x] **D3** Intent and conversation style can use a faster model (`OPENROUTER_FAST_MODEL`), which defaults to the main model.
+- [x] **D4** The chat shows specific errors for 400, 401, 404, 429 and network failures. Reloading a finished interview opens its report instead of an empty chat.
+- [x] **D5** `GET /health` checks Redis and Postgres (200 or 503, with a 3s timeout per check). Added `.env.example` files for both apps.
+- [ ] **D6** Measure turn latency with real keys, with and without `OPENROUTER_FAST_MODEL`, and record the numbers.
+
+---
+
 ## ⚪ Phase 4: Cleanup
 
 - [x] **C1** Removed dead backend code, confirmed unused by tracing imports from `server.js`:

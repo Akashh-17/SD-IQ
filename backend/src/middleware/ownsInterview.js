@@ -1,3 +1,4 @@
+import { logError } from "../utils/logger.js";
 import { supabase } from "../config/supabase.js";
 import { SessionService } from "../services/interview/session.service.js";
 
@@ -82,7 +83,7 @@ export async function ownsInterview(req, res, next) {
 
     catch (err) {
 
-        console.error(err);
+        logError(err);
 
         return res.status(500).json({
 

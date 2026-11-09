@@ -1,0 +1,1453 @@
+{
+  "version": 1,
+  "timestamp": "2026-11-08T06:06:48.245Z",
+  "mode": "mock",
+  "purpose": "harness-only; synthetic oracle",
+  "models": {
+    "evaluator": "synthetic-oracle",
+    "intent": "synthetic-oracle"
+  },
+  "provenance": {
+    "harnessSha256": "0fff7e33ed3f02473ec42d80118bc3b0119a8ca33c0e8d40a96a439166c74bf6",
+    "fixturesSha256": "781d894bb104a6f36b530ef7c4be7a6cef3f46e2b0f73a6809262914c8608b7c",
+    "knowledgeSha256": "5bab0b0ab3af67f9c201f1f7007ee4255fb9c012a77d3e657dfad00c916782ec",
+    "agentSha256": "1de25bf3a4beeee6833510050f53b5aa53fb64efdb0227ce05c8c0f0156defd8"
+  },
+  "durationMs": 81,
+  "modelCalls": 78,
+  "repeats": 3,
+  "threshold": 0.85,
+  "scoring": [
+    {
+      "id": "url_shortener-requirements-strong",
+      "problemId": "url_shortener",
+      "stage": "Requirements",
+      "kind": "strong",
+      "expected": {
+        "minScore": 7,
+        "maxScore": 10,
+        "answeredCurrentQuestion": true,
+        "maxStdDev": 1.5,
+        "mustMentionConcepts": [
+          {
+            "name": "redirects",
+            "aliases": [
+              "redirect",
+              "redirects"
+            ]
+          },
+          {
+            "name": "capacity",
+            "aliases": [
+              "peak",
+              "traffic",
+              "capacity",
+              "requests per second"
+            ]
+          }
+        ]
+      },
+      "mean": 8.5,
+      "stdev": 0,
+      "stable": true,
+      "runs": [
+        {
+          "run": 1,
+          "score": 8.5,
+          "answeredCurrentQuestion": true,
+          "scoreInRange": true,
+          "answeredMatches": true,
+          "missingConcepts": [],
+          "durationMs": 2,
+          "pass": true
+        },
+        {
+          "run": 2,
+          "score": 8.5,
+          "answeredCurrentQuestion": true,
+          "scoreInRange": true,
+          "answeredMatches": true,
+          "missingConcepts": [],
+          "durationMs": 0,
+          "pass": true
+        },
+        {
+          "run": 3,
+          "score": 8.5,
+          "answeredCurrentQuestion": true,
+          "scoreInRange": true,
+          "answeredMatches": true,
+          "missingConcepts": [],
+          "durationMs": 0,
+          "pass": true
+        }
+      ],
+      "pass": true
+    },
+    {
+      "id": "url_shortener-requirements-partial",
+      "problemId": "url_shortener",
+      "stage": "Requirements",
+      "kind": "partial",
+      "expected": {
+        "minScore": 4,
+        "maxScore": 7,
+        "answeredCurrentQuestion": true,
+        "maxStdDev": 1.5,
+        "mustMentionConcepts": [
+          {
+            "name": "redirects",
+            "aliases": [
+              "redirect",
+              "redirects"
+            ]
+          }
+        ]
+      },
+      "mean": 5.5,
+      "stdev": 0,
+      "stable": true,
+      "runs": [
+        {
+          "run": 1,
+          "score": 5.5,
+          "answeredCurrentQuestion": true,
+          "scoreInRange": true,
+          "answeredMatches": true,
+          "missingConcepts": [],
+          "durationMs": 0,
+          "pass": true
+        },
+        {
+          "run": 2,
+          "score": 5.5,
+          "answeredCurrentQuestion": true,
+          "scoreInRange": true,
+          "answeredMatches": true,
+          "missingConcepts": [],
+          "durationMs": 0,
+          "pass": true
+        },
+        {
+          "run": 3,
+          "score": 5.5,
+          "answeredCurrentQuestion": true,
+          "scoreInRange": true,
+          "answeredMatches": true,
+          "missingConcepts": [],
+          "durationMs": 0,
+          "pass": true
+        }
+      ],
+      "pass": true
+    },
+    {
+      "id": "url_shortener-requirements-weak",
+      "problemId": "url_shortener",
+      "stage": "Requirements",
+      "kind": "weak",
+      "expected": {
+        "minScore": 0,
+        "maxScore": 4,
+        "answeredCurrentQuestion": true,
+        "maxStdDev": 1.5,
+        "mustMentionConcepts": [
+          {
+            "name": "redirects",
+            "aliases": [
+              "redirect",
+              "redirects"
+            ]
+          }
+        ]
+      },
+      "mean": 2,
+      "stdev": 0,
+      "stable": true,
+      "runs": [
+        {
+          "run": 1,
+          "score": 2,
+          "answeredCurrentQuestion": true,
+          "scoreInRange": true,
+          "answeredMatches": true,
+          "missingConcepts": [],
+          "durationMs": 0,
+          "pass": true
+        },
+        {
+          "run": 2,
+          "score": 2,
+          "answeredCurrentQuestion": true,
+          "scoreInRange": true,
+          "answeredMatches": true,
+          "missingConcepts": [],
+          "durationMs": 0,
+          "pass": true
+        },
+        {
+          "run": 3,
+          "score": 2,
+          "answeredCurrentQuestion": true,
+          "scoreInRange": true,
+          "answeredMatches": true,
+          "missingConcepts": [],
+          "durationMs": 0,
+          "pass": true
+        }
+      ],
+      "pass": true
+    },
+    {
+      "id": "rate_limiter-high-level-design-strong",
+      "problemId": "rate_limiter",
+      "stage": "High Level Design",
+      "kind": "strong",
+      "expected": {
+        "minScore": 7,
+        "maxScore": 10,
+        "answeredCurrentQuestion": true,
+        "maxStdDev": 1.5,
+        "mustMentionConcepts": [
+          {
+            "name": "gateway",
+            "aliases": [
+              "gateway",
+              "enforcement"
+            ]
+          },
+          {
+            "name": "policy",
+            "aliases": [
+              "policy",
+              "policies",
+              "control plane"
+            ]
+          }
+        ]
+      },
+      "mean": 8.5,
+      "stdev": 0,
+      "stable": true,
+      "runs": [
+        {
+          "run": 1,
+          "score": 8.5,
+          "answeredCurrentQuestion": true,
+          "scoreInRange": true,
+          "answeredMatches": true,
+          "missingConcepts": [],
+          "durationMs": 0,
+          "pass": true
+        },
+        {
+          "run": 2,
+          "score": 8.5,
+          "answeredCurrentQuestion": true,
+          "scoreInRange": true,
+          "answeredMatches": true,
+          "missingConcepts": [],
+          "durationMs": 0,
+          "pass": true
+        },
+        {
+          "run": 3,
+          "score": 8.5,
+          "answeredCurrentQuestion": true,
+          "scoreInRange": true,
+          "answeredMatches": true,
+          "missingConcepts": [],
+          "durationMs": 0,
+          "pass": true
+        }
+      ],
+      "pass": true
+    },
+    {
+      "id": "rate_limiter-high-level-design-partial",
+      "problemId": "rate_limiter",
+      "stage": "High Level Design",
+      "kind": "partial",
+      "expected": {
+        "minScore": 4,
+        "maxScore": 7,
+        "answeredCurrentQuestion": true,
+        "maxStdDev": 1.5,
+        "mustMentionConcepts": [
+          {
+            "name": "gateway",
+            "aliases": [
+              "gateway",
+              "enforcement"
+            ]
+          }
+        ]
+      },
+      "mean": 5.5,
+      "stdev": 0,
+      "stable": true,
+      "runs": [
+        {
+          "run": 1,
+          "score": 5.5,
+          "answeredCurrentQuestion": true,
+          "scoreInRange": true,
+          "answeredMatches": true,
+          "missingConcepts": [],
+          "durationMs": 0,
+          "pass": true
+        },
+        {
+          "run": 2,
+          "score": 5.5,
+          "answeredCurrentQuestion": true,
+          "scoreInRange": true,
+          "answeredMatches": true,
+          "missingConcepts": [],
+          "durationMs": 0,
+          "pass": true
+        },
+        {
+          "run": 3,
+          "score": 5.5,
+          "answeredCurrentQuestion": true,
+          "scoreInRange": true,
+          "answeredMatches": true,
+          "missingConcepts": [],
+          "durationMs": 0,
+          "pass": true
+        }
+      ],
+      "pass": true
+    },
+    {
+      "id": "rate_limiter-high-level-design-off_topic",
+      "problemId": "rate_limiter",
+      "stage": "High Level Design",
+      "kind": "off_topic",
+      "expected": {
+        "minScore": 0,
+        "maxScore": 2,
+        "answeredCurrentQuestion": false,
+        "maxStdDev": 1.5,
+        "mustMentionConcepts": [
+          {
+            "name": "relevance mismatch",
+            "aliases": [
+              "off topic",
+              "unrelated",
+              "irrelevant",
+              "does not address",
+              "does not answer",
+              "not addressing",
+              "hike",
+              "hiking",
+              "weekend",
+              "personal"
+            ]
+          }
+        ]
+      },
+      "mean": 1,
+      "stdev": 0,
+      "stable": true,
+      "runs": [
+        {
+          "run": 1,
+          "score": 1,
+          "answeredCurrentQuestion": false,
+          "scoreInRange": true,
+          "answeredMatches": true,
+          "missingConcepts": [],
+          "durationMs": 0,
+          "pass": true
+        },
+        {
+          "run": 2,
+          "score": 1,
+          "answeredCurrentQuestion": false,
+          "scoreInRange": true,
+          "answeredMatches": true,
+          "missingConcepts": [],
+          "durationMs": 0,
+          "pass": true
+        },
+        {
+          "run": 3,
+          "score": 1,
+          "answeredCurrentQuestion": false,
+          "scoreInRange": true,
+          "answeredMatches": true,
+          "missingConcepts": [],
+          "durationMs": 0,
+          "pass": true
+        }
+      ],
+      "pass": true
+    },
+    {
+      "id": "notification_system-core-flow-strong",
+      "problemId": "notification_system",
+      "stage": "Core Flow",
+      "kind": "strong",
+      "expected": {
+        "minScore": 7,
+        "maxScore": 10,
+        "answeredCurrentQuestion": true,
+        "maxStdDev": 1.5,
+        "mustMentionConcepts": [
+          {
+            "name": "idempotency",
+            "aliases": [
+              "idempotency",
+              "idempotent",
+              "deduplication",
+              "deduplicate"
+            ]
+          },
+          {
+            "name": "retry policy",
+            "aliases": [
+              "retry",
+              "retries",
+              "backoff"
+            ]
+          }
+        ]
+      },
+      "mean": 8.5,
+      "stdev": 0,
+      "stable": true,
+      "runs": [
+        {
+          "run": 1,
+          "score": 8.5,
+          "answeredCurrentQuestion": true,
+          "scoreInRange": true,
+          "answeredMatches": true,
+          "missingConcepts": [],
+          "durationMs": 0,
+          "pass": true
+        },
+        {
+          "run": 2,
+          "score": 8.5,
+          "answeredCurrentQuestion": true,
+          "scoreInRange": true,
+          "answeredMatches": true,
+          "missingConcepts": [],
+          "durationMs": 0,
+          "pass": true
+        },
+        {
+          "run": 3,
+          "score": 8.5,
+          "answeredCurrentQuestion": true,
+          "scoreInRange": true,
+          "answeredMatches": true,
+          "missingConcepts": [],
+          "durationMs": 0,
+          "pass": true
+        }
+      ],
+      "pass": true
+    },
+    {
+      "id": "notification_system-core-flow-partial",
+      "problemId": "notification_system",
+      "stage": "Core Flow",
+      "kind": "partial",
+      "expected": {
+        "minScore": 4,
+        "maxScore": 7,
+        "answeredCurrentQuestion": true,
+        "maxStdDev": 1.5,
+        "mustMentionConcepts": [
+          {
+            "name": "idempotency",
+            "aliases": [
+              "idempotency",
+              "idempotent",
+              "deduplication",
+              "deduplicate"
+            ]
+          }
+        ]
+      },
+      "mean": 5.5,
+      "stdev": 0,
+      "stable": true,
+      "runs": [
+        {
+          "run": 1,
+          "score": 5.5,
+          "answeredCurrentQuestion": true,
+          "scoreInRange": true,
+          "answeredMatches": true,
+          "missingConcepts": [],
+          "durationMs": 0,
+          "pass": true
+        },
+        {
+          "run": 2,
+          "score": 5.5,
+          "answeredCurrentQuestion": true,
+          "scoreInRange": true,
+          "answeredMatches": true,
+          "missingConcepts": [],
+          "durationMs": 0,
+          "pass": true
+        },
+        {
+          "run": 3,
+          "score": 5.5,
+          "answeredCurrentQuestion": true,
+          "scoreInRange": true,
+          "answeredMatches": true,
+          "missingConcepts": [],
+          "durationMs": 0,
+          "pass": true
+        }
+      ],
+      "pass": true
+    },
+    {
+      "id": "notification_system-core-flow-weak",
+      "problemId": "notification_system",
+      "stage": "Core Flow",
+      "kind": "weak",
+      "expected": {
+        "minScore": 0,
+        "maxScore": 4,
+        "answeredCurrentQuestion": true,
+        "maxStdDev": 1.5,
+        "mustMentionConcepts": [
+          {
+            "name": "idempotency",
+            "aliases": [
+              "idempotency",
+              "idempotent",
+              "deduplication",
+              "deduplicate"
+            ]
+          }
+        ]
+      },
+      "mean": 2,
+      "stdev": 0,
+      "stable": true,
+      "runs": [
+        {
+          "run": 1,
+          "score": 2,
+          "answeredCurrentQuestion": true,
+          "scoreInRange": true,
+          "answeredMatches": true,
+          "missingConcepts": [],
+          "durationMs": 0,
+          "pass": true
+        },
+        {
+          "run": 2,
+          "score": 2,
+          "answeredCurrentQuestion": true,
+          "scoreInRange": true,
+          "answeredMatches": true,
+          "missingConcepts": [],
+          "durationMs": 0,
+          "pass": true
+        },
+        {
+          "run": 3,
+          "score": 2,
+          "answeredCurrentQuestion": true,
+          "scoreInRange": true,
+          "answeredMatches": true,
+          "missingConcepts": [],
+          "durationMs": 0,
+          "pass": true
+        }
+      ],
+      "pass": true
+    },
+    {
+      "id": "url_shortener-data-model-strong",
+      "problemId": "url_shortener",
+      "stage": "Data Model",
+      "kind": "strong",
+      "expected": {
+        "minScore": 7,
+        "maxScore": 10,
+        "answeredCurrentQuestion": true,
+        "maxStdDev": 1.5,
+        "mustMentionConcepts": [
+          {
+            "name": "unique index",
+            "aliases": [
+              "unique",
+              "uniqueness",
+              "conditional insert",
+              "primary key"
+            ]
+          },
+          {
+            "name": "lookup",
+            "aliases": [
+              "lookup",
+              "index",
+              "indexing"
+            ]
+          }
+        ]
+      },
+      "mean": 8.5,
+      "stdev": 0,
+      "stable": true,
+      "runs": [
+        {
+          "run": 1,
+          "score": 8.5,
+          "answeredCurrentQuestion": true,
+          "scoreInRange": true,
+          "answeredMatches": true,
+          "missingConcepts": [],
+          "durationMs": 0,
+          "pass": true
+        },
+        {
+          "run": 2,
+          "score": 8.5,
+          "answeredCurrentQuestion": true,
+          "scoreInRange": true,
+          "answeredMatches": true,
+          "missingConcepts": [],
+          "durationMs": 0,
+          "pass": true
+        },
+        {
+          "run": 3,
+          "score": 8.5,
+          "answeredCurrentQuestion": true,
+          "scoreInRange": true,
+          "answeredMatches": true,
+          "missingConcepts": [],
+          "durationMs": 0,
+          "pass": true
+        }
+      ],
+      "pass": true
+    },
+    {
+      "id": "url_shortener-data-model-partial",
+      "problemId": "url_shortener",
+      "stage": "Data Model",
+      "kind": "partial",
+      "expected": {
+        "minScore": 4,
+        "maxScore": 7,
+        "answeredCurrentQuestion": true,
+        "maxStdDev": 1.5,
+        "mustMentionConcepts": [
+          {
+            "name": "unique index",
+            "aliases": [
+              "unique",
+              "uniqueness",
+              "conditional insert",
+              "primary key"
+            ]
+          },
+          {
+            "name": "expiry",
+            "aliases": [
+              "expiry",
+              "expiration",
+              "expires",
+              "expires_at",
+              "expired"
+            ]
+          }
+        ]
+      },
+      "mean": 5.5,
+      "stdev": 0,
+      "stable": true,
+      "runs": [
+        {
+          "run": 1,
+          "score": 5.5,
+          "answeredCurrentQuestion": true,
+          "scoreInRange": true,
+          "answeredMatches": true,
+          "missingConcepts": [],
+          "durationMs": 0,
+          "pass": true
+        },
+        {
+          "run": 2,
+          "score": 5.5,
+          "answeredCurrentQuestion": true,
+          "scoreInRange": true,
+          "answeredMatches": true,
+          "missingConcepts": [],
+          "durationMs": 0,
+          "pass": true
+        },
+        {
+          "run": 3,
+          "score": 5.5,
+          "answeredCurrentQuestion": true,
+          "scoreInRange": true,
+          "answeredMatches": true,
+          "missingConcepts": [],
+          "durationMs": 0,
+          "pass": true
+        }
+      ],
+      "pass": true
+    },
+    {
+      "id": "url_shortener-data-model-off_topic",
+      "problemId": "url_shortener",
+      "stage": "Data Model",
+      "kind": "off_topic",
+      "expected": {
+        "minScore": 0,
+        "maxScore": 2,
+        "answeredCurrentQuestion": false,
+        "maxStdDev": 1.5,
+        "mustMentionConcepts": [
+          {
+            "name": "relevance mismatch",
+            "aliases": [
+              "off topic",
+              "unrelated",
+              "irrelevant",
+              "does not address",
+              "does not answer",
+              "not addressing",
+              "hike",
+              "hiking",
+              "weekend",
+              "personal"
+            ]
+          }
+        ]
+      },
+      "mean": 1,
+      "stdev": 0,
+      "stable": true,
+      "runs": [
+        {
+          "run": 1,
+          "score": 1,
+          "answeredCurrentQuestion": false,
+          "scoreInRange": true,
+          "answeredMatches": true,
+          "missingConcepts": [],
+          "durationMs": 0,
+          "pass": true
+        },
+        {
+          "run": 2,
+          "score": 1,
+          "answeredCurrentQuestion": false,
+          "scoreInRange": true,
+          "answeredMatches": true,
+          "missingConcepts": [],
+          "durationMs": 0,
+          "pass": true
+        },
+        {
+          "run": 3,
+          "score": 1,
+          "answeredCurrentQuestion": false,
+          "scoreInRange": true,
+          "answeredMatches": true,
+          "missingConcepts": [],
+          "durationMs": 0,
+          "pass": true
+        }
+      ],
+      "pass": true
+    },
+    {
+      "id": "rate_limiter-reliability-strong",
+      "problemId": "rate_limiter",
+      "stage": "Reliability",
+      "kind": "strong",
+      "expected": {
+        "minScore": 7,
+        "maxScore": 10,
+        "answeredCurrentQuestion": true,
+        "maxStdDev": 1.5,
+        "mustMentionConcepts": [
+          {
+            "name": "failure policy",
+            "aliases": [
+              "fail open",
+              "fail closed",
+              "outage",
+              "failure policy"
+            ]
+          },
+          {
+            "name": "replication",
+            "aliases": [
+              "replica",
+              "replication",
+              "failover"
+            ]
+          }
+        ]
+      },
+      "mean": 8.5,
+      "stdev": 0,
+      "stable": true,
+      "runs": [
+        {
+          "run": 1,
+          "score": 8.5,
+          "answeredCurrentQuestion": true,
+          "scoreInRange": true,
+          "answeredMatches": true,
+          "missingConcepts": [],
+          "durationMs": 0,
+          "pass": true
+        },
+        {
+          "run": 2,
+          "score": 8.5,
+          "answeredCurrentQuestion": true,
+          "scoreInRange": true,
+          "answeredMatches": true,
+          "missingConcepts": [],
+          "durationMs": 0,
+          "pass": true
+        },
+        {
+          "run": 3,
+          "score": 8.5,
+          "answeredCurrentQuestion": true,
+          "scoreInRange": true,
+          "answeredMatches": true,
+          "missingConcepts": [],
+          "durationMs": 0,
+          "pass": true
+        }
+      ],
+      "pass": true
+    },
+    {
+      "id": "rate_limiter-reliability-partial",
+      "problemId": "rate_limiter",
+      "stage": "Reliability",
+      "kind": "partial",
+      "expected": {
+        "minScore": 4,
+        "maxScore": 7,
+        "answeredCurrentQuestion": true,
+        "maxStdDev": 1.5,
+        "mustMentionConcepts": [
+          {
+            "name": "failure policy",
+            "aliases": [
+              "fail open",
+              "fail closed",
+              "outage",
+              "failure policy"
+            ]
+          }
+        ]
+      },
+      "mean": 5.5,
+      "stdev": 0,
+      "stable": true,
+      "runs": [
+        {
+          "run": 1,
+          "score": 5.5,
+          "answeredCurrentQuestion": true,
+          "scoreInRange": true,
+          "answeredMatches": true,
+          "missingConcepts": [],
+          "durationMs": 0,
+          "pass": true
+        },
+        {
+          "run": 2,
+          "score": 5.5,
+          "answeredCurrentQuestion": true,
+          "scoreInRange": true,
+          "answeredMatches": true,
+          "missingConcepts": [],
+          "durationMs": 0,
+          "pass": true
+        },
+        {
+          "run": 3,
+          "score": 5.5,
+          "answeredCurrentQuestion": true,
+          "scoreInRange": true,
+          "answeredMatches": true,
+          "missingConcepts": [],
+          "durationMs": 0,
+          "pass": true
+        }
+      ],
+      "pass": true
+    },
+    {
+      "id": "rate_limiter-reliability-weak",
+      "problemId": "rate_limiter",
+      "stage": "Reliability",
+      "kind": "weak",
+      "expected": {
+        "minScore": 0,
+        "maxScore": 4,
+        "answeredCurrentQuestion": true,
+        "maxStdDev": 1.5,
+        "mustMentionConcepts": [
+          {
+            "name": "failure policy",
+            "aliases": [
+              "fail open",
+              "fail closed",
+              "outage",
+              "timeout",
+              "failure"
+            ]
+          }
+        ]
+      },
+      "mean": 2,
+      "stdev": 0,
+      "stable": true,
+      "runs": [
+        {
+          "run": 1,
+          "score": 2,
+          "answeredCurrentQuestion": true,
+          "scoreInRange": true,
+          "answeredMatches": true,
+          "missingConcepts": [],
+          "durationMs": 0,
+          "pass": true
+        },
+        {
+          "run": 2,
+          "score": 2,
+          "answeredCurrentQuestion": true,
+          "scoreInRange": true,
+          "answeredMatches": true,
+          "missingConcepts": [],
+          "durationMs": 0,
+          "pass": true
+        },
+        {
+          "run": 3,
+          "score": 2,
+          "answeredCurrentQuestion": true,
+          "scoreInRange": true,
+          "answeredMatches": true,
+          "missingConcepts": [],
+          "durationMs": 0,
+          "pass": true
+        }
+      ],
+      "pass": true
+    },
+    {
+      "id": "notification_system-scaling-strong",
+      "problemId": "notification_system",
+      "stage": "Scaling",
+      "kind": "strong",
+      "expected": {
+        "minScore": 7,
+        "maxScore": 10,
+        "answeredCurrentQuestion": true,
+        "maxStdDev": 1.5,
+        "mustMentionConcepts": [
+          {
+            "name": "queue isolation",
+            "aliases": [
+              "queue",
+              "queues",
+              "channel",
+              "channels"
+            ]
+          },
+          {
+            "name": "capacity",
+            "aliases": [
+              "capacity",
+              "attempts",
+              "volume",
+              "throughput"
+            ]
+          }
+        ]
+      },
+      "mean": 8.5,
+      "stdev": 0,
+      "stable": true,
+      "runs": [
+        {
+          "run": 1,
+          "score": 8.5,
+          "answeredCurrentQuestion": true,
+          "scoreInRange": true,
+          "answeredMatches": true,
+          "missingConcepts": [],
+          "durationMs": 0,
+          "pass": true
+        },
+        {
+          "run": 2,
+          "score": 8.5,
+          "answeredCurrentQuestion": true,
+          "scoreInRange": true,
+          "answeredMatches": true,
+          "missingConcepts": [],
+          "durationMs": 0,
+          "pass": true
+        },
+        {
+          "run": 3,
+          "score": 8.5,
+          "answeredCurrentQuestion": true,
+          "scoreInRange": true,
+          "answeredMatches": true,
+          "missingConcepts": [],
+          "durationMs": 0,
+          "pass": true
+        }
+      ],
+      "pass": true
+    },
+    {
+      "id": "notification_system-scaling-partial",
+      "problemId": "notification_system",
+      "stage": "Scaling",
+      "kind": "partial",
+      "expected": {
+        "minScore": 4,
+        "maxScore": 7,
+        "answeredCurrentQuestion": true,
+        "maxStdDev": 1.5,
+        "mustMentionConcepts": [
+          {
+            "name": "queue isolation",
+            "aliases": [
+              "queue",
+              "queues",
+              "channel",
+              "channels"
+            ]
+          }
+        ]
+      },
+      "mean": 5.5,
+      "stdev": 0,
+      "stable": true,
+      "runs": [
+        {
+          "run": 1,
+          "score": 5.5,
+          "answeredCurrentQuestion": true,
+          "scoreInRange": true,
+          "answeredMatches": true,
+          "missingConcepts": [],
+          "durationMs": 0,
+          "pass": true
+        },
+        {
+          "run": 2,
+          "score": 5.5,
+          "answeredCurrentQuestion": true,
+          "scoreInRange": true,
+          "answeredMatches": true,
+          "missingConcepts": [],
+          "durationMs": 0,
+          "pass": true
+        },
+        {
+          "run": 3,
+          "score": 5.5,
+          "answeredCurrentQuestion": true,
+          "scoreInRange": true,
+          "answeredMatches": true,
+          "missingConcepts": [],
+          "durationMs": 0,
+          "pass": true
+        }
+      ],
+      "pass": true
+    },
+    {
+      "id": "notification_system-scaling-off_topic",
+      "problemId": "notification_system",
+      "stage": "Scaling",
+      "kind": "off_topic",
+      "expected": {
+        "minScore": 0,
+        "maxScore": 2,
+        "answeredCurrentQuestion": false,
+        "maxStdDev": 1.5,
+        "mustMentionConcepts": [
+          {
+            "name": "relevance mismatch",
+            "aliases": [
+              "off topic",
+              "unrelated",
+              "irrelevant",
+              "does not address",
+              "does not answer",
+              "not addressing",
+              "hike",
+              "hiking",
+              "weekend",
+              "personal"
+            ]
+          }
+        ]
+      },
+      "mean": 1,
+      "stdev": 0,
+      "stable": true,
+      "runs": [
+        {
+          "run": 1,
+          "score": 1,
+          "answeredCurrentQuestion": false,
+          "scoreInRange": true,
+          "answeredMatches": true,
+          "missingConcepts": [],
+          "durationMs": 0,
+          "pass": true
+        },
+        {
+          "run": 2,
+          "score": 1,
+          "answeredCurrentQuestion": false,
+          "scoreInRange": true,
+          "answeredMatches": true,
+          "missingConcepts": [],
+          "durationMs": 0,
+          "pass": true
+        },
+        {
+          "run": 3,
+          "score": 1,
+          "answeredCurrentQuestion": false,
+          "scoreInRange": true,
+          "answeredMatches": true,
+          "missingConcepts": [],
+          "durationMs": 0,
+          "pass": true
+        }
+      ],
+      "pass": true
+    },
+    {
+      "id": "url_shortener-tradeoffs-strong",
+      "problemId": "url_shortener",
+      "stage": "Tradeoffs",
+      "kind": "strong",
+      "expected": {
+        "minScore": 7,
+        "maxScore": 10,
+        "answeredCurrentQuestion": true,
+        "maxStdDev": 1.5,
+        "mustMentionConcepts": [
+          {
+            "name": "code allocation",
+            "aliases": [
+              "collision",
+              "random",
+              "allocator",
+              "sequential",
+              "code generation"
+            ]
+          },
+          {
+            "name": "deletion freshness",
+            "aliases": [
+              "deletion",
+              "expiry",
+              "expiration",
+              "stale",
+              "freshness"
+            ]
+          }
+        ]
+      },
+      "mean": 8.5,
+      "stdev": 0,
+      "stable": true,
+      "runs": [
+        {
+          "run": 1,
+          "score": 8.5,
+          "answeredCurrentQuestion": true,
+          "scoreInRange": true,
+          "answeredMatches": true,
+          "missingConcepts": [],
+          "durationMs": 0,
+          "pass": true
+        },
+        {
+          "run": 2,
+          "score": 8.5,
+          "answeredCurrentQuestion": true,
+          "scoreInRange": true,
+          "answeredMatches": true,
+          "missingConcepts": [],
+          "durationMs": 0,
+          "pass": true
+        },
+        {
+          "run": 3,
+          "score": 8.5,
+          "answeredCurrentQuestion": true,
+          "scoreInRange": true,
+          "answeredMatches": true,
+          "missingConcepts": [],
+          "durationMs": 0,
+          "pass": true
+        }
+      ],
+      "pass": true
+    },
+    {
+      "id": "url_shortener-tradeoffs-partial",
+      "problemId": "url_shortener",
+      "stage": "Tradeoffs",
+      "kind": "partial",
+      "expected": {
+        "minScore": 4,
+        "maxScore": 7,
+        "answeredCurrentQuestion": true,
+        "maxStdDev": 1.5,
+        "mustMentionConcepts": [
+          {
+            "name": "code allocation",
+            "aliases": [
+              "collision",
+              "random",
+              "allocator",
+              "sequential",
+              "code generation"
+            ]
+          }
+        ]
+      },
+      "mean": 5.5,
+      "stdev": 0,
+      "stable": true,
+      "runs": [
+        {
+          "run": 1,
+          "score": 5.5,
+          "answeredCurrentQuestion": true,
+          "scoreInRange": true,
+          "answeredMatches": true,
+          "missingConcepts": [],
+          "durationMs": 0,
+          "pass": true
+        },
+        {
+          "run": 2,
+          "score": 5.5,
+          "answeredCurrentQuestion": true,
+          "scoreInRange": true,
+          "answeredMatches": true,
+          "missingConcepts": [],
+          "durationMs": 0,
+          "pass": true
+        },
+        {
+          "run": 3,
+          "score": 5.5,
+          "answeredCurrentQuestion": true,
+          "scoreInRange": true,
+          "answeredMatches": true,
+          "missingConcepts": [],
+          "durationMs": 0,
+          "pass": true
+        }
+      ],
+      "pass": true
+    },
+    {
+      "id": "url_shortener-tradeoffs-weak",
+      "problemId": "url_shortener",
+      "stage": "Tradeoffs",
+      "kind": "weak",
+      "expected": {
+        "minScore": 0,
+        "maxScore": 4,
+        "answeredCurrentQuestion": true,
+        "maxStdDev": 1.5,
+        "mustMentionConcepts": [
+          {
+            "name": "code allocation",
+            "aliases": [
+              "collision",
+              "random",
+              "allocator",
+              "sequential",
+              "code generation"
+            ]
+          }
+        ]
+      },
+      "mean": 2,
+      "stdev": 0,
+      "stable": true,
+      "runs": [
+        {
+          "run": 1,
+          "score": 2,
+          "answeredCurrentQuestion": true,
+          "scoreInRange": true,
+          "answeredMatches": true,
+          "missingConcepts": [],
+          "durationMs": 0,
+          "pass": true
+        },
+        {
+          "run": 2,
+          "score": 2,
+          "answeredCurrentQuestion": true,
+          "scoreInRange": true,
+          "answeredMatches": true,
+          "missingConcepts": [],
+          "durationMs": 0,
+          "pass": true
+        },
+        {
+          "run": 3,
+          "score": 2,
+          "answeredCurrentQuestion": true,
+          "scoreInRange": true,
+          "answeredMatches": true,
+          "missingConcepts": [],
+          "durationMs": 0,
+          "pass": true
+        }
+      ],
+      "pass": true
+    }
+  ],
+  "classification": [
+    {
+      "id": "intent-01",
+      "expected": "ANSWER",
+      "actual": "ANSWER",
+      "durationMs": 1,
+      "pass": true
+    },
+    {
+      "id": "intent-02",
+      "expected": "ANSWER",
+      "actual": "ANSWER",
+      "durationMs": 0,
+      "pass": true
+    },
+    {
+      "id": "intent-03",
+      "expected": "ANSWER",
+      "actual": "ANSWER",
+      "durationMs": 0,
+      "pass": true
+    },
+    {
+      "id": "intent-04",
+      "expected": "QUESTION",
+      "actual": "QUESTION",
+      "durationMs": 0,
+      "pass": true
+    },
+    {
+      "id": "intent-05",
+      "expected": "QUESTION",
+      "actual": "QUESTION",
+      "durationMs": 0,
+      "pass": true
+    },
+    {
+      "id": "intent-06",
+      "expected": "CLARIFICATION",
+      "actual": "CLARIFICATION",
+      "durationMs": 0,
+      "pass": true
+    },
+    {
+      "id": "intent-07",
+      "expected": "CLARIFICATION",
+      "actual": "CLARIFICATION",
+      "durationMs": 0,
+      "pass": true
+    },
+    {
+      "id": "intent-08",
+      "expected": "CLARIFICATION",
+      "actual": "CLARIFICATION",
+      "durationMs": 0,
+      "pass": true
+    },
+    {
+      "id": "intent-09",
+      "expected": "WRAP_UP",
+      "actual": "WRAP_UP",
+      "durationMs": 0,
+      "pass": true
+    },
+    {
+      "id": "intent-10",
+      "expected": "WRAP_UP",
+      "actual": "WRAP_UP",
+      "durationMs": 0,
+      "pass": true
+    },
+    {
+      "id": "intent-11",
+      "expected": "WRAP_UP",
+      "actual": "WRAP_UP",
+      "durationMs": 0,
+      "pass": true
+    },
+    {
+      "id": "intent-12",
+      "expected": "SMALL_TALK",
+      "actual": "SMALL_TALK",
+      "durationMs": 0,
+      "pass": true
+    },
+    {
+      "id": "intent-13",
+      "expected": "SMALL_TALK",
+      "actual": "SMALL_TALK",
+      "durationMs": 0,
+      "pass": true
+    },
+    {
+      "id": "intent-14",
+      "expected": "ACKNOWLEDGEMENT",
+      "actual": "ACKNOWLEDGEMENT",
+      "durationMs": 0,
+      "pass": true
+    },
+    {
+      "id": "intent-15",
+      "expected": "ACKNOWLEDGEMENT",
+      "actual": "ACKNOWLEDGEMENT",
+      "durationMs": 0,
+      "pass": true
+    }
+  ],
+  "scoringPassRate": 1,
+  "intentAccuracy": 1,
+  "passed": true
+}

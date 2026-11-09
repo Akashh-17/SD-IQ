@@ -1,8 +1,9 @@
-import { llm } from "../../services/llm.js";
+// Short classification output: uses the fast model
+import { llmFast } from "../../services/llm.js";
 import { IntentSchema } from "./schema.js";
 import { intentPrompt } from "./prompt.js";
 
-const structured = llm.withStructuredOutput(IntentSchema);
+const structured = llmFast.withStructuredOutput(IntentSchema);
 
 export async function classifyIntent(message) {
 

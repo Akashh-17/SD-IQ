@@ -1,12 +1,21 @@
+import { logError } from "../utils/logger.js";
 import { generateInterviewerResponse } from "../agents/interviewer/agent.js";
 import { buildInterviewerContext } from "../services/contextBuilder.js";
 import { ReportService } from "../services/report/report.service.js";
 import { log } from "../utils/logger.js";
 import { buildMemory } from "../services/memoryBuilder.js";
 
-export async function interviewNode(state) {
+export async function interviewNode(state, config) {
 
-    const result = await respond(state);
+    config?.signal?.throwIfAborted();
+
+    if (config?.configurable?.streamInterview) {
+        config.writer?.({ type: "interviewer-status", phase: "responding" });
+    }
+
+    const result = await respond(state, config);
+
+    config?.signal?.throwIfAborted();
 
     // Remember what was just asked and refresh the answer digest
     const message = result.messages?.at(-1)?.content;
@@ -21,7 +30,7 @@ export async function interviewNode(state) {
 
 }
 
-async function respond(state) {
+async function respond(state, config) {
 
     // =====================================================
     // Initial Greeting
@@ -89,9 +98,9 @@ ${firstStage.entryQuestion}`
         buildInterviewerContext(state);
 
     const response =
-        await generateInterviewerResponse(interviewerState);
+        await generateInterviewerResponse(interviewerState, config);
 
-    log("INTERVIEWER", response);
+    if (!config?.configurable?.streamInterview) log("INTERVIEWER", response);
 
     // =====================================================
     // Interview Finished
@@ -107,6 +116,11 @@ ${firstStage.entryQuestion}`
 
         try {
 
+            config?.signal?.throwIfAborted();
+
+            // The final user answer must be in the report before Redis is removed.
+            await config?.configurable?.beforeReport?.();
+
             const report = await ReportService.generate(
 
                 state.interview.interviewId,
@@ -115,7 +129,7 @@ ${firstStage.entryQuestion}`
 
             );
 
-            log("REPORT GENERATED", report);
+            if (!config?.configurable?.streamInterview) log("REPORT GENERATED", report);
 
             return {
 
@@ -151,7 +165,9 @@ ${firstStage.entryQuestion}`
 
         catch (err) {
 
-            console.error("REPORT ERROR", err);
+            if (config?.signal?.aborted) throw err;
+
+            logError("REPORT ERROR", err);
 
             return {
 

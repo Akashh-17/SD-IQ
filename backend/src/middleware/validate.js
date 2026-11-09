@@ -71,6 +71,12 @@ export const problemId = z.string().regex(/^[a-z0-9_]{1,64}$/);
 
 export const Schemas = {
 
+    customProblem: z.object({
+
+        topic: z.string().trim().min(3).max(120)
+
+    }),
+
     interviewParams: z.object({
 
         interviewId

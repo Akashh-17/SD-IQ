@@ -1,0 +1,257 @@
+{
+  "estimatedDuration": 45,
+  "difficultyLevels": [
+    "SDE1",
+    "SDE2",
+    "Senior"
+  ],
+  "stages": [
+    {
+      "name": "Requirements",
+      "entryQuestion": "Before designing a home news feed, what scope and scale assumptions would you clarify?",
+      "objective": "Agree on product behavior, measurable quality targets and the stated exercise workload.",
+      "completionCriteria": [
+        {
+          "name": "Functional scope",
+          "required": true,
+          "concepts": [
+            "Core operations and users",
+            "Explicit exclusions"
+          ],
+          "guidance": "Define following, eligibility, deletion and ordering; a chronological feed is valid, and media bytes are outside this problem."
+        },
+        {
+          "name": "Quality targets",
+          "required": true,
+          "concepts": [
+            "Latency and availability targets",
+            "Consistency and durability expectations"
+          ],
+          "guidance": "Clarify freshness, pagination stability and privacy guarantees separately from read availability."
+        },
+        {
+          "name": "Capacity estimates",
+          "required": true,
+          "concepts": [
+            "Daily volume divided by 86400",
+            "Peak multiplier and storage budget"
+          ],
+          "guidance": "Use the fictional baseline or state a justified alternative; derive average and peak rates and distinguish payload bytes from replication and indexes."
+        }
+      ]
+    },
+    {
+      "name": "High Level Design",
+      "entryQuestion": "Walk me through publishing a post and reading a follower home feed.",
+      "objective": "Separate post truth, relationship truth, fanout work and read assembly.",
+      "completionCriteria": [
+        {
+          "name": "Publication truth",
+          "required": true,
+          "concepts": [
+            "Post store",
+            "Transactional outbox or equivalent"
+          ],
+          "guidance": "Durably store posts and a replayable publication event before acknowledging."
+        },
+        {
+          "name": "Graph ownership",
+          "required": true,
+          "concepts": [
+            "Social graph",
+            "Visibility rules"
+          ],
+          "guidance": "Maintain follow, block and privacy state with clear authorization checks."
+        },
+        {
+          "name": "Read assembly",
+          "required": true,
+          "concepts": [
+            "Feed service",
+            "Post hydration"
+          ],
+          "guidance": "Assemble eligible candidates from bounded feed references and author streams, then hydrate post metadata."
+        }
+      ]
+    },
+    {
+      "name": "Core Flow",
+      "entryQuestion": "How would you combine ordinary-author fanout with million-follower authors and stable pagination?",
+      "objective": "Design a high-degree-aware feed assembly flow with defensible cursor semantics.",
+      "completionCriteria": [
+        {
+          "name": "Hybrid candidate strategy",
+          "required": true,
+          "concepts": [
+            "Push ordinary authors or justified alternative",
+            "Pull high-degree author stream"
+          ],
+          "guidance": "Choose write/read/hybrid fanout with a clear high-degree author policy; estimate its amplification rather than requiring one fixed threshold."
+        },
+        {
+          "name": "Fanout replay",
+          "required": true,
+          "concepts": [
+            "Idempotent feed insertion",
+            "Relationship-version cutoff"
+          ],
+          "guidance": "Use stable post/event IDs and idempotent reference insertion, with a cutoff rule for follow/unfollow races."
+        },
+        {
+          "name": "Ordering and pagination",
+          "required": true,
+          "concepts": [
+            "Ordering key plus post ID",
+            "Cursor watermark"
+          ],
+          "guidance": "Use a stable tie-breaker and cursor watermark/snapshot or a justified alternative that bounds duplicates and skipped items while new posts arrive."
+        },
+        {
+          "name": "Candidate filtering",
+          "required": true,
+          "concepts": [
+            "Read-time eligibility filter",
+            "Bounded candidate overfetch"
+          ],
+          "guidance": "Apply current blocks, deletions and private-account eligibility before returning hydrated results."
+        }
+      ]
+    },
+    {
+      "name": "Data Model",
+      "entryQuestion": "What data models and indexes support author timelines, follows and home-feed cursors?",
+      "objective": "Model authoritative social state separately from derived feed materializations.",
+      "completionCriteria": [
+        {
+          "name": "Post and author stream",
+          "required": true,
+          "concepts": [
+            "Author timeline index",
+            "Post tombstone"
+          ],
+          "guidance": "Store post ID, author, ordering key, visibility version and deletion marker; index the author timeline."
+        },
+        {
+          "name": "Social relationships",
+          "required": true,
+          "concepts": [
+            "Bidirectional relationship indexes",
+            "Relationship version"
+          ],
+          "guidance": "Support follower enumeration for fanout and following enumeration for reads, with versioned follow/block changes."
+        },
+        {
+          "name": "Feed materialization",
+          "required": true,
+          "concepts": [
+            "recipient_id + ordering_key + post_id",
+            "Derived reference retention"
+          ],
+          "guidance": "Store bounded recipient-post references rather than copying whole post bodies; identify the rebuild source."
+        }
+      ]
+    },
+    {
+      "name": "Reliability",
+      "entryQuestion": "What happens when fanout falls behind or a user blocks an author whose posts are cached?",
+      "objective": "Protect eligibility while recovering derived feed state.",
+      "completionCriteria": [
+        {
+          "name": "Durable recovery",
+          "required": true,
+          "concepts": [
+            "Replayable publication events",
+            "Derived-feed rebuild"
+          ],
+          "guidance": "Replay publication work and rebuild derived feeds from post and relationship truth after worker/cache failure."
+        },
+        {
+          "name": "Privacy correctness",
+          "required": true,
+          "concepts": [
+            "Authoritative eligibility check",
+            "Revocation and deletion propagation"
+          ],
+          "guidance": "A stale cache cannot grant access; validate visibility or use versioned invalidation with a defined bound."
+        },
+        {
+          "name": "Degraded reads",
+          "required": true,
+          "concepts": [
+            "Eligible stale cache",
+            "Backpressure and fallback"
+          ],
+          "guidance": "Define bounded stale-but-eligible reads, backpressure and fallback when rankers or high-degree streams fail."
+        }
+      ]
+    },
+    {
+      "name": "Scaling",
+      "entryQuestion": "How would you size reads and fanout for normal authors while isolating a celebrity post?",
+      "objective": "Budget write amplification and read hydration, not just incoming post requests.",
+      "completionCriteria": [
+        {
+          "name": "Rate amplification",
+          "required": true,
+          "concepts": [
+            "Posts versus fanout writes",
+            "Page reads versus post hydration"
+          ],
+          "guidance": "Derive 23.15 average posts/s and 2314.81 average page reads/s; 100 ordinary followers imply 200 million reference writes/day before high-degree exceptions."
+        },
+        {
+          "name": "Hot-author isolation",
+          "required": true,
+          "concepts": [
+            "High-degree isolation",
+            "Recipient-range fanout tasks"
+          ],
+          "guidance": "Shard fanout work by recipient range and bypass or batch high-degree authors; avoid one queue partition owning all celebrity work."
+        },
+        {
+          "name": "State budget",
+          "required": true,
+          "concepts": [
+            "Bounded feed length",
+            "Cache and network headroom"
+          ],
+          "guidance": "A 500-reference feed for 20 million active recipients contains 10 billion references, about 160 GB at 16 bytes each before overhead and replicas."
+        }
+      ]
+    },
+    {
+      "name": "Tradeoffs",
+      "entryQuestion": "Which tradeoffs would you choose for freshness, ranking and consistency?",
+      "objective": "Explain how the chosen design changes product behavior under load.",
+      "completionCriteria": [
+        {
+          "name": "Read/write tradeoff",
+          "required": true,
+          "concepts": [
+            "Push/pull cost crossover",
+            "Freshness under backlog"
+          ],
+          "guidance": "Compare fanout cost, read aggregation and freshness for normal versus high-degree authors."
+        },
+        {
+          "name": "Ranking tradeoff",
+          "required": true,
+          "concepts": [
+            "Chronological versus scored feed",
+            "Ranking-version cursor"
+          ],
+          "guidance": "A chronological baseline is acceptable; if ranking is used, define stable cursor/version semantics and a latency fallback."
+        },
+        {
+          "name": "Eligibility tradeoff",
+          "required": true,
+          "concepts": [
+            "Privacy versus insertion consistency",
+            "Freshness and filter-drop metrics"
+          ],
+          "guidance": "Explain consistency for privacy versus eventual feed insertion and choose useful freshness, queue-lag and filtering metrics."
+        }
+      ]
+    }
+  ]
+}

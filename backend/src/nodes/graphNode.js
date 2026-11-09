@@ -1,3 +1,4 @@
+import { logError } from "../utils/logger.js";
 import { llm } from "../services/llm.js";
 import { graphSignature } from "../utils/graphSignature.js";
 import { GraphAnalysisSchema } from "../agents/graph/schema.js";
@@ -62,7 +63,7 @@ ${JSON.stringify(simplified, null, 2)}
 
   catch (e) {
 
-    console.error("[Graph Analysis]", e.message);
+    logError("[Graph Analysis]", e.message);
 
     // null = "no analysis" (not cached, so the next edit or message
     // retries instead of keeping an empty result for this graph)

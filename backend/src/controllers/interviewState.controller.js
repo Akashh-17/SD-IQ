@@ -1,4 +1,6 @@
+import { logError } from "../utils/logger.js";
 import { SessionService } from "../services/interview/session.service.js";
+import { agent } from "./interview.controller.js";
 
 export async function getInterviewState(req, res) {
 
@@ -18,9 +20,16 @@ export async function getInterviewState(req, res) {
 
         }
 
+        // Keep session reads available even if the optional live-stage lookup fails.
+        let stage;
+        try {
+            const state = await agent?.getState({ configurable: { thread_id: interviewId } });
+            stage = state?.values?.interview?.stage;
+        } catch { /* Existing metadata/graph remains useful during checkpoint outages. */ }
+
         res.json({
 
-            interview: session.interview,
+            interview: { ...session.interview, ...(typeof stage === "string" ? { stage } : {}) },
 
             transcript: session.transcript,
 
@@ -34,7 +43,7 @@ export async function getInterviewState(req, res) {
 
     catch (err) {
 
-        console.error(err);
+        logError(err);
 
         res.status(500).json({
 

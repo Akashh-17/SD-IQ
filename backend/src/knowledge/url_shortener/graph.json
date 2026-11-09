@@ -1,37 +1,54 @@
 {
   "nodeMapping": {
-    "api": "API Server",
+    "client": "Web Client",
     "lb": "Load Balancer",
-    "cache": "Redis",
+    "api": "API Server",
+    "urls": "URL Service",
+    "ids": "ID Generator",
+    "cache": "Cache",
     "db": "Database",
     "queue": "Message Queue",
+    "analytics": "Analytics Service",
     "cdn": "CDN"
   },
-
   "recommendedNodes": [
+    "Web Client",
     "Load Balancer",
     "API Server",
-    "Redis",
+    "URL Service",
     "Database"
   ],
-
   "optionalNodes": [
+    "ID Generator",
+    "Cache",
     "Message Queue",
+    "Analytics Service",
     "CDN"
   ],
-
   "recommendedConnections": [
+    {
+      "from": "Web Client",
+      "to": "Load Balancer"
+    },
     {
       "from": "Load Balancer",
       "to": "API Server"
     },
     {
       "from": "API Server",
-      "to": "Redis"
+      "to": "URL Service"
     },
     {
-      "from": "API Server",
+      "from": "URL Service",
       "to": "Database"
+    },
+    {
+      "from": "URL Service",
+      "to": "Cache"
+    },
+    {
+      "from": "URL Service",
+      "to": "ID Generator"
     },
     {
       "from": "API Server",
@@ -39,7 +56,57 @@
     },
     {
       "from": "Message Queue",
-      "to": "Database"
+      "to": "Analytics Service"
+    },
+    {
+      "from": "Web Client",
+      "to": "CDN"
+    },
+    {
+      "from": "CDN",
+      "to": "Load Balancer"
+    }
+  ],
+  "graphChecks": [
+    {
+      "name": "Web Client role represented",
+      "required": true
+    },
+    {
+      "name": "Load Balancer role represented",
+      "required": true
+    },
+    {
+      "name": "API Server role represented",
+      "required": true
+    },
+    {
+      "name": "URL Service role represented",
+      "required": true
+    },
+    {
+      "name": "ID Generator role represented",
+      "required": false
+    },
+    {
+      "name": "Cache role represented",
+      "required": false
+    },
+    {
+      "name": "Database role represented",
+      "required": true
+    },
+    {
+      "name": "Message Queue role represented",
+      "required": false
+    },
+    {
+      "name": "Analytics Service role represented",
+      "required": false
+    },
+    {
+      "name": "CDN role represented",
+      "required": false
     }
   ]
 }

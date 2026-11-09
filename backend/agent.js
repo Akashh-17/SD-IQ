@@ -1,3 +1,4 @@
+import { timeNode } from "./src/observability/node.js";
 import { StateGraph, START, END } from "@langchain/langgraph";
 
 import { State } from "./src/state.js";
@@ -19,21 +20,21 @@ export function buildAgent(checkpointer) {
     // -----------------------------
 
 
-    workflow.addNode("input", inputNode);
+    workflow.addNode("input", timeNode("input", inputNode));
 
-    workflow.addNode("greeting", greetingNode);
+    workflow.addNode("greeting", timeNode("greeting", greetingNode));
 
-    workflow.addNode("intent", intentNode);
+    workflow.addNode("intent", timeNode("intent", intentNode));
 
-    workflow.addNode("orchestrator", orchestratorNode);
+    workflow.addNode("orchestrator", timeNode("orchestrator", orchestratorNode));
 
-    workflow.addNode("evaluator", evaluatorNode);
+    workflow.addNode("evaluator", timeNode("evaluator", evaluatorNode));
 
-    workflow.addNode("conversationManager", conversationNode);
+    workflow.addNode("conversationManager", timeNode("conversationManager", conversationNode));
 
-    workflow.addNode("interviewer", interviewNode);
+    workflow.addNode("interviewer", timeNode("interviewer", interviewNode));
 
-    workflow.addNode("graphAnalyzer", graphNode);
+    workflow.addNode("graphAnalyzer", timeNode("graphAnalyzer", graphNode));
 
     // -----------------------------
     // Initial Greeting

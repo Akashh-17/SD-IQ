@@ -1,265 +1,257 @@
 {
-  "estimatedDuration": 35,
-
+  "estimatedDuration": 45,
   "difficultyLevels": [
-    "Junior",
     "SDE1",
     "SDE2",
     "Senior"
   ],
-
   "stages": [
-
     {
       "name": "Requirements",
-
-      "objective": "Gather functional and non-functional requirements before beginning the design.",
-
-      "entryQuestion": "Before designing the system, what clarification questions would you ask?",
-
+      "entryQuestion": "Before designing a URL shortener, what scope and scale assumptions would you clarify?",
+      "objective": "Agree on product behavior, measurable quality targets and the stated exercise workload.",
       "completionCriteria": [
         {
-          "name": "Functional Requirements",
+          "name": "Functional scope",
           "required": true,
           "concepts": [
-            "Shorten URLs",
-            "Redirect URLs",
-            "Custom Alias",
-            "Expiration",
-            "Analytics"
-          ]
+            "Core operations and users",
+            "Explicit exclusions"
+          ],
+          "guidance": "Distinguish creation, redirects, aliases and expiration; analytics is not required on the redirect critical path."
         },
         {
-          "name": "Non Functional Requirements",
+          "name": "Quality targets",
           "required": true,
           "concepts": [
-            "Latency",
-            "Availability",
-            "Scalability",
-            "Durability"
-          ]
+            "Latency and availability targets",
+            "Consistency and durability expectations"
+          ],
+          "guidance": "Discuss redirect latency, durable acknowledged writes and the allowed delay for expiration or deletion."
         },
         {
-          "name": "Constraints",
+          "name": "Capacity estimates",
           "required": true,
           "concepts": [
-            "Billions of URLs",
-            "Collision",
-            "Read Heavy"
-          ]
+            "Daily volume divided by 86400",
+            "Peak multiplier and storage budget"
+          ],
+          "guidance": "Use the fictional baseline or state a justified alternative; derive average and peak rates and distinguish payload bytes from replication and indexes."
         }
       ]
     },
-
     {
       "name": "High Level Design",
-
-      "objective": "Understand the overall architecture and major components.",
-
-      "entryQuestion": "Walk me through your high-level design.",
-
+      "entryQuestion": "Walk me through a request from creating a short link to following it.",
+      "objective": "Separate the write path, redirect lookup and optional analytics path.",
       "completionCriteria": [
         {
-          "name": "Client",
+          "name": "Request paths",
           "required": true,
           "concepts": [
-            "Web Client"
-          ]
+            "Client and request routing",
+            "Stateless API"
+          ],
+          "guidance": "Explain how a client reaches a stateless API or equivalent routing layer."
         },
         {
-          "name": "Load Balancer",
+          "name": "Mapping ownership",
           "required": true,
           "concepts": [
-            "Load Balancer"
-          ]
+            "URL mapping service",
+            "Persistent mapping store"
+          ],
+          "guidance": "Assign code creation, uniqueness and redirect lookup to clear logical responsibilities; separate processes are not required."
         },
         {
-          "name": "API Service",
+          "name": "Read acceleration",
           "required": true,
           "concepts": [
-            "API Server"
-          ]
+            "Cache-aside lookup",
+            "Database lookup"
+          ],
+          "guidance": "Explain when a cache helps and how misses reach the source of truth; Redis is one option."
         },
         {
-          "name": "Database",
-          "required": true,
-          "concepts": [
-            "Database"
-          ]
-        },
-        {
-          "name": "Cache",
+          "name": "Click analytics",
           "required": false,
           "concepts": [
-            "Redis"
-          ]
+            "Asynchronous click events",
+            "Analytics worker"
+          ],
+          "guidance": "Decouple analytics from redirects if included."
         }
       ]
     },
-
     {
-      "name": "Short Code Generation",
-
-      "objective": "Evaluate the strategy used to generate unique short URLs.",
-
-      "entryQuestion": "How will your service generate unique short URLs?",
-
+      "name": "Core Flow",
+      "entryQuestion": "How will you generate short codes and handle collisions or concurrent custom aliases?",
+      "objective": "Choose one defensible code strategy and preserve unique mappings.",
       "completionCriteria": [
         {
-          "name": "ID Generation",
+          "name": "Code strategy",
           "required": true,
           "concepts": [
-            "Auto Increment",
-            "UUID",
-            "Snowflake"
-          ]
+            "Random code or unique ID allocation",
+            "Base62 as an encoding, not encryption"
+          ],
+          "guidance": "Choose random codes with collision retries or unique IDs plus encoding; do not require both."
         },
         {
-          "name": "Encoding",
+          "name": "Atomic uniqueness",
           "required": true,
           "concepts": [
-            "Base62"
-          ]
+            "Conditional insert",
+            "Collision retry"
+          ],
+          "guidance": "Use a unique constraint or equivalent conditional insert so racing writers cannot overwrite an existing alias."
         },
         {
-          "name": "Collision Handling",
+          "name": "Redirect semantics",
           "required": true,
           "concepts": [
-            "Collision Detection",
-            "Uniqueness"
-          ]
+            "Expiration check",
+            "HTTP redirect and cache semantics"
+          ],
+          "guidance": "Define not-found and expired outcomes, and justify 301 versus 302 and cache behavior."
         }
       ]
     },
-
     {
-      "name": "Database",
-
-      "objective": "Evaluate schema design and storage strategy.",
-
-      "entryQuestion": "How would you store URLs and retrieve them efficiently?",
-
+      "name": "Data Model",
+      "entryQuestion": "What mapping schema and indexes support creation, lookup and expiry?",
+      "objective": "Model a durable mapping and its access paths.",
       "completionCriteria": [
         {
-          "name": "Schema",
+          "name": "Mapping schema",
           "required": true,
           "concepts": [
-            "Short Code",
-            "Original URL",
-            "Created At",
-            "Expiry"
-          ]
+            "short_code to target_url",
+            "expires_at"
+          ],
+          "guidance": "Include short code, target URL, creation time, expiry and optional owner; avoid storing long URLs in a fixed tiny field."
         },
         {
-          "name": "Indexes",
+          "name": "Lookup indexes",
           "required": true,
           "concepts": [
-            "Primary Key",
-            "Unique Index"
-          ]
+            "Unique code index",
+            "Conditional writes"
+          ],
+          "guidance": "Make code lookup and alias uniqueness efficient; choose SQL or key-value storage with justification."
         },
         {
-          "name": "Storage",
+          "name": "Lifecycle records",
           "required": true,
           "concepts": [
-            "SQL",
-            "NoSQL"
-          ]
+            "Deletion marker",
+            "Expiry cleanup"
+          ],
+          "guidance": "Explain deletion or tombstones and cleanup without breaking authoritative expiry checks."
         }
       ]
     },
-
     {
-      "name": "Caching",
-
-      "objective": "Evaluate how redirects are optimized.",
-
-      "entryQuestion": "How would you reduce database lookups during redirects?",
-
+      "name": "Reliability",
+      "entryQuestion": "What happens on a cache miss, cache outage or deletion of a cached link?",
+      "objective": "Keep redirects correct through cache and storage failures.",
       "completionCriteria": [
         {
-          "name": "Cache",
+          "name": "Cache lifecycle",
           "required": true,
           "concepts": [
-            "Redis"
-          ]
+            "TTL bounded by link expiry",
+            "Invalidation"
+          ],
+          "guidance": "Bound staleness with expiry-aligned TTLs or invalidation; do not let cache entries outlive an expired link."
         },
         {
-          "name": "Cache Strategy",
+          "name": "Failure behavior",
           "required": true,
           "concepts": [
-            "Cache Aside",
-            "TTL"
-          ]
+            "Request coalescing",
+            "Database fallback limits"
+          ],
+          "guidance": "Handle cache misses and cache failure without overwhelming the database; define a timeout and degraded behavior."
+        },
+        {
+          "name": "Durable creation",
+          "required": true,
+          "concepts": [
+            "Durable writes",
+            "Idempotency key"
+          ],
+          "guidance": "Acknowledge only after the authoritative store accepts the mapping; cover retry idempotency and restore."
         }
       ]
     },
-
     {
       "name": "Scaling",
-
-      "objective": "Evaluate scalability under heavy traffic.",
-
-      "entryQuestion": "How would your service scale to billions of redirects every day?",
-
+      "entryQuestion": "How would the stated peak redirect and creation load change your partitioning and cache strategy?",
+      "objective": "Scale the specified workload rather than assuming billions of daily requests.",
       "completionCriteria": [
-        {
-          "name": "Replication",
-          "required": true,
-          "concepts": [
-            "Read Replica"
-          ]
-        },
         {
           "name": "Partitioning",
           "required": true,
           "concepts": [
-            "Sharding"
-          ]
+            "Hash partitioning",
+            "Shard routing"
+          ],
+          "guidance": "Partition by code or its hash while preserving uniqueness; explain allocation ownership if using IDs."
         },
         {
-          "name": "CDN",
-          "required": false,
+          "name": "Hot links",
+          "required": true,
           "concepts": [
-            "CDN"
-          ]
+            "Hot-key protection",
+            "Cache stampede control"
+          ],
+          "guidance": "Replicate or cache popular immutable mappings; explain stampede protection and controlled negative caching."
+        },
+        {
+          "name": "Capacity budget",
+          "required": true,
+          "concepts": [
+            "Read/write ratio 100:1",
+            "Replication and index overhead"
+          ],
+          "guidance": "Derive 1157.41 average redirects/s and 5787.04 peak redirects/s, plus approximately 182.5 GB of one-year raw mapping data."
         }
       ]
     },
-
     {
       "name": "Tradeoffs",
-
-      "objective": "Assess architectural reasoning.",
-
-      "entryQuestion": "Let's discuss the tradeoffs in your design.",
-
+      "entryQuestion": "Which tradeoffs would you make for code allocation, redirect caching and availability?",
+      "objective": "Defend the choices and their failure semantics.",
       "completionCriteria": [
         {
-          "name": "Consistency",
+          "name": "Allocation tradeoff",
           "required": true,
           "concepts": [
-            "Consistency"
-          ]
+            "Random versus allocated identifiers",
+            "Collision probability"
+          ],
+          "guidance": "Compare one chosen allocation strategy with a credible alternative, including predictability and collisions."
         },
         {
-          "name": "Availability",
+          "name": "Freshness tradeoff",
           "required": true,
           "concepts": [
-            "Availability"
-          ]
+            "301 versus 302",
+            "Invalidation versus immutable links"
+          ],
+          "guidance": "Explain how permanent HTTP/CDN caching can conflict with deletion or edits; disabling CDN caching is acceptable."
         },
         {
-          "name": "Code Generation",
+          "name": "Operational tradeoff",
           "required": true,
           "concepts": [
-            "Hashing",
-            "Base62",
-            "Snowflake"
-          ]
+            "Availability during cache failure",
+            "Redirect latency and errors"
+          ],
+          "guidance": "Prioritize durable creation and predictable redirects, and identify useful latency, error and cache-hit metrics."
         }
       ]
     }
-
   ]
 }

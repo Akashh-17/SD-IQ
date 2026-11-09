@@ -1,78 +1,136 @@
 {
   "components": [
     {
+      "name": "Desktop or Mobile Client",
+      "purpose": "Uploads content and tracks a per-device change cursor."
+    },
+    {
       "name": "API Gateway",
-      "purpose": "Entry point for all client requests."
+      "purpose": "Routes metadata and upload-session requests."
     },
     {
-      "name": "Load Balancer",
-      "purpose": "Distribute incoming traffic."
-    },
-    {
-      "name": "Authentication Service",
-      "purpose": "Authenticate users and authorize access."
+      "name": "Authorization Service",
+      "purpose": "Checks ownership, sharing grants and revocation versions."
     },
     {
       "name": "Metadata Service",
-      "purpose": "Manage file metadata, folders and permissions."
-    },
-    {
-      "name": "Upload Service",
-      "purpose": "Handle chunked uploads and file assembly."
-    },
-    {
-      "name": "Object Storage",
-      "purpose": "Store file contents."
+      "purpose": "Owns file versions, folders, manifests and durable change records."
     },
     {
       "name": "Metadata Database",
-      "purpose": "Store metadata about files, folders and versions."
+      "purpose": "Stores versioned metadata, grants and ordered tenant changes."
     },
     {
-      "name": "Redis",
-      "purpose": "Cache metadata and frequently accessed information."
+      "name": "Upload Service",
+      "purpose": "Manages resumable sessions and content checksums."
     },
     {
-      "name": "Message Queue",
-      "purpose": "Asynchronous processing of background tasks."
+      "name": "Object Storage",
+      "purpose": "Stores durable file chunks and committed manifests."
     },
     {
-      "name": "Notification Service",
-      "purpose": "Notify clients about file changes."
+      "name": "Change Queue",
+      "purpose": "Buffers change notifications and background cleanup work."
+    },
+    {
+      "name": "Sync Notification Service",
+      "purpose": "Sends change hints; devices recover from the durable change log."
+    },
+    {
+      "name": "Metadata Cache",
+      "purpose": "Caches authorized metadata with bounded permission-aware lifetimes."
     },
     {
       "name": "CDN",
-      "purpose": "Accelerate file downloads globally."
+      "purpose": "Serves authorized downloads from object storage with bounded signed URLs."
     }
   ],
-
   "tradeoffs": [
     {
-      "topic": "Object Storage",
+      "topic": "Metadata publication",
       "alternatives": [
-        "Block Storage",
-        "Distributed File System"
-      ]
+        "Conditional SQL version update",
+        "Transactional key-value update"
+      ],
+      "guidance": "Prevent lost updates; eventual notification does not imply eventual authorization."
     },
     {
       "topic": "Synchronization",
       "alternatives": [
-        "Polling",
-        "Push Notifications"
+        "Push hints plus durable cursor replay",
+        "Periodic polling of a durable change log"
+      ],
+      "guidance": "Either must recover missed notifications."
+    },
+    {
+      "topic": "Deduplication",
+      "alternatives": [
+        "No deduplication",
+        "Tenant-scoped content deduplication"
+      ],
+      "guidance": "Do not infer global content equality across private tenants."
+    }
+  ],
+  "dataModel": [
+    {
+      "entity": "File",
+      "key": "tenant_id + file_id",
+      "fields": [
+        "parent_folder_id",
+        "owner_id",
+        "current_version",
+        "deleted_at"
+      ],
+      "notes": "Index parent folder for cursor listings."
+    },
+    {
+      "entity": "Version",
+      "key": "file_id + version",
+      "fields": [
+        "manifest_key",
+        "checksum",
+        "size_bytes",
+        "created_at"
+      ],
+      "notes": "Commit only after content is durable; retain conflict versions."
+    },
+    {
+      "entity": "Grant",
+      "key": "file_id + principal_id",
+      "fields": [
+        "role",
+        "revocation_version"
+      ],
+      "notes": "Check on every metadata action and content-link issuance."
+    },
+    {
+      "entity": "Change",
+      "key": "tenant_id + sequence",
+      "fields": [
+        "file_id",
+        "version",
+        "operation"
+      ],
+      "notes": "Persist deletion tombstones and per-device replay cursors."
+    }
+  ],
+  "flows": [
+    {
+      "name": "Upload publication",
+      "steps": [
+        "Authorize and create an upload session with part checksums",
+        "Client uploads or resumes missing chunks directly to object storage",
+        "Verify the manifest and content durability",
+        "Conditionally publish the file version and change record",
+        "Notify devices, which replay authoritative changes"
       ]
     },
     {
-      "topic": "Metadata Database",
-      "alternatives": [
-        "PostgreSQL",
-        "Cassandra"
-      ]
-    },
-    {
-      "topic": "Message Queue",
-      "alternatives": [
-        "Kafka",
-        "RabbitMQ"
+      "name": "Download",
+      "steps": [
+        "Check the grant and current version in metadata",
+        "Issue a bounded signed URL",
+        "Client downloads from authorized CDN or object storage and verifies integrity"
       ]
     }
   ]

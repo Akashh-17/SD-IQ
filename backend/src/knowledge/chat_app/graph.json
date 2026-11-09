@@ -1,12 +1,116 @@
 {
   "nodeMapping": {
+    "client": "Mobile Client",
     "api": "API Gateway",
-    "lb": "Load Balancer",
-    "websocket_server": "WebSocket Server",
-    "cache": "Redis",
-    "queue": "Kafka",
-    "db": "Database",
-    "notification_service": "Notification Service",
+    "connections": "Connection Server",
+    "messages": "Message Service",
+    "db": "Message Database",
+    "queue": "Durable Message Queue",
+    "cache": "Presence Cache",
+    "notify": "Notification Service",
+    "objects": "Object Storage",
     "cdn": "CDN"
-  }
+  },
+  "recommendedNodes": [
+    "Mobile Client",
+    "API Gateway",
+    "Connection Server",
+    "Message Service",
+    "Message Database",
+    "Durable Message Queue"
+  ],
+  "optionalNodes": [
+    "Presence Cache",
+    "Notification Service",
+    "Object Storage",
+    "CDN"
+  ],
+  "recommendedConnections": [
+    {
+      "from": "Mobile Client",
+      "to": "API Gateway"
+    },
+    {
+      "from": "API Gateway",
+      "to": "Connection Server"
+    },
+    {
+      "from": "Connection Server",
+      "to": "Message Service"
+    },
+    {
+      "from": "Connection Server",
+      "to": "Presence Cache"
+    },
+    {
+      "from": "Message Service",
+      "to": "Message Database"
+    },
+    {
+      "from": "Message Service",
+      "to": "Durable Message Queue"
+    },
+    {
+      "from": "Durable Message Queue",
+      "to": "Connection Server"
+    },
+    {
+      "from": "Durable Message Queue",
+      "to": "Notification Service"
+    },
+    {
+      "from": "Mobile Client",
+      "to": "Object Storage"
+    },
+    {
+      "from": "Mobile Client",
+      "to": "CDN"
+    },
+    {
+      "from": "CDN",
+      "to": "Object Storage"
+    }
+  ],
+  "graphChecks": [
+    {
+      "name": "Mobile Client role represented",
+      "required": true
+    },
+    {
+      "name": "API Gateway role represented",
+      "required": true
+    },
+    {
+      "name": "Connection Server role represented",
+      "required": true
+    },
+    {
+      "name": "Message Service role represented",
+      "required": true
+    },
+    {
+      "name": "Message Database role represented",
+      "required": true
+    },
+    {
+      "name": "Durable Message Queue role represented",
+      "required": true
+    },
+    {
+      "name": "Presence Cache role represented",
+      "required": false
+    },
+    {
+      "name": "Notification Service role represented",
+      "required": false
+    },
+    {
+      "name": "Object Storage role represented",
+      "required": false
+    },
+    {
+      "name": "CDN role represented",
+      "required": false
+    }
+  ]
 }

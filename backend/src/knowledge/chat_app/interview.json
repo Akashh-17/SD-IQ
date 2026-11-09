@@ -1,287 +1,255 @@
 {
   "estimatedDuration": 45,
-
   "difficultyLevels": [
-    "Junior",
     "SDE1",
     "SDE2",
     "Senior"
   ],
-
   "stages": [
     {
       "name": "Requirements",
-
-      "objective": "Gather all functional and non-functional requirements before starting the design.",
-
-      "entryQuestion": "Before we begin the design, do you have any requirement clarification questions?",
-
+      "entryQuestion": "Before designing a chat service, what scope and scale assumptions would you clarify?",
+      "objective": "Agree on product behavior, measurable quality targets and the stated exercise workload.",
       "completionCriteria": [
         {
-          "name": "Functional Requirements",
+          "name": "Functional scope",
           "required": true,
           "concepts": [
-            "One-to-one messaging",
-            "Group messaging",
-            "Media sharing",
-            "Read receipts",
-            "Typing indicator",
-            "Push notifications"
-          ]
+            "Core operations and users",
+            "Explicit exclusions"
+          ],
+          "guidance": "Clarify online/offline delivery, group bounds, media references and acknowledgement meanings; typing indicators are optional."
         },
         {
-          "name": "Non Functional Requirements",
+          "name": "Quality targets",
           "required": true,
           "concepts": [
-            "Latency",
-            "Availability",
-            "Scalability",
-            "Durability"
-          ]
+            "Latency and availability targets",
+            "Consistency and durability expectations"
+          ],
+          "guidance": "Separate accepted, delivered and read states; order within a conversation rather than globally."
         },
         {
-          "name": "Constraints",
+          "name": "Capacity estimates",
           "required": true,
           "concepts": [
-            "500 Million DAU",
-            "Large media",
-            "Global users",
-            "Network failures"
-          ]
+            "Daily volume divided by 86400",
+            "Peak multiplier and storage budget"
+          ],
+          "guidance": "Use the fictional baseline or state a justified alternative; derive average and peak rates and distinguish payload bytes from replication and indexes."
         }
       ]
     },
-
     {
       "name": "High Level Design",
-
-      "objective": "Understand the overall architecture and major components.",
-
-      "entryQuestion": "Great. Walk me through your high-level architecture.",
-
+      "entryQuestion": "Walk me through online and offline message delivery at a high level.",
+      "objective": "Separate connection routing, durable messaging and asynchronous notifications.",
       "completionCriteria": [
         {
-          "name": "Client",
-
+          "name": "Connection routing",
           "required": true,
-
           "concepts": [
-            "Mobile Client"
-          ]
+            "Persistent connections",
+            "Connection directory"
+          ],
+          "guidance": "Route authenticated persistent connections to a connection server; WebSocket or an equivalent transport is acceptable."
         },
         {
-          "name": "Load Balancer",
-
+          "name": "Durable messaging",
           "required": true,
-
           "concepts": [
-            "Load Balancer"
-          ]
+            "Message service",
+            "Durable message store"
+          ],
+          "guidance": "Assign message persistence and recipient delivery to a messaging service and durable store."
         },
         {
-          "name": "Gateway",
-
+          "name": "Offline and media paths",
           "required": true,
-
           "concepts": [
-            "API Gateway"
-          ]
-        },
-        {
-          "name": "Realtime",
-
-          "required": true,
-
-          "concepts": [
-            "WebSocket"
-          ]
-        },
-        {
-          "name": "Messaging",
-
-          "required": true,
-
-          "concepts": [
-            "Message Service"
-          ]
-        },
-        {
-          "name": "Storage",
-
-          "required": true,
-
-          "concepts": [
-            "Database"
-          ]
+            "Offline backlog",
+            "Object-storage media references"
+          ],
+          "guidance": "Describe offline backlog access and media stored outside the message database."
         }
       ]
     },
-
     {
-      "name": "Realtime Communication",
-
-      "objective": "Evaluate the realtime messaging flow.",
-
-      "entryQuestion": "Let's discuss how messages flow through the system.",
-
+      "name": "Core Flow",
+      "entryQuestion": "How do retries, acknowledgements and ordering work when a phone disconnects?",
+      "objective": "Provide practical at-least-once delivery with deduplication and bounded ordering.",
       "completionCriteria": [
         {
-          "name": "Connection",
-
+          "name": "Acknowledgement boundary",
           "required": true,
-
           "concepts": [
-            "Persistent Connection",
-            "WebSocket"
-          ]
+            "Durable acceptance ACK",
+            "Delivery acknowledgement"
+          ],
+          "guidance": "Distinguish server acceptance from recipient delivery and read receipts; persist before acceptance ACK."
         },
         {
-          "name": "Delivery",
-
+          "name": "Retry deduplication",
           "required": true,
-
           "concepts": [
-            "ACK",
-            "Retry",
-            "Offline Messages"
-          ]
+            "Client-generated message ID",
+            "Idempotent receive"
+          ],
+          "guidance": "Use a stable client message ID so reconnect retries do not create duplicate visible messages."
         },
         {
-          "name": "Presence",
-
-          "required": false,
-
+          "name": "Conversation ordering",
+          "required": true,
           "concepts": [
-            "Heartbeat",
-            "Online Status"
-          ]
+            "Per-conversation sequence",
+            "Gap recovery"
+          ],
+          "guidance": "Choose per-conversation sequence allocation or a justified alternative; handle gaps and duplicate arrivals."
+        },
+        {
+          "name": "Group fanout",
+          "required": true,
+          "concepts": [
+            "Group membership version",
+            "Recipient fanout"
+          ],
+          "guidance": "Explain bounded group membership lookup and per-recipient delivery without promising a global order across chats."
         }
       ]
     },
-
     {
-      "name": "Database",
-
-      "objective": "Evaluate schema design and data modelling.",
-
-      "entryQuestion": "How would you design the database schema?",
-
+      "name": "Data Model",
+      "entryQuestion": "What keys and indexes let a device fetch unread messages in order?",
+      "objective": "Model conversations, membership and messages with cursor-based reads.",
       "completionCriteria": [
         {
-          "name": "Schema",
-
+          "name": "Message schema",
           "required": true,
-
           "concepts": [
-            "Users",
-            "Chats",
-            "Messages",
-            "GroupMembers"
-          ]
+            "conversation_id and sequence",
+            "Unique client message ID"
+          ],
+          "guidance": "Key messages by conversation and sequence or equivalent sortable cursor; store sender, stable message ID and payload reference."
         },
         {
-          "name": "Indexes",
-
+          "name": "Membership and cursors",
           "required": true,
-
           "concepts": [
-            "chat_id",
-            "timestamp"
-          ]
+            "Conversation membership",
+            "Per-device cursor"
+          ],
+          "guidance": "Represent group membership and per-device delivered/read cursors while enforcing access."
         },
         {
-          "name": "Pagination",
-
+          "name": "Retention and pagination",
           "required": true,
-
           "concepts": [
-            "Cursor Pagination"
-          ]
+            "Cursor pagination",
+            "Retention tombstones"
+          ],
+          "guidance": "Use cursor pagination and an explicit retention policy; do not retain media inline in text rows."
         }
       ]
     },
-
+    {
+      "name": "Reliability",
+      "entryQuestion": "What happens if connection servers, the broker or the message store fail?",
+      "objective": "Recover delivery from durable state rather than transient Pub/Sub.",
+      "completionCriteria": [
+        {
+          "name": "Durable replay",
+          "required": true,
+          "concepts": [
+            "Durable replay log",
+            "Offline cursor recovery"
+          ],
+          "guidance": "A transient Redis Pub/Sub channel alone is not an offline message store; replay from durable messages or a durable log."
+        },
+        {
+          "name": "Reconnect recovery",
+          "required": true,
+          "concepts": [
+            "Backoff with jitter",
+            "Connection heartbeat and expiry"
+          ],
+          "guidance": "Handle reconnect storms, exponential backoff and stale connection ownership."
+        },
+        {
+          "name": "Safe notifications",
+          "required": true,
+          "concepts": [
+            "Push as a delivery hint",
+            "Access-checked media links"
+          ],
+          "guidance": "Push notifications are hints, not proof of delivery; respect membership changes and avoid leaking private media."
+        }
+      ]
+    },
     {
       "name": "Scaling",
-
-      "objective": "Evaluate scalability of the architecture.",
-
-      "entryQuestion": "How would this system scale to hundreds of millions of users?",
-
+      "entryQuestion": "How would you size and partition this chat workload without creating a hot group shard?",
+      "objective": "Scale connections, writes and fanout independently.",
       "completionCriteria": [
         {
-          "name": "Caching",
-
-          "required": true,
-
-          "concepts": [
-            "Redis"
-          ]
-        },
-        {
-          "name": "Queue",
-
-          "required": true,
-
-          "concepts": [
-            "Kafka"
-          ]
-        },
-        {
           "name": "Partitioning",
-
           "required": true,
-
           "concepts": [
-            "Sharding"
-          ]
+            "Conversation partition",
+            "Connection-server scaling"
+          ],
+          "guidance": "Choose conversation-based ownership for message order; distribute unrelated conversations independently."
         },
         {
-          "name": "Replication",
-
+          "name": "Traffic and storage",
           "required": true,
-
           "concepts": [
-            "Replication"
-          ]
+            "Sent versus delivered volume",
+            "Replication budget"
+          ],
+          "guidance": "Derive 4629.63 sent messages/s average, 23148.15 peak and 3.6 TB raw text retention for 30 days."
+        },
+        {
+          "name": "Backpressure",
+          "required": true,
+          "concepts": [
+            "Hot conversation handling",
+            "Bounded delivery queues"
+          ],
+          "guidance": "Bound queues and isolate busy groups or users; avoid a single global broker partition."
         }
       ]
     },
-
     {
       "name": "Tradeoffs",
-
-      "objective": "Assess architectural reasoning and tradeoffs.",
-
-      "entryQuestion": "Let's discuss some tradeoffs in your design.",
-
+      "entryQuestion": "What guarantees would you trade for availability, latency and battery use?",
+      "objective": "Explain transport, delivery and storage tradeoffs without requiring a specific broker.",
       "completionCriteria": [
         {
-          "name": "Consistency",
-
+          "name": "Delivery tradeoff",
           "required": true,
-
           "concepts": [
-            "Consistency"
-          ]
+            "At-least-once delivery",
+            "Visible deduplication"
+          ],
+          "guidance": "Compare at-least-once plus dedupe with the cost and limits of end-to-end exactly-once claims."
         },
         {
-          "name": "Availability",
-
+          "name": "Consistency tradeoff",
           "required": true,
-
           "concepts": [
-            "Availability"
-          ]
+            "Per-chat order",
+            "Membership freshness"
+          ],
+          "guidance": "Explain ordering and membership correctness during partitions, not only a memorized CAP slogan."
         },
         {
-          "name": "CAP",
-
+          "name": "Transport tradeoff",
           "required": true,
-
           "concepts": [
-            "CAP Theorem"
-          ]
+            "WebSocket or equivalent",
+            "Heartbeat and battery budget"
+          ],
+          "guidance": "Compare persistent connections with polling or streaming alternatives and their mobile-resource costs."
         }
       ]
     }

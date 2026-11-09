@@ -1,290 +1,55 @@
-import { useEffect, useRef, useState } from "react";
-import {
-    ChevronUp,
-    LogOut,
-    Settings,
-    User,
-} from "lucide-react";
+import type { User as AuthUser } from "@supabase/supabase-js";
+import { useEffect, useRef, useState, type KeyboardEvent } from "react";
+import { ChevronUp, LogOut, Settings, User } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import {
-    getCurrentUser,
-    signOut,
-} from "../../services/auth.service";
+import { getCurrentUser, signOut } from "../../services/auth.service";
+import clsx from "clsx";
 
-export default function ProfileMenu() {
-
+export default function ProfileMenu({ collapsed = false }: { collapsed?: boolean }) {
     const navigate = useNavigate();
-
-    const menuRef = useRef<HTMLDivElement>(null);
-
+    const ref = useRef<HTMLDivElement>(null);
+    const trigger = useRef<HTMLButtonElement>(null);
     const [open, setOpen] = useState(false);
-
-    const [user, setUser] = useState<any>(null);
-
+    const [user, setUser] = useState<AuthUser | null>(null);
     useEffect(() => {
-
-        async function loadUser() {
-
-            const currentUser = await getCurrentUser();
-
-            setUser(currentUser);
-
-        }
-
-        loadUser();
-
+        let active = true;
+        getCurrentUser().then(current => { if (active) setUser(current); }).catch(() => {});
+        return () => { active = false; };
     }, []);
-
     useEffect(() => {
-
-        function handleClickOutside(e: MouseEvent) {
-
-            if (
-
-                menuRef.current &&
-
-                !menuRef.current.contains(e.target as Node)
-
-            ) {
-
-                setOpen(false);
-
-            }
-
-        }
-
-        document.addEventListener(
-
-            "mousedown",
-
-            handleClickOutside
-
-        );
-
-        return () =>
-
-            document.removeEventListener(
-
-                "mousedown",
-
-                handleClickOutside
-
-            );
-
+        function outside(event: PointerEvent) { if (!ref.current?.contains(event.target as Node)) setOpen(false); }
+        document.addEventListener("pointerdown", outside);
+        return () => document.removeEventListener("pointerdown", outside);
     }, []);
-
-    async function handleLogout() {
-
-        await signOut();
-
-        navigate("/");
-
+    useEffect(() => { if (open) ref.current?.querySelector<HTMLElement>('[role="menuitem"]')?.focus(); }, [open]);
+    function close() { setOpen(false); trigger.current?.focus(); }
+    function keys(event: KeyboardEvent<HTMLDivElement>) {
+        if (event.key === "Escape") { event.preventDefault(); close(); return; }
+        if (event.key === "Tab") { close(); return; }
+        const items = Array.from(ref.current?.querySelectorAll<HTMLElement>('[role="menuitem"]') ?? []);
+        const index = items.indexOf(document.activeElement as HTMLElement);
+        if (event.key === "ArrowDown" || event.key === "ArrowUp" || event.key === "Home" || event.key === "End") {
+            event.preventDefault();
+            const next = event.key === "Home" ? 0 : event.key === "End" ? items.length - 1 : (index + (event.key === "ArrowDown" ? 1 : -1) + items.length) % items.length;
+            items[next]?.focus();
+        }
     }
-
     const email = user?.email ?? "Guest";
-
     const name = email.split("@")[0];
-
-    const initials =
-
-        name
-
-            .split(".")
-
-            .map((n: string) => n[0])
-
-            .join("")
-
-            .substring(0, 2)
-
-            .toUpperCase();
-
-    return (
-
-        <div
-
-            ref={menuRef}
-
-            className="relative"
-
-        >
-
-            <button
-
-                onClick={() =>
-
-                    setOpen(
-
-                        !open
-
-                    )
-
-                }
-
-                className="flex w-full items-center gap-3 rounded-xl p-3 transition hover:bg-white/5"
-
-            >
-
-                <div
-                    className="
-        aspect-square
-        h-8
-        shrink-0
-        flex
-        items-center
-        justify-center
-        rounded-full
-        bg-[#F5B301]
-        text-xs
-        font-semibold
-        text-black
-    "
-                >
-                    {initials}
-                </div>
-
-                <div className="flex-1 text-left">
-
-                    <div className="text-sm font-semibold text-white">
-
-                        {name}
-
-                    </div>
-
-                    <div className="truncate text-xs text-gray-500">
-
-                        {email}
-
-                    </div>
-
-                </div>
-
-                <ChevronUp
-
-                    size={18}
-
-                    className={`
-
-                        text-gray-500
-
-                        transition-transform
-
-                        ${open
-
-                            ? "rotate-180"
-
-                            : ""
-
-                        }
-
-                    `}
-
-                />
-
-            </button>
-
-            {
-
-                open && (
-
-                    <div
-
-                        className="
-
-                            absolute
-
-                            bottom-16
-
-                            left-0
-
-                            w-full
-
-                            overflow-hidden
-
-                            rounded-xl
-
-                            border
-
-                            border-white/10
-
-                            bg-[#111214]
-
-                            shadow-2xl
-
-                            animate-in
-
-                            fade-in
-
-                            slide-in-from-bottom-2
-
-                        "
-
-                    >
-
-                        <button
-
-                            onClick={() => {
-
-                                navigate("/profile");
-
-                                setOpen(false);
-
-                            }}
-
-                            className="flex w-full items-center gap-3 px-4 py-3 text-sm text-gray-300 transition hover:bg-white/5"
-
-                        >
-
-                            <User size={16} />
-
-                            View Profile
-
-                        </button>
-
-                        <button
-
-                            onClick={() => {
-
-                                navigate("/settings");
-
-                                setOpen(false);
-
-                            }}
-
-                            className="flex w-full items-center gap-3 px-4 py-3 text-sm text-gray-300 transition hover:bg-white/5"
-
-                        >
-
-                            <Settings size={16} />
-
-                            Settings
-
-                        </button>
-
-                        <div className="border-t border-white/10" />
-
-                        <button
-
-                            onClick={handleLogout}
-
-                            className="flex w-full items-center gap-3 px-4 py-3 text-sm text-red-400 transition hover:bg-red-500/10"
-
-                        >
-
-                            <LogOut size={16} />
-
-                            Logout
-
-                        </button>
-
-                    </div>
-
-                )
-
-            }
-
-        </div>
-
-    );
-
+    const initials = name.split(".").map(part => part[0]).join("").slice(0, 2).toUpperCase();
+    const menuClass = "flex min-h-11 w-full items-center gap-3 px-4 py-3 text-left text-xs text-muted transition-colors hover:bg-elevated hover:text-text";
+    return <div ref={ref} className="relative">
+        <button ref={trigger} type="button" aria-label={collapsed ? `Account menu for ${name}` : undefined} aria-expanded={open} aria-haspopup="menu"
+            onClick={() => setOpen(value => !value)} onKeyDown={event => { if (event.key === "ArrowDown" || event.key === "ArrowUp") { event.preventDefault(); setOpen(true); } }}
+            className={clsx("flex min-h-11 w-full items-center gap-3 rounded-control transition-colors hover:bg-elevated", collapsed ? "justify-center" : "p-2")}>
+            <span aria-hidden="true" className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-border bg-elevated font-mono text-xs text-text">{initials}</span>
+            {!collapsed && <><span className="min-w-0 flex-1 text-left"><span className="block truncate text-xs font-medium">{name}</span><span className="mt-0.5 block truncate text-[10px] text-muted">{email}</span></span><ChevronUp size={14} aria-hidden="true" className={clsx("text-muted", open && "rotate-180")} /></>}
+        </button>
+        {open && <div role="menu" aria-label="Account" onKeyDown={keys} className="absolute bottom-full left-0 z-50 mb-3 w-52 overflow-hidden rounded-card border border-border bg-surface py-1 shadow-floating">
+            <button type="button" role="menuitem" className={menuClass} onClick={() => { close(); navigate("/profile"); }}><User size={15} aria-hidden="true" />View profile</button>
+            <button type="button" role="menuitem" className={menuClass} onClick={() => { close(); navigate("/settings"); }}><Settings size={15} aria-hidden="true" />Settings</button>
+            <div role="separator" className="my-1 border-t border-border" />
+            <button type="button" role="menuitem" className={clsx(menuClass, "!text-danger")} onClick={async () => { await signOut(); navigate("/"); }}><LogOut size={15} aria-hidden="true" />Log out</button>
+        </div>}
+    </div>;
 }

@@ -1,0 +1,359 @@
+{
+  "guidance": [
+    "Evaluate the latest answer against the current question and objective, not future stages.",
+    "Required criteria are semantic outcomes. Concepts are examples and alternatives, not an AND checklist or mandatory products.",
+    "Accept a justified algorithm, database or vendor; probe claims actually made rather than demanding every alternative.",
+    "Do not penalize optional features, omitted diagram boxes, company-specific facts or small rounding differences.",
+    "Use the fictional workload consistently; accept an explicitly justified alternative workload and its arithmetic.",
+    "Weights and minimumCoverage are advisory; runtime progression uses required criteria and report scores are computed in code."
+  ],
+  "scoreAnchors": [
+    {
+      "min": 0,
+      "max": 2,
+      "description": "Does not address the current question or makes a fundamental correctness error."
+    },
+    {
+      "min": 3,
+      "max": 4,
+      "description": "Names plausible components but cannot explain their mechanism or limitations."
+    },
+    {
+      "min": 5,
+      "max": 6,
+      "description": "Explains a workable baseline with some gaps in the current objective."
+    },
+    {
+      "min": 7,
+      "max": 8,
+      "description": "Explains a coherent mechanism, failure cases and justified tradeoffs."
+    },
+    {
+      "min": 9,
+      "max": 10,
+      "description": "Quantifies and defends a robust design, recognizing limits and alternatives."
+    }
+  ],
+  "topics": [
+    {
+      "name": "Requirements",
+      "weight": 12,
+      "minimumCoverage": 0.75,
+      "guidance": "Agree on product behavior, measurable quality targets and the stated exercise workload. Evaluate only the current question and stage; a justified alternative earns equal credit.",
+      "concepts": [
+        {
+          "name": "Functional scope",
+          "importance": "critical",
+          "probe": true,
+          "guidance": "Clarify transactional versus bulk priority, selected channels, acceptance semantics and user preferences."
+        },
+        {
+          "name": "Core operations and users",
+          "importance": "important",
+          "probe": true,
+          "guidance": "Supporting example for Functional scope. Reward equivalent mechanisms; do not require every listed alternative."
+        },
+        {
+          "name": "Quality targets",
+          "importance": "critical",
+          "probe": true,
+          "guidance": "Separate durable API acceptance from provider acceptance and final delivery; define latency and retention for each."
+        },
+        {
+          "name": "Latency and availability targets",
+          "importance": "important",
+          "probe": true,
+          "guidance": "Supporting example for Quality targets. Reward equivalent mechanisms; do not require every listed alternative."
+        },
+        {
+          "name": "Capacity estimates",
+          "importance": "critical",
+          "probe": true,
+          "guidance": "Use the fictional baseline or state a justified alternative; derive average and peak rates and distinguish payload bytes from replication and indexes."
+        },
+        {
+          "name": "Daily volume divided by 86400",
+          "importance": "important",
+          "probe": true,
+          "guidance": "Supporting example for Capacity estimates. Reward equivalent mechanisms; do not require every listed alternative."
+        }
+      ]
+    },
+    {
+      "name": "High Level Design",
+      "weight": 16,
+      "minimumCoverage": 0.75,
+      "guidance": "Keep provider latency off the acceptance path and isolate channels. Evaluate only the current question and stage; a justified alternative earns equal credit.",
+      "concepts": [
+        {
+          "name": "Durable acceptance",
+          "importance": "critical",
+          "probe": true,
+          "guidance": "Persist a stable intent ID and recoverable dispatch work before acknowledging; a transactional outbox or equivalent is acceptable."
+        },
+        {
+          "name": "Intent store",
+          "importance": "important",
+          "probe": true,
+          "guidance": "Supporting example for Durable acceptance. Reward equivalent mechanisms; do not require every listed alternative."
+        },
+        {
+          "name": "Routing and preferences",
+          "importance": "critical",
+          "probe": true,
+          "guidance": "Resolve recipients and allowed channels using current preferences, including quiet hours."
+        },
+        {
+          "name": "Preference evaluation",
+          "importance": "important",
+          "probe": true,
+          "guidance": "Supporting example for Routing and preferences. Reward equivalent mechanisms; do not require every listed alternative."
+        },
+        {
+          "name": "Channel isolation",
+          "importance": "critical",
+          "probe": true,
+          "guidance": "Use bounded per-channel work and provider adapters with independent quotas and failure domains."
+        },
+        {
+          "name": "Channel queues",
+          "importance": "important",
+          "probe": true,
+          "guidance": "Supporting example for Channel isolation. Reward equivalent mechanisms; do not require every listed alternative."
+        }
+      ]
+    },
+    {
+      "name": "Core Flow",
+      "weight": 22,
+      "minimumCoverage": 0.75,
+      "guidance": "Explain identity, retry uncertainty and per-channel completion. Evaluate only the current question and stage; a justified alternative earns equal credit.",
+      "concepts": [
+        {
+          "name": "Intent idempotency",
+          "importance": "critical",
+          "probe": true,
+          "guidance": "Scope a caller-provided key to its tenant and compare the request fingerprint so a retried intent is not duplicated."
+        },
+        {
+          "name": "Tenant-scoped idempotency key",
+          "importance": "important",
+          "probe": true,
+          "guidance": "Supporting example for Intent idempotency. Reward equivalent mechanisms; do not require every listed alternative."
+        },
+        {
+          "name": "Attempt lifecycle",
+          "importance": "critical",
+          "probe": true,
+          "guidance": "Track pending, leased, attempted and terminal outcomes per channel; distinguish provider acceptance from confirmed delivery."
+        },
+        {
+          "name": "Per-channel attempt state",
+          "importance": "important",
+          "probe": true,
+          "guidance": "Supporting example for Attempt lifecycle. Reward equivalent mechanisms; do not require every listed alternative."
+        },
+        {
+          "name": "Retry uncertainty",
+          "importance": "critical",
+          "probe": true,
+          "guidance": "Use bounded exponential backoff with jitter and provider idempotency keys when supported; acknowledge that an ambiguous timeout may still duplicate delivery."
+        },
+        {
+          "name": "Backoff with jitter",
+          "importance": "important",
+          "probe": true,
+          "guidance": "Supporting example for Retry uncertainty. Reward equivalent mechanisms; do not require every listed alternative."
+        },
+        {
+          "name": "Eligibility at send time",
+          "importance": "critical",
+          "probe": true,
+          "guidance": "Recheck opt-out and quiet-hour policy before the actual attempt, not just when the intent is created."
+        },
+        {
+          "name": "Send-time preference check",
+          "importance": "important",
+          "probe": true,
+          "guidance": "Supporting example for Eligibility at send time. Reward equivalent mechanisms; do not require every listed alternative."
+        }
+      ]
+    },
+    {
+      "name": "Data Model",
+      "weight": 14,
+      "minimumCoverage": 0.75,
+      "guidance": "Model durable state transitions and a bounded deduplication window. Evaluate only the current question and stage; a justified alternative earns equal credit.",
+      "concepts": [
+        {
+          "name": "Intent schema",
+          "importance": "critical",
+          "probe": true,
+          "guidance": "Store tenant, intent ID, idempotency key, recipient reference, template version and request hash; protect sensitive parameters."
+        },
+        {
+          "name": "Tenant intent key",
+          "importance": "important",
+          "probe": true,
+          "guidance": "Supporting example for Intent schema. Reward equivalent mechanisms; do not require every listed alternative."
+        },
+        {
+          "name": "Attempt schema",
+          "importance": "critical",
+          "probe": true,
+          "guidance": "Represent each channel/provider attempt with attempt number, lease expiry, retry time and provider reference."
+        },
+        {
+          "name": "Channel attempt key",
+          "importance": "important",
+          "probe": true,
+          "guidance": "Supporting example for Attempt schema. Reward equivalent mechanisms; do not require every listed alternative."
+        },
+        {
+          "name": "Preferences and receipts",
+          "importance": "critical",
+          "probe": true,
+          "guidance": "Version user preferences and deduplicate asynchronous provider receipts; enforce tenant isolation."
+        },
+        {
+          "name": "Preference version",
+          "importance": "important",
+          "probe": true,
+          "guidance": "Supporting example for Preferences and receipts. Reward equivalent mechanisms; do not require every listed alternative."
+        }
+      ]
+    },
+    {
+      "name": "Reliability",
+      "weight": 16,
+      "minimumCoverage": 0.75,
+      "guidance": "Prevent endless retries and isolate degraded providers. Evaluate only the current question and stage; a justified alternative earns equal credit.",
+      "concepts": [
+        {
+          "name": "Lease and replay",
+          "importance": "critical",
+          "probe": true,
+          "guidance": "Recover abandoned work from durable state and make completion idempotent after a worker crashes."
+        },
+        {
+          "name": "Worker lease expiry",
+          "importance": "important",
+          "probe": true,
+          "guidance": "Supporting example for Lease and replay. Reward equivalent mechanisms; do not require every listed alternative."
+        },
+        {
+          "name": "Failure classification",
+          "importance": "critical",
+          "probe": true,
+          "guidance": "Retry transient errors, stop on permanent failures, dead-letter exhausted attempts and support controlled replay."
+        },
+        {
+          "name": "Transient versus permanent failure",
+          "importance": "important",
+          "probe": true,
+          "guidance": "Supporting example for Failure classification. Reward equivalent mechanisms; do not require every listed alternative."
+        },
+        {
+          "name": "Provider protection",
+          "importance": "critical",
+          "probe": true,
+          "guidance": "Respect provider quotas and retry delays, use circuit breaking, and avoid a fallback provider causing duplicate sends."
+        },
+        {
+          "name": "Per-provider quotas",
+          "importance": "important",
+          "probe": true,
+          "guidance": "Supporting example for Provider protection. Reward equivalent mechanisms; do not require every listed alternative."
+        }
+      ]
+    },
+    {
+      "name": "Scaling",
+      "weight": 12,
+      "minimumCoverage": 0.75,
+      "guidance": "Scale worker pools and preserve priority under backpressure. Evaluate only the current question and stage; a justified alternative earns equal credit.",
+      "concepts": [
+        {
+          "name": "Attempt capacity",
+          "importance": "critical",
+          "probe": true,
+          "guidance": "Derive 231.48 intents/s and 347.22 channel attempts/s average, with 3472.22 peak attempts/s before retries."
+        },
+        {
+          "name": "Intents versus attempts",
+          "importance": "important",
+          "probe": true,
+          "guidance": "Supporting example for Attempt capacity. Reward equivalent mechanisms; do not require every listed alternative."
+        },
+        {
+          "name": "Queue partitioning",
+          "importance": "critical",
+          "probe": true,
+          "guidance": "Partition by channel and tenant or priority; prevent one bulk campaign from starving transactional traffic."
+        },
+        {
+          "name": "Tenant fairness",
+          "importance": "important",
+          "probe": true,
+          "guidance": "Supporting example for Queue partitioning. Reward equivalent mechanisms; do not require every listed alternative."
+        },
+        {
+          "name": "Storage budget",
+          "importance": "critical",
+          "probe": true,
+          "guidance": "Estimate 140 GB of 7-day raw intent records and 420 GB with three copies, before indexes and individual attempt rows."
+        },
+        {
+          "name": "Retention budget",
+          "importance": "important",
+          "probe": true,
+          "guidance": "Supporting example for Storage budget. Reward equivalent mechanisms; do not require every listed alternative."
+        }
+      ]
+    },
+    {
+      "name": "Tradeoffs",
+      "weight": 8,
+      "minimumCoverage": 0.75,
+      "guidance": "Explain practical provider and product boundaries. Evaluate only the current question and stage; a justified alternative earns equal credit.",
+      "concepts": [
+        {
+          "name": "Guarantee tradeoff",
+          "importance": "critical",
+          "probe": true,
+          "guidance": "Explain at-least-once internal processing versus best-effort external deduplication; do not promise universal exactly-once sends."
+        },
+        {
+          "name": "Processing versus external delivery",
+          "importance": "important",
+          "probe": true,
+          "guidance": "Supporting example for Guarantee tradeoff. Reward equivalent mechanisms; do not require every listed alternative."
+        },
+        {
+          "name": "Latency tradeoff",
+          "importance": "critical",
+          "probe": true,
+          "guidance": "Compare immediate transactional delivery with scheduled or bulk work under provider cost and quota limits."
+        },
+        {
+          "name": "Priority versus batch efficiency",
+          "importance": "important",
+          "probe": true,
+          "guidance": "Supporting example for Latency tradeoff. Reward equivalent mechanisms; do not require every listed alternative."
+        },
+        {
+          "name": "Privacy and operations",
+          "importance": "critical",
+          "probe": true,
+          "guidance": "Minimize retention and payload logging; monitor oldest queued age, terminal failures and provider throttles without recipient labels."
+        },
+        {
+          "name": "Sensitive-content minimization",
+          "importance": "important",
+          "probe": true,
+          "guidance": "Supporting example for Privacy and operations. Reward equivalent mechanisms; do not require every listed alternative."
+        }
+      ]
+    }
+  ]
+}

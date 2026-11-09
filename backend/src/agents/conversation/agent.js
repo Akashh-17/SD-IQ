@@ -1,9 +1,10 @@
-import { llm } from "../../services/llm.js";
+// Short classification output: uses the fast model
+import { llmFast } from "../../services/llm.js";
 import { conversationPrompt } from "./prompt.js";
 import { ConversationSchema } from "./schema.js";
 
 const structured =
-    llm.withStructuredOutput(
+    llmFast.withStructuredOutput(
         ConversationSchema
     );
 

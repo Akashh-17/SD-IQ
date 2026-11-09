@@ -1,3 +1,4 @@
+import { logError } from "../../utils/logger.js";
 import { llm } from "../llm.js";
 import { log } from "../../utils/logger.js";
 
@@ -118,7 +119,7 @@ Do NOT wrap the JSON in markdown.
 
     catch (err) {
 
-        console.error("Invalid report JSON from the LLM");
+        logError("Invalid report JSON from the LLM");
 
         log("INVALID REPORT JSON", content);
 

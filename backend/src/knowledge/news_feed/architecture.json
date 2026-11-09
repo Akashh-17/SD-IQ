@@ -1,0 +1,171 @@
+{
+  "components": [
+    {
+      "name": "Feed Client",
+      "purpose": "Publishes posts and requests cursor-based feed pages."
+    },
+    {
+      "name": "API Gateway",
+      "purpose": "Authenticates post, follow and feed operations."
+    },
+    {
+      "name": "Post Service",
+      "purpose": "Owns durable posts, author timelines and publication events."
+    },
+    {
+      "name": "Post Database",
+      "purpose": "Stores authoritative posts and replayable publication outbox records."
+    },
+    {
+      "name": "Social Graph Service",
+      "purpose": "Owns follows, blocks and privacy versions."
+    },
+    {
+      "name": "Relationship Database",
+      "purpose": "Indexes follower and following access paths and eligibility changes."
+    },
+    {
+      "name": "Fanout Queue",
+      "purpose": "Carries partitioned, replayable post-fanout tasks."
+    },
+    {
+      "name": "Fanout Workers",
+      "purpose": "Write idempotent bounded recipient feed references for eligible authors."
+    },
+    {
+      "name": "Home Feed Store",
+      "purpose": "Stores derived recipient references, not the only copy of posts or permissions."
+    },
+    {
+      "name": "Feed Service",
+      "purpose": "Merges candidate sources, filters eligibility and hydrates results."
+    },
+    {
+      "name": "High-degree Author Streams",
+      "purpose": "Provides pull-based candidate posts for high-degree authors."
+    },
+    {
+      "name": "Ranking Service",
+      "purpose": "Optional bounded-latency scoring; chronological fallback remains available."
+    }
+  ],
+  "tradeoffs": [
+    {
+      "topic": "Fanout",
+      "alternatives": [
+        "Write fanout",
+        "Read fanout",
+        "Hybrid high-degree policy"
+      ],
+      "guidance": "Estimate amplification and read latency for the stated follower distribution."
+    },
+    {
+      "topic": "Cursor semantics",
+      "alternatives": [
+        "Chronological watermark with stable tie-breaker",
+        "Versioned ranked snapshot"
+      ],
+      "guidance": "Describe duplicates, edits and newly inserted posts explicitly."
+    },
+    {
+      "topic": "Eligibility",
+      "alternatives": [
+        "Read-time authoritative filter",
+        "Versioned invalidation with a bounded staleness contract"
+      ],
+      "guidance": "Do not serve blocked/private content merely because a feed reference exists."
+    }
+  ],
+  "dataModel": [
+    {
+      "entity": "Post",
+      "key": "post_id",
+      "fields": [
+        "author_id",
+        "ordering_key",
+        "visibility_version",
+        "deleted_at",
+        "content_reference"
+      ],
+      "notes": "Index the author stream and preserve deletion markers long enough for replay."
+    },
+    {
+      "entity": "Follow",
+      "key": "follower_id + author_id",
+      "fields": [
+        "state",
+        "version",
+        "effective_at"
+      ],
+      "notes": "Support reverse enumeration and explicit race semantics."
+    },
+    {
+      "entity": "FeedEntry",
+      "key": "recipient_id + ordering_key + post_id",
+      "fields": [
+        "author_id",
+        "source_event_id"
+      ],
+      "notes": "Bound feed length; insertion is idempotent and rebuildable."
+    },
+    {
+      "entity": "PublicationEvent",
+      "key": "event_id",
+      "fields": [
+        "post_id",
+        "author_id",
+        "post_version",
+        "created_at"
+      ],
+      "notes": "Durably link accepted publication to replayable fanout work."
+    },
+    {
+      "entity": "FeedCursor",
+      "key": "client-held signed cursor",
+      "fields": [
+        "ordering_watermark",
+        "last_post_id",
+        "ranking_version"
+      ],
+      "notes": "Bind to the recipient and ordering semantics; do not trust arbitrary client offsets."
+    },
+    {
+      "entity": "Block",
+      "key": "viewer_id + blocked_author_id",
+      "fields": [
+        "version",
+        "effective_at"
+      ],
+      "notes": "Authoritative eligibility filtering applies even to previously cached feed entries."
+    },
+    {
+      "entity": "ProfileVisibility",
+      "key": "author_id",
+      "fields": [
+        "privacy_mode",
+        "visibility_version"
+      ],
+      "notes": "Evaluate current private-account eligibility and define revocation behavior."
+    }
+  ],
+  "flows": [
+    {
+      "name": "Publish fanout",
+      "steps": [
+        "Commit a post and recoverable publication event",
+        "Classify author workload under the chosen fanout policy",
+        "Partition ordinary-author recipient work and insert references idempotently",
+        "Keep high-degree author posts available for pull-based merge"
+      ]
+    },
+    {
+      "name": "Read",
+      "steps": [
+        "Read a bounded recipient reference window plus high-degree author candidates",
+        "Merge using stable ordering and cursor semantics",
+        "Filter current visibility, blocks and deletions",
+        "Hydrate eligible post metadata and return at most 20 references with a next cursor"
+      ]
+    }
+  ]
+}

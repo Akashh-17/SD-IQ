@@ -1,384 +1,357 @@
 {
+  "guidance": [
+    "Evaluate the latest answer against the current question and objective, not future stages.",
+    "Required criteria are semantic outcomes. Concepts are examples and alternatives, not an AND checklist or mandatory products.",
+    "Accept a justified algorithm, database or vendor; probe claims actually made rather than demanding every alternative.",
+    "Do not penalize optional features, omitted diagram boxes, company-specific facts or small rounding differences.",
+    "Use the fictional workload consistently; accept an explicitly justified alternative workload and its arithmetic.",
+    "Weights and minimumCoverage are advisory; runtime progression uses required criteria and report scores are computed in code."
+  ],
+  "scoreAnchors": [
+    {
+      "min": 0,
+      "max": 2,
+      "description": "Does not address the current question or makes a fundamental correctness error."
+    },
+    {
+      "min": 3,
+      "max": 4,
+      "description": "Names plausible components but cannot explain their mechanism or limitations."
+    },
+    {
+      "min": 5,
+      "max": 6,
+      "description": "Explains a workable baseline with some gaps in the current objective."
+    },
+    {
+      "min": 7,
+      "max": 8,
+      "description": "Explains a coherent mechanism, failure cases and justified tradeoffs."
+    },
+    {
+      "min": 9,
+      "max": 10,
+      "description": "Quantifies and defends a robust design, recognizing limits and alternatives."
+    }
+  ],
   "topics": [
     {
-      "name": "Requirement Gathering",
-      "weight": 10,
+      "name": "Requirements",
+      "weight": 12,
       "minimumCoverage": 0.75,
+      "guidance": "Agree on product behavior, measurable quality targets and the stated exercise workload. Evaluate only the current question and stage; a justified alternative earns equal credit.",
       "concepts": [
         {
-          "name": "Functional Requirements",
+          "name": "Functional scope",
           "importance": "critical",
-          "probe": false
+          "probe": true,
+          "guidance": "Clarify rider/driver actions, cancellation, assignment and payment boundaries; location and matching freshness differ from trip durability."
         },
         {
-          "name": "Non Functional Requirements",
-          "importance": "critical",
-          "probe": false
-        },
-        {
-          "name": "Ride Request",
-          "importance": "critical",
-          "probe": false
-        },
-        {
-          "name": "Ride Matching",
-          "importance": "critical",
-          "probe": false
-        },
-        {
-          "name": "Live Tracking",
+          "name": "Core operations and users",
           "importance": "important",
-          "probe": false
+          "probe": true,
+          "guidance": "Supporting example for Functional scope. Reward equivalent mechanisms; do not require every listed alternative."
         },
         {
-          "name": "Payments",
+          "name": "Quality targets",
+          "importance": "critical",
+          "probe": true,
+          "guidance": "Set matching latency and stale-location limits, and require exclusive assignment despite retries and partitions."
+        },
+        {
+          "name": "Latency and availability targets",
           "importance": "important",
-          "probe": false
+          "probe": true,
+          "guidance": "Supporting example for Quality targets. Reward equivalent mechanisms; do not require every listed alternative."
         },
         {
-          "name": "Notifications",
-          "importance": "optional",
-          "probe": false
+          "name": "Capacity estimates",
+          "importance": "critical",
+          "probe": true,
+          "guidance": "Use the fictional baseline or state a justified alternative; derive average and peak rates and distinguish payload bytes from replication and indexes."
+        },
+        {
+          "name": "Daily volume divided by 86400",
+          "importance": "important",
+          "probe": true,
+          "guidance": "Supporting example for Capacity estimates. Reward equivalent mechanisms; do not require every listed alternative."
         }
       ]
     },
-
     {
       "name": "High Level Design",
-      "weight": 12,
-      "minimumCoverage": 0.80,
-      "concepts": [
-        {
-          "name": "Load Balancer",
-          "importance": "critical",
-          "probe": false
-        },
-        {
-          "name": "API Gateway",
-          "importance": "critical",
-          "probe": false
-        },
-        {
-          "name": "Trip Service",
-          "importance": "critical",
-          "probe": true
-        },
-        {
-          "name": "Location Service",
-          "importance": "critical",
-          "probe": true
-        },
-        {
-          "name": "Matching Service",
-          "importance": "critical",
-          "probe": true
-        },
-        {
-          "name": "Database",
-          "importance": "critical",
-          "probe": false
-        },
-        {
-          "name": "Redis",
-          "importance": "important",
-          "probe": true
-        }
-      ]
-    },
-
-    {
-      "name": "Location Tracking",
-      "weight": 15,
-      "minimumCoverage": 0.85,
-      "concepts": [
-        {
-          "name": "GPS Updates",
-          "importance": "critical",
-          "probe": true
-        },
-        {
-          "name": "Driver Heartbeat",
-          "importance": "important",
-          "probe": true
-        },
-        {
-          "name": "WebSocket",
-          "importance": "important",
-          "probe": true
-        },
-        {
-          "name": "gRPC Streaming",
-          "importance": "important",
-          "probe": true
-        },
-        {
-          "name": "Location Service",
-          "importance": "critical",
-          "probe": false
-        },
-        {
-          "name": "Redis",
-          "importance": "important",
-          "probe": false
-        }
-      ]
-    },
-
-    {
-      "name": "Geospatial Search",
-      "weight": 12,
-      "minimumCoverage": 0.80,
-      "concepts": [
-        {
-          "name": "Geohash",
-          "importance": "critical",
-          "probe": true
-        },
-        {
-          "name": "Uber H3",
-          "importance": "critical",
-          "probe": true
-        },
-        {
-          "name": "QuadTree",
-          "importance": "important",
-          "probe": true
-        },
-        {
-          "name": "Nearest Driver Search",
-          "importance": "critical",
-          "probe": true
-        },
-        {
-          "name": "Radius Search",
-          "importance": "important",
-          "probe": true
-        }
-      ]
-    },
-
-    {
-      "name": "Ride Matching",
-      "weight": 12,
-      "minimumCoverage": 0.80,
-      "concepts": [
-        {
-          "name": "Dispatch Algorithm",
-          "importance": "critical",
-          "probe": true
-        },
-        {
-          "name": "ETA",
-          "importance": "critical",
-          "probe": true
-        },
-        {
-          "name": "Driver Selection",
-          "importance": "critical",
-          "probe": true
-        },
-        {
-          "name": "Driver Acceptance",
-          "importance": "important",
-          "probe": true
-        },
-        {
-          "name": "Retry Logic",
-          "importance": "important",
-          "probe": true
-        }
-      ]
-    },
-
-    {
-      "name": "Trip Lifecycle",
-      "weight": 10,
-      "minimumCoverage": 0.80,
-      "concepts": [
-        {
-          "name": "Requested",
-          "importance": "critical",
-          "probe": false
-        },
-        {
-          "name": "Accepted",
-          "importance": "critical",
-          "probe": false
-        },
-        {
-          "name": "In Progress",
-          "importance": "critical",
-          "probe": false
-        },
-        {
-          "name": "Completed",
-          "importance": "critical",
-          "probe": false
-        },
-        {
-          "name": "Cancelled",
-          "importance": "important",
-          "probe": true
-        }
-      ]
-    },
-
-    {
-      "name": "Pricing & Payments",
-      "weight": 8,
-      "minimumCoverage": 0.70,
-      "concepts": [
-        {
-          "name": "Fare Estimation",
-          "importance": "critical",
-          "probe": true
-        },
-        {
-          "name": "Surge Pricing",
-          "importance": "critical",
-          "probe": true
-        },
-        {
-          "name": "Payment Service",
-          "importance": "important",
-          "probe": false
-        },
-        {
-          "name": "Refunds",
-          "importance": "optional",
-          "probe": true
-        }
-      ]
-    },
-
-    {
-      "name": "Database",
-      "weight": 8,
+      "weight": 16,
       "minimumCoverage": 0.75,
+      "guidance": "Separate ephemeral geospatial state from durable trip and payment state. Evaluate only the current question and stage; a justified alternative earns equal credit.",
       "concepts": [
         {
-          "name": "Users",
+          "name": "Location boundary",
           "importance": "critical",
-          "probe": false
+          "probe": true,
+          "guidance": "Ingest timestamped locations and update a geospatial index with expiry; do not write every fix synchronously to the trip row."
         },
         {
-          "name": "Drivers",
-          "importance": "critical",
-          "probe": false
-        },
-        {
-          "name": "Trips",
-          "importance": "critical",
-          "probe": false
-        },
-        {
-          "name": "Payments",
+          "name": "Location service",
           "importance": "important",
-          "probe": false
+          "probe": true,
+          "guidance": "Supporting example for Location boundary. Reward equivalent mechanisms; do not require every listed alternative."
         },
         {
-          "name": "Indexes",
+          "name": "Matching boundary",
+          "importance": "critical",
+          "probe": true,
+          "guidance": "Find eligible candidates and estimate pickup time; nearest straight-line distance alone is not necessarily best."
+        },
+        {
+          "name": "Matching service",
           "importance": "important",
-          "probe": true
+          "probe": true,
+          "guidance": "Supporting example for Matching boundary. Reward equivalent mechanisms; do not require every listed alternative."
+        },
+        {
+          "name": "Trip authority",
+          "importance": "critical",
+          "probe": true,
+          "guidance": "Make a trip service own assignment, state transitions and payment requests in a durable store."
+        },
+        {
+          "name": "Trip state machine",
+          "importance": "important",
+          "probe": true,
+          "guidance": "Supporting example for Trip authority. Reward equivalent mechanisms; do not require every listed alternative."
         }
       ]
     },
-
     {
-      "name": "Caching & Messaging",
-      "weight": 6,
-      "minimumCoverage": 0.70,
+      "name": "Core Flow",
+      "weight": 22,
+      "minimumCoverage": 0.75,
+      "guidance": "Combine geospatial candidate search with concurrency-safe dispatch. Evaluate only the current question and stage; a justified alternative earns equal credit.",
       "concepts": [
         {
-          "name": "Redis",
+          "name": "Fresh candidates",
           "importance": "critical",
-          "probe": false
+          "probe": true,
+          "guidance": "Use a spatial grid/index or another justified method, filter stale GPS and consider accuracy and road travel time."
         },
         {
-          "name": "Kafka",
+          "name": "Geohash, H3, R-tree or equivalent",
+          "importance": "important",
+          "probe": true,
+          "guidance": "Supporting example for Fresh candidates. Reward equivalent mechanisms; do not require every listed alternative."
+        },
+        {
+          "name": "Exclusive assignment",
           "importance": "critical",
-          "probe": true
+          "probe": true,
+          "guidance": "Use conditional offer reservations and fence stale acceptance. An expiring offer is not an accepted trip: retain authoritative driver ownership for accepted/in-progress trips until a terminal transition or explicit reconciled recovery."
         },
         {
-          "name": "Notification Queue",
+          "name": "Compare-and-set driver lease",
           "importance": "important",
-          "probe": true
+          "probe": true,
+          "guidance": "Supporting example for Exclusive assignment. Reward equivalent mechanisms; do not require every listed alternative."
         },
         {
-          "name": "Async Processing",
+          "name": "Dispatch retries",
+          "importance": "critical",
+          "probe": true,
+          "guidance": "Handle acceptance timeout, duplicate offers and cancellation while moving to another driver without double booking."
+        },
+        {
+          "name": "Offer expiry",
           "importance": "important",
-          "probe": true
+          "probe": true,
+          "guidance": "Supporting example for Dispatch retries. Reward equivalent mechanisms; do not require every listed alternative."
+        },
+        {
+          "name": "Trip transitions",
+          "importance": "critical",
+          "probe": true,
+          "guidance": "Define legal requested, offered, accepted, in-progress, completed and cancelled transitions."
+        },
+        {
+          "name": "Versioned trip transitions",
+          "importance": "important",
+          "probe": true,
+          "guidance": "Supporting example for Trip transitions. Reward equivalent mechanisms; do not require every listed alternative."
         }
       ]
     },
-
+    {
+      "name": "Data Model",
+      "weight": 14,
+      "minimumCoverage": 0.75,
+      "guidance": "Choose keys for trip history, driver exclusivity and idempotent payment. Evaluate only the current question and stage; a justified alternative earns equal credit.",
+      "concepts": [
+        {
+          "name": "Trip schema",
+          "importance": "critical",
+          "probe": true,
+          "guidance": "Store rider, driver, state, state version and timestamps with indexed history access."
+        },
+        {
+          "name": "trip_id and state_version",
+          "importance": "important",
+          "probe": true,
+          "guidance": "Supporting example for Trip schema. Reward equivalent mechanisms; do not require every listed alternative."
+        },
+        {
+          "name": "Assignment record",
+          "importance": "critical",
+          "probe": true,
+          "guidance": "Track offer expiry separately from durable accepted occupancy, with trip ID and a fencing/version token; enforce at most one nonterminal trip per driver."
+        },
+        {
+          "name": "One active assignment per driver",
+          "importance": "important",
+          "probe": true,
+          "guidance": "Supporting example for Assignment record. Reward equivalent mechanisms; do not require every listed alternative."
+        },
+        {
+          "name": "Payment request",
+          "importance": "critical",
+          "probe": true,
+          "guidance": "Use a stable payment operation ID and separate payment state from GPS and matching."
+        },
+        {
+          "name": "Idempotency key",
+          "importance": "important",
+          "probe": true,
+          "guidance": "Supporting example for Payment request. Reward equivalent mechanisms; do not require every listed alternative."
+        }
+      ]
+    },
+    {
+      "name": "Reliability",
+      "weight": 16,
+      "minimumCoverage": 0.75,
+      "guidance": "Preserve assignment safety while allowing bounded degraded behavior. Evaluate only the current question and stage; a justified alternative earns equal credit.",
+      "concepts": [
+        {
+          "name": "Stale locations",
+          "importance": "critical",
+          "probe": true,
+          "guidance": "Expire inactive drivers, reject out-of-order fixes and account for GPS uncertainty."
+        },
+        {
+          "name": "Location sequence or timestamp",
+          "importance": "important",
+          "probe": true,
+          "guidance": "Supporting example for Stale locations. Reward equivalent mechanisms; do not require every listed alternative."
+        },
+        {
+          "name": "Assignment recovery",
+          "importance": "critical",
+          "probe": true,
+          "guidance": "Expire abandoned offers and fence stale workers; renew or reconcile accepted trip ownership rather than declaring a busy driver available merely because a timer expired."
+        },
+        {
+          "name": "Fencing on recovery",
+          "importance": "important",
+          "probe": true,
+          "guidance": "Supporting example for Assignment recovery. Reward equivalent mechanisms; do not require every listed alternative."
+        },
+        {
+          "name": "Payment correctness",
+          "importance": "critical",
+          "probe": true,
+          "guidance": "Use idempotent provider requests and callbacks; trip completion must not charge twice."
+        },
+        {
+          "name": "Idempotent payment operation",
+          "importance": "important",
+          "probe": true,
+          "guidance": "Supporting example for Payment correctness. Reward equivalent mechanisms; do not require every listed alternative."
+        }
+      ]
+    },
     {
       "name": "Scaling",
-      "weight": 10,
-      "minimumCoverage": 0.80,
+      "weight": 12,
+      "minimumCoverage": 0.75,
+      "guidance": "Scale geospatial reads, hot areas and durable writes independently. Evaluate only the current question and stage; a justified alternative earns equal credit.",
       "concepts": [
         {
-          "name": "Horizontal Scaling",
+          "name": "Location capacity",
           "importance": "critical",
-          "probe": false
+          "probe": true,
+          "guidance": "500000 drivers / 5 seconds is 100000 updates/s; a 2x burst is 200000 updates/s. Do not confuse this with trip request throughput."
         },
         {
-          "name": "Sharding",
-          "importance": "critical",
-          "probe": true
-        },
-        {
-          "name": "Replication",
-          "importance": "critical",
-          "probe": true
-        },
-        {
-          "name": "Load Balancer",
+          "name": "Update frequency arithmetic",
           "importance": "important",
-          "probe": false
+          "probe": true,
+          "guidance": "Supporting example for Location capacity. Reward equivalent mechanisms; do not require every listed alternative."
         },
         {
-          "name": "Geo Partitioning",
+          "name": "Regional ownership",
+          "importance": "critical",
+          "probe": true,
+          "guidance": "Partition by city/region and subdivide hot cells while searching neighboring cells and handling boundaries."
+        },
+        {
+          "name": "Regional dispatch owner",
           "importance": "important",
-          "probe": true
+          "probe": true,
+          "guidance": "Supporting example for Regional ownership. Reward equivalent mechanisms; do not require every listed alternative."
+        },
+        {
+          "name": "Durable throughput",
+          "importance": "critical",
+          "probe": true,
+          "guidance": "Size 231.48 average and 1157.41 peak ride requests/s separately from location traffic; buffer optional history asynchronously."
+        },
+        {
+          "name": "Trip write rate",
+          "importance": "important",
+          "probe": true,
+          "guidance": "Supporting example for Durable throughput. Reward equivalent mechanisms; do not require every listed alternative."
         }
       ]
     },
-
     {
       "name": "Tradeoffs",
-      "weight": 12,
+      "weight": 8,
       "minimumCoverage": 0.75,
+      "guidance": "Defend a concrete regional dispatch policy. Evaluate only the current question and stage; a justified alternative earns equal credit.",
       "concepts": [
         {
-          "name": "Consistency",
+          "name": "Matching quality tradeoff",
           "importance": "critical",
-          "probe": true
+          "probe": true,
+          "guidance": "Compare nearest-candidate dispatch with ETA-aware or batched matching and state a latency budget."
         },
         {
-          "name": "Availability",
+          "name": "Distance versus ETA",
+          "importance": "important",
+          "probe": true,
+          "guidance": "Supporting example for Matching quality tradeoff. Reward equivalent mechanisms; do not require every listed alternative."
+        },
+        {
+          "name": "Consistency tradeoff",
           "importance": "critical",
-          "probe": true
+          "probe": true,
+          "guidance": "Distinguish eventually fresh locations from exclusive authoritative assignment; explain the partition policy."
         },
         {
-          "name": "Geohash vs H3",
+          "name": "Eventual location state",
+          "importance": "important",
+          "probe": true,
+          "guidance": "Supporting example for Consistency tradeoff. Reward equivalent mechanisms; do not require every listed alternative."
+        },
+        {
+          "name": "Operations tradeoff",
           "importance": "critical",
-          "probe": true
+          "probe": true,
+          "guidance": "Choose key health signals such as stale-driver rate, match latency, expired offers and duplicate-payment prevention."
         },
         {
-          "name": "WebSocket vs gRPC",
+          "name": "Match latency and cancellation metrics",
           "importance": "important",
-          "probe": true
-        },
-        {
-          "name": "SQL vs NoSQL",
-          "importance": "important",
-          "probe": true
-        },
-        {
-          "name": "Static vs Surge Pricing",
-          "importance": "important",
-          "probe": true
+          "probe": true,
+          "guidance": "Supporting example for Operations tradeoff. Reward equivalent mechanisms; do not require every listed alternative."
         }
       ]
     }

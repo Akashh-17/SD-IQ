@@ -1,0 +1,55 @@
+{
+  "id": "rate_limiter",
+  "title": "Design a Distributed Rate Limiter",
+  "problemDifficulty": "Medium",
+  "description": "Design a multi-tenant rate-limiting service for an API gateway with explicit burst, refill, atomicity and outage semantics.",
+  "functionalRequirements": [
+    "Enforce per-tenant and per-user API policies",
+    "Allow a configured burst while limiting sustained request rate",
+    "Return an allow/deny decision and a useful retry delay",
+    "Update policies without resetting all client budgets accidentally"
+  ],
+  "nonFunctionalRequirements": [
+    "Rate-limit decision p95 below 5 ms within the serving region",
+    "99.99% decision-path availability target, with endpoint-specific outage policy",
+    "Concurrent checks for the same key must update the budget atomically"
+  ],
+  "constraints": [
+    "100000 average checks/s across tenants; plan for a 3x peak of 300000 checks/s",
+    "Example policy: 100 requests per minute with a burst capacity of 20 tokens",
+    "Size for 20 million active tenant-user-route buckets at 80 logical bytes each before object and key overhead"
+  ],
+  "outOfScope": [
+    "DDoS mitigation at network line rate",
+    "Billing-grade globally exact quotas without discussing the added coordination cost",
+    "A requirement to use Redis, Lua or a particular cloud vendor"
+  ],
+  "scale": {
+    "assumption": "Synthetic interview workload, not a claim about any named company's actual traffic.",
+    "rates": [
+      {
+        "name": "Limiter checks",
+        "dailyVolume": 8640000000,
+        "averagePerSecond": 100000.0,
+        "peakMultiplier": 3,
+        "peakPerSecond": 300000.0
+      }
+    ],
+    "storageEstimates": [],
+    "stateEstimates": [
+      {
+        "name": "Active logical bucket state before key and allocator overhead",
+        "entities": 20000000,
+        "bytesPerEntity": 80,
+        "replicationFactor": 3,
+        "rawBytes": 1600000000,
+        "replicatedBytes": 4800000000
+      }
+    ],
+    "notes": [
+      "The example refill rate is 100/60 tokens per second, approximately 1.67; initial capacity is 20, not 100.",
+      "The daily check count is a sustained capacity scenario, not a count of unique users.",
+      "A fixed-window implementation is valid only if its larger boundary bursts are explicitly accepted; it does not silently satisfy token-bucket semantics."
+    ]
+  }
+}

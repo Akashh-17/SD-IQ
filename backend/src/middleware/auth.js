@@ -1,3 +1,4 @@
+import { logError } from "../utils/logger.js";
 import { supabase } from "../config/supabase.js";
 
 export async function auth(req, res, next) {
@@ -50,7 +51,7 @@ export async function auth(req, res, next) {
 
     catch (err) {
 
-        console.error(err);
+        logError(err);
 
         return res.status(500).json({
 

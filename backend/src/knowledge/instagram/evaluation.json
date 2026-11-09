@@ -1,285 +1,381 @@
 {
+  "guidance": [
+    "Evaluate the latest answer against the current question and objective, not future stages.",
+    "Required criteria are semantic outcomes. Concepts are examples and alternatives, not an AND checklist or mandatory products.",
+    "Accept a justified algorithm, database or vendor; probe claims actually made rather than demanding every alternative.",
+    "Do not penalize optional features, omitted diagram boxes, company-specific facts or small rounding differences.",
+    "Use the fictional workload consistently; accept an explicitly justified alternative workload and its arithmetic.",
+    "Weights and minimumCoverage are advisory; runtime progression uses required criteria and report scores are computed in code."
+  ],
+  "scoreAnchors": [
+    {
+      "min": 0,
+      "max": 2,
+      "description": "Does not address the current question or makes a fundamental correctness error."
+    },
+    {
+      "min": 3,
+      "max": 4,
+      "description": "Names plausible components but cannot explain their mechanism or limitations."
+    },
+    {
+      "min": 5,
+      "max": 6,
+      "description": "Explains a workable baseline with some gaps in the current objective."
+    },
+    {
+      "min": 7,
+      "max": 8,
+      "description": "Explains a coherent mechanism, failure cases and justified tradeoffs."
+    },
+    {
+      "min": 9,
+      "max": 10,
+      "description": "Quantifies and defends a robust design, recognizing limits and alternatives."
+    }
+  ],
   "topics": [
     {
-      "name": "Requirement Gathering",
-      "weight": 10,
+      "name": "Requirements",
+      "weight": 12,
       "minimumCoverage": 0.75,
+      "guidance": "Agree on product behavior, measurable quality targets and the stated exercise workload. Evaluate only the current question and stage; a justified alternative earns equal credit.",
       "concepts": [
         {
-          "name": "Functional Requirements",
+          "name": "Functional scope",
           "importance": "critical",
-          "probe": false
+          "probe": true,
+          "guidance": "Prioritize publish/read/follow and privacy; keep search, notifications and sophisticated recommendations optional."
         },
         {
-          "name": "Non Functional Requirements",
+          "name": "Core operations and users",
+          "importance": "important",
+          "probe": true,
+          "guidance": "Supporting example for Functional scope. Reward equivalent mechanisms; do not require every listed alternative."
+        },
+        {
+          "name": "Quality targets",
           "importance": "critical",
-          "probe": false
+          "probe": true,
+          "guidance": "Separate media durability, metadata freshness, private visibility and feed response latency."
         },
         {
-          "name": "Feed",
+          "name": "Latency and availability targets",
+          "importance": "important",
+          "probe": true,
+          "guidance": "Supporting example for Quality targets. Reward equivalent mechanisms; do not require every listed alternative."
+        },
+        {
+          "name": "Capacity estimates",
           "importance": "critical",
-          "probe": false
+          "probe": true,
+          "guidance": "Use the fictional baseline or state a justified alternative; derive average and peak rates and distinguish payload bytes from replication and indexes."
         },
         {
-          "name": "Media Upload",
+          "name": "Daily volume divided by 86400",
           "importance": "important",
-          "probe": false
-        },
-        {
-          "name": "Likes",
-          "importance": "important",
-          "probe": false
-        },
-        {
-          "name": "Comments",
-          "importance": "optional",
-          "probe": false
-        },
-        {
-          "name": "Followers",
-          "importance": "important",
-          "probe": false
+          "probe": true,
+          "guidance": "Supporting example for Capacity estimates. Reward equivalent mechanisms; do not require every listed alternative."
         }
       ]
     },
-
     {
       "name": "High Level Design",
-      "weight": 12,
-      "minimumCoverage": 0.80,
+      "weight": 16,
+      "minimumCoverage": 0.75,
+      "guidance": "Separate media bytes, post metadata, follower relationships and feed serving. Evaluate only the current question and stage; a justified alternative earns equal credit.",
       "concepts": [
         {
-          "name": "Load Balancer",
+          "name": "Publication boundary",
           "importance": "critical",
-          "probe": false
+          "probe": true,
+          "guidance": "Describe media upload and a post service that publishes only durable, accessible content."
         },
         {
-          "name": "API Gateway",
-          "importance": "critical",
-          "probe": false
-        },
-        {
-          "name": "Feed Service",
-          "importance": "critical",
-          "probe": true
-        },
-        {
-          "name": "Post Service",
-          "importance": "critical",
-          "probe": true
-        },
-        {
-          "name": "Media Service",
+          "name": "Media upload service",
           "importance": "important",
-          "probe": true
+          "probe": true,
+          "guidance": "Supporting example for Publication boundary. Reward equivalent mechanisms; do not require every listed alternative."
         },
         {
-          "name": "Database",
+          "name": "Feed boundary",
           "importance": "critical",
-          "probe": false
+          "probe": true,
+          "guidance": "Separate follower lookup, candidate feed references and read serving; services may be colocated."
         },
         {
-          "name": "Redis",
+          "name": "Follower graph",
           "importance": "important",
-          "probe": true
+          "probe": true,
+          "guidance": "Supporting example for Feed boundary. Reward equivalent mechanisms; do not require every listed alternative."
+        },
+        {
+          "name": "Persistent storage",
+          "importance": "critical",
+          "probe": true,
+          "guidance": "Include durable post and relationship storage as well as object storage; caches are not the only copy."
+        },
+        {
+          "name": "Post database",
+          "importance": "important",
+          "probe": true,
+          "guidance": "Supporting example for Persistent storage. Reward equivalent mechanisms; do not require every listed alternative."
+        },
+        {
+          "name": "Optional extensions",
+          "importance": "optional",
+          "probe": false,
+          "guidance": "A search index or recommendation service is not required for a correct baseline."
+        },
+        {
+          "name": "Search index",
+          "importance": "optional",
+          "probe": false,
+          "guidance": "Supporting example for Optional extensions. Reward equivalent mechanisms; do not require every listed alternative."
         }
       ]
     },
-
     {
-      "name": "Feed Generation",
-      "weight": 15,
-      "minimumCoverage": 0.85,
+      "name": "Core Flow",
+      "weight": 22,
+      "minimumCoverage": 0.75,
+      "guidance": "Connect the media pipeline with a defensible feed-generation strategy. Evaluate only the current question and stage; a justified alternative earns equal credit.",
       "concepts": [
         {
-          "name": "Fan-out on Write",
+          "name": "Media publication",
           "importance": "critical",
-          "probe": true
+          "probe": true,
+          "guidance": "Upload to object storage, validate/checksum and create derivatives asynchronously; do not expose an unfinished asset."
         },
         {
-          "name": "Fan-out on Read",
-          "importance": "critical",
-          "probe": true
-        },
-        {
-          "name": "Hybrid Feed",
+          "name": "Durable media reference",
           "importance": "important",
-          "probe": true
+          "probe": true,
+          "guidance": "Supporting example for Media publication. Reward equivalent mechanisms; do not require every listed alternative."
         },
         {
-          "name": "Ranking",
+          "name": "Fanout strategy",
           "importance": "critical",
-          "probe": true
+          "probe": true,
+          "guidance": "Choose write fanout, read fanout or a hybrid, explaining the read/write tradeoff and high-degree authors."
         },
         {
-          "name": "Follower Graph",
-          "importance": "critical",
-          "probe": true
-        },
-        {
-          "name": "Celebrity Problem",
+          "name": "Fanout on write or read",
           "importance": "important",
-          "probe": true
+          "probe": true,
+          "guidance": "Supporting example for Fanout strategy. Reward equivalent mechanisms; do not require every listed alternative."
+        },
+        {
+          "name": "Feed ordering",
+          "importance": "critical",
+          "probe": true,
+          "guidance": "A reverse-chronological baseline is acceptable; use a stable tie-breaker and defend any ranking signal."
+        },
+        {
+          "name": "Chronological or scored ordering",
+          "importance": "important",
+          "probe": true,
+          "guidance": "Supporting example for Feed ordering. Reward equivalent mechanisms; do not require every listed alternative."
+        },
+        {
+          "name": "Visibility filtering",
+          "importance": "critical",
+          "probe": true,
+          "guidance": "Apply current visibility/deletion rules when serving feed references rather than trusting stale fanout forever."
+        },
+        {
+          "name": "Read-time visibility check",
+          "importance": "important",
+          "probe": true,
+          "guidance": "Supporting example for Visibility filtering. Reward equivalent mechanisms; do not require every listed alternative."
         }
       ]
     },
-
     {
-      "name": "Media Pipeline",
-      "weight": 10,
-      "minimumCoverage": 0.80,
+      "name": "Data Model",
+      "weight": 14,
+      "minimumCoverage": 0.75,
+      "guidance": "Model social relationships and media references without storing blobs in relational rows. Evaluate only the current question and stage; a justified alternative earns equal credit.",
       "concepts": [
         {
-          "name": "Object Storage",
+          "name": "Post records",
           "importance": "critical",
-          "probe": false
+          "probe": true,
+          "guidance": "Represent author, post ID, creation time, media manifest, visibility and deletion version."
         },
         {
-          "name": "CDN",
+          "name": "Post metadata",
+          "importance": "important",
+          "probe": true,
+          "guidance": "Supporting example for Post records. Reward equivalent mechanisms; do not require every listed alternative."
+        },
+        {
+          "name": "Relationship records",
           "importance": "critical",
-          "probe": true
+          "probe": true,
+          "guidance": "Index follows by follower and author; make like/follow operations idempotent."
         },
         {
-          "name": "Compression",
+          "name": "Follower and following indexes",
           "importance": "important",
-          "probe": true
+          "probe": true,
+          "guidance": "Supporting example for Relationship records. Reward equivalent mechanisms; do not require every listed alternative."
         },
         {
-          "name": "Thumbnail Generation",
-          "importance": "important",
-          "probe": true
+          "name": "Feed cursors",
+          "importance": "critical",
+          "probe": true,
+          "guidance": "Page by stable ordering key rather than deep offsets; handle deletion and repeated page requests."
         },
         {
-          "name": "Video Transcoding",
+          "name": "Timestamp plus post ID",
           "importance": "important",
-          "probe": true
+          "probe": true,
+          "guidance": "Supporting example for Feed cursors. Reward equivalent mechanisms; do not require every listed alternative."
+        },
+        {
+          "name": "Engagement records",
+          "importance": "critical",
+          "probe": true,
+          "guidance": "Represent retried likes with a unique key and comments with post-scoped ordering, author access checks and deletion semantics."
+        },
+        {
+          "name": "Idempotent reactions",
+          "importance": "important",
+          "probe": true,
+          "guidance": "A supporting example for engagement records; accept equivalent idempotent relationship models."
         }
       ]
     },
-
     {
-      "name": "Database",
-      "weight": 10,
-      "minimumCoverage": 0.80,
+      "name": "Reliability",
+      "weight": 16,
+      "minimumCoverage": 0.75,
+      "guidance": "Handle publication retries, stale feeds and access revocation safely. Evaluate only the current question and stage; a justified alternative earns equal credit.",
       "concepts": [
         {
-          "name": "Posts",
+          "name": "Retry correctness",
           "importance": "critical",
-          "probe": false
+          "probe": true,
+          "guidance": "Use stable event IDs and idempotent derivative/fanout writes; reconcile metadata and objects after partial failure."
         },
         {
-          "name": "Users",
-          "importance": "critical",
-          "probe": false
-        },
-        {
-          "name": "Followers",
-          "importance": "critical",
-          "probe": true
-        },
-        {
-          "name": "Indexes",
+          "name": "Idempotent event handling",
           "importance": "important",
-          "probe": true
+          "probe": true,
+          "guidance": "Supporting example for Retry correctness. Reward equivalent mechanisms; do not require every listed alternative."
         },
         {
-          "name": "Cursor Pagination",
+          "name": "Privacy and deletion",
           "importance": "critical",
-          "probe": true
+          "probe": true,
+          "guidance": "Invalidate or filter private/deleted posts and use bounded authorized media links where needed."
+        },
+        {
+          "name": "Visibility version",
+          "importance": "important",
+          "probe": true,
+          "guidance": "Supporting example for Privacy and deletion. Reward equivalent mechanisms; do not require every listed alternative."
+        },
+        {
+          "name": "Degraded operation",
+          "importance": "critical",
+          "probe": true,
+          "guidance": "Bound worker backlogs and allow stale eligible feeds during a cache or ranking outage."
+        },
+        {
+          "name": "Queue lag limits",
+          "importance": "important",
+          "probe": true,
+          "guidance": "Supporting example for Degraded operation. Reward equivalent mechanisms; do not require every listed alternative."
         }
       ]
     },
-
-    {
-      "name": "Caching",
-      "weight": 8,
-      "minimumCoverage": 0.70,
-      "concepts": [
-        {
-          "name": "Redis",
-          "importance": "critical",
-          "probe": false
-        },
-        {
-          "name": "Feed Cache",
-          "importance": "critical",
-          "probe": true
-        },
-        {
-          "name": "Profile Cache",
-          "importance": "important",
-          "probe": false
-        },
-        {
-          "name": "Cache Invalidation",
-          "importance": "important",
-          "probe": true
-        }
-      ]
-    },
-
     {
       "name": "Scaling",
       "weight": 12,
-      "minimumCoverage": 0.80,
+      "minimumCoverage": 0.75,
+      "guidance": "Budget media bytes separately from post and feed metadata. Evaluate only the current question and stage; a justified alternative earns equal credit.",
       "concepts": [
         {
-          "name": "Sharding",
+          "name": "Media budget",
           "importance": "critical",
-          "probe": true
+          "probe": true,
+          "guidance": "Derive about 2.10 TB/day of source photos and 62.91 TB in a 30-day cohort before copies, derivatives and video."
         },
         {
-          "name": "Replication",
-          "importance": "critical",
-          "probe": true
-        },
-        {
-          "name": "Kafka",
+          "name": "Photo bytes versus metadata",
           "importance": "important",
-          "probe": true
+          "probe": true,
+          "guidance": "Supporting example for Media budget. Reward equivalent mechanisms; do not require every listed alternative."
         },
         {
-          "name": "Horizontal Scaling",
+          "name": "Feed partitioning",
           "importance": "critical",
-          "probe": false
+          "probe": true,
+          "guidance": "Partition by recipient or author as appropriate and isolate high-degree users from ordinary fanout."
         },
         {
-          "name": "Load Balancer",
+          "name": "Recipient feed shard",
           "importance": "important",
-          "probe": false
+          "probe": true,
+          "guidance": "Supporting example for Feed partitioning. Reward equivalent mechanisms; do not require every listed alternative."
+        },
+        {
+          "name": "Cache and delivery",
+          "importance": "critical",
+          "probe": true,
+          "guidance": "Use bounded feed caches and CDN delivery of media; clients fetch media from the CDN/object path, not through an API-to-CDN RPC."
+        },
+        {
+          "name": "Bounded feed reference cache",
+          "importance": "important",
+          "probe": true,
+          "guidance": "Supporting example for Cache and delivery. Reward equivalent mechanisms; do not require every listed alternative."
         }
       ]
     },
-
     {
       "name": "Tradeoffs",
-      "weight": 13,
+      "weight": 8,
       "minimumCoverage": 0.75,
+      "guidance": "Explain the consequences of the chosen feed and storage mechanisms. Evaluate only the current question and stage; a justified alternative earns equal credit.",
       "concepts": [
         {
-          "name": "Consistency",
+          "name": "Fanout tradeoff",
           "importance": "critical",
-          "probe": true
+          "probe": true,
+          "guidance": "Compare write amplification with read aggregation and justify the high-degree author policy."
         },
         {
-          "name": "Availability",
-          "importance": "critical",
-          "probe": true
-        },
-        {
-          "name": "CAP Theorem",
+          "name": "Write fanout versus read fanout",
           "importance": "important",
-          "probe": true
+          "probe": true,
+          "guidance": "Supporting example for Fanout tradeoff. Reward equivalent mechanisms; do not require every listed alternative."
         },
         {
-          "name": "Fan-out on Write vs Fan-out on Read",
+          "name": "Consistency tradeoff",
           "importance": "critical",
-          "probe": true
+          "probe": true,
+          "guidance": "Allow eventual feed insertion but explain why private-content access and deletion require stronger checks."
         },
         {
-          "name": "SQL vs NoSQL",
+          "name": "Feed freshness",
           "importance": "important",
-          "probe": true
+          "probe": true,
+          "guidance": "Supporting example for Consistency tradeoff. Reward equivalent mechanisms; do not require every listed alternative."
+        },
+        {
+          "name": "Product scope tradeoff",
+          "importance": "critical",
+          "probe": true,
+          "guidance": "Distinguish a valid chronological baseline from optional machine-learned ranking; discuss quality versus compute cost."
+        },
+        {
+          "name": "Chronological baseline",
+          "importance": "important",
+          "probe": true,
+          "guidance": "Supporting example for Product scope tradeoff. Reward equivalent mechanisms; do not require every listed alternative."
         }
       ]
     }

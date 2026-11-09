@@ -1,0 +1,23 @@
+import { beforeAll, beforeEach, expect, it } from "vitest";
+import express from "express";
+import request from "supertest";
+import routes from "../src/routes/interview.routes.js";
+import { initializeAgent, agent } from "../src/controllers/interview.controller.js";
+import { redis } from "../src/config/redis.js";
+import { supabase } from "../src/config/supabase.js";
+const app = express(); app.use(express.json()); app.use("/api/interview", routes);
+const post = (route, body) => request(app).post(`/api/interview/${route}`).set("Authorization", "Bearer mock-token-a").send(body);
+beforeAll(initializeAgent);
+beforeEach(() => { redis.reset(); supabase.reset(); });
+it("exposes the live graph stage without losing session metadata or ownership", async () => {
+    const start = await post("start", { problemId: "url_shortener", difficulty: "SDE1" });
+    const id = start.body.interviewId;
+    await post("initialize", { interviewId: id });
+    const graph = await agent.getState({ configurable: { thread_id: id } });
+    const state = await request(app).get(`/api/interview/state/${id}`).set("Authorization", "Bearer mock-token-a");
+    expect(state.status).toBe(200);
+    expect(state.body.interview.stage).toBe(graph.values.interview.stage);
+    expect(state.body.interview.title).toBe("Design TinyURL");
+    expect(state.body.interview.startedAt).toEqual(expect.any(Number));
+    expect((await request(app).get(`/api/interview/state/${id}`).set("Authorization", "Bearer mock-token-b")).status).toBe(404);
+});

@@ -9,6 +9,18 @@ export class PersistenceService {
     //   everything was saved (ReportService relies on this)
     static async save(session) {
 
+        const completedAt = new Date().toISOString();
+        const startedAt = session.interview.startedAt;
+        // Replay/timing metadata lives in the existing report JSON column.
+        const reportContext = {
+            ...(session.interview.problemId ? { problemId: session.interview.problemId } : {}),
+            ...(Number.isFinite(startedAt) ? {
+                startedAt,
+                completedAt,
+                durationMs: Math.max(0, new Date(completedAt).getTime() - startedAt)
+            } : {})
+        };
+
         // =====================================================
         // Interview
         // =====================================================
@@ -41,7 +53,7 @@ export class PersistenceService {
 
                 overall_score: session.report?.overallScore ?? 0,
 
-                completed_at: new Date().toISOString()
+                completed_at: completedAt
 
 
             }, {
@@ -105,7 +117,7 @@ export class PersistenceService {
 
             report:
 
-                session.report ?? {}
+                { ...session.report, ...reportContext }
 
         });
 
@@ -144,7 +156,7 @@ export class PersistenceService {
     // Load Report
     // =====================================================
 
-    static async getReport(interviewId) {
+    static async getReport(interviewId, { userId, includeGraph = false } = {}) {
 
         // =====================================================
         // Interview
@@ -177,7 +189,7 @@ export class PersistenceService {
             throw interviewError;
 
         // Not finished yet, or no such interview
-        if (!interview)
+        if (!interview || (userId && interview.user_id !== userId))
 
             return null;
 
@@ -215,6 +227,19 @@ export class PersistenceService {
 
             return null;
 
+        // Status/lock checks keep their existing light read path. The owner-only
+        // report view opts into the durable snapshot after ownership is checked.
+        let graph;
+        if (includeGraph) {
+            const { data: snapshot, error } = await supabase
+                .from("graphs")
+                .select("graph, analysis")
+                .eq("interview_id", interview.id)
+                .maybeSingle();
+            if (error) throw error;
+            graph = snapshot ? { ...snapshot.graph, analysis: snapshot.analysis } : null;
+        }
+
         // =====================================================
         // Flatten Response
         // =====================================================
@@ -222,6 +247,8 @@ export class PersistenceService {
         return {
 
             interview,
+
+            ...(includeGraph ? { graph } : {}),
 
             report: {
 

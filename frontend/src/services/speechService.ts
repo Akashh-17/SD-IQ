@@ -1,6 +1,5 @@
 class SpeechService {
   isListening = false;
-  synthesis = window.speechSynthesis;
 
   private mediaRecorder: MediaRecorder | null = null;
   private chunks: Blob[] = [];
@@ -115,26 +114,6 @@ onRecording: (blob: Blob) => void, onStatus?: (msg: string) => void ) {
     console.log("[SpeechService] Callback fired");
   }
 
-  // ── TTS (unchanged) ──────────────────────────────────────────────────────
-  speak(text: string) {
-    const clean = text
-      .replace(/\*\*(.*?)\*\*/g, "$1")
-      .replace(/\*(.*?)\*/g, "$1")
-      .replace(/#{1,6}\s/g, "")
-      .replace(/✅|❌|⚠️|🔴|🎤/g, "")
-      .trim();
-
-    this.synthesis.cancel();
-    const utter = new SpeechSynthesisUtterance(clean);
-    utter.rate = 0.93;
-    utter.pitch = 1;
-    utter.volume = 1;
-    this.synthesis.speak(utter);
-  }
-
-  stopSpeaking() {
-    this.synthesis.cancel();
-  }
 }
 
 export default new SpeechService();

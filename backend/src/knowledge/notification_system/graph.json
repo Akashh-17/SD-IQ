@@ -1,0 +1,130 @@
+{
+  "nodeMapping": {
+    "producer": "Producing Service",
+    "api": "Notification API",
+    "db": "Notification Database",
+    "router": "Routing Service",
+    "preferences": "Preference Service",
+    "queue": "Channel Queues",
+    "workers": "Delivery Workers",
+    "providers": "Provider Adapters",
+    "external": "External Providers",
+    "receipts": "Receipt Handler",
+    "dead": "Dead-letter Queue"
+  },
+  "recommendedNodes": [
+    "Producing Service",
+    "Notification API",
+    "Notification Database",
+    "Routing Service",
+    "Preference Service",
+    "Channel Queues",
+    "Delivery Workers",
+    "Provider Adapters",
+    "External Providers",
+    "Receipt Handler"
+  ],
+  "optionalNodes": [
+    "Dead-letter Queue"
+  ],
+  "recommendedConnections": [
+    {
+      "from": "Producing Service",
+      "to": "Notification API"
+    },
+    {
+      "from": "Notification API",
+      "to": "Notification Database"
+    },
+    {
+      "from": "Notification Database",
+      "to": "Routing Service"
+    },
+    {
+      "from": "Routing Service",
+      "to": "Preference Service"
+    },
+    {
+      "from": "Routing Service",
+      "to": "Channel Queues"
+    },
+    {
+      "from": "Channel Queues",
+      "to": "Delivery Workers"
+    },
+    {
+      "from": "Delivery Workers",
+      "to": "Preference Service"
+    },
+    {
+      "from": "Delivery Workers",
+      "to": "Provider Adapters"
+    },
+    {
+      "from": "Provider Adapters",
+      "to": "External Providers"
+    },
+    {
+      "from": "External Providers",
+      "to": "Receipt Handler"
+    },
+    {
+      "from": "Receipt Handler",
+      "to": "Notification Database"
+    },
+    {
+      "from": "Delivery Workers",
+      "to": "Notification Database"
+    },
+    {
+      "from": "Delivery Workers",
+      "to": "Dead-letter Queue"
+    }
+  ],
+  "graphChecks": [
+    {
+      "name": "Producing Service role represented",
+      "required": true
+    },
+    {
+      "name": "Notification API role represented",
+      "required": true
+    },
+    {
+      "name": "Notification Database role represented",
+      "required": true
+    },
+    {
+      "name": "Routing Service role represented",
+      "required": true
+    },
+    {
+      "name": "Preference Service role represented",
+      "required": true
+    },
+    {
+      "name": "Channel Queues role represented",
+      "required": true
+    },
+    {
+      "name": "Delivery Workers role represented",
+      "required": true
+    },
+    {
+      "name": "Provider Adapters role represented",
+      "required": true
+    },
+    {
+      "name": "External Providers role represented",
+      "required": true
+    },
+    {
+      "name": "Receipt Handler role represented",
+      "required": true
+    },
+    {
+      "name": "Dead-letter Queue role represented",
+      "required": false
+    }
+  ]
+}
