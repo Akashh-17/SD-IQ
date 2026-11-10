@@ -116,6 +116,14 @@ describe("shared controls", () => {
         expect(play).toHaveBeenCalledWith(false);
     });
 
+    it("checks off only the steps listed in completedSteps", () => {
+        const { container } = render(<Stepper steps={[{ id: "a", label: "One" }, { id: "b", label: "Two" }, { id: "c", label: "Three" }]} activeStep={2} completedSteps={[0]} />);
+        const items = container.querySelectorAll("li");
+        expect(items[0].querySelector("svg")).not.toBeNull();
+        expect(items[1].querySelector("svg")).toBeNull();
+        expect(items[1]).toHaveTextContent("02");
+    });
+
     it("exposes the final statistic to assistive technology and a useful empty-state action", () => {
         render(<><StatCard label="Availability" value={99.9} decimals={1} suffix="%" /><EmptyState title="No sessions" description="Pick a problem" action={<Button>Start</Button>} /></>);
         expect(screen.getByText("99.9%", { selector: ".sr-only" })).toBeInTheDocument();

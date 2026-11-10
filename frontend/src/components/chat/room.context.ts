@@ -3,7 +3,8 @@ import type { Node, Edge } from "reactflow";
 
 export type SaveStatus = "loading" | "saved" | "saving" | "error";
 export interface RoomSnapshot {
-    interview: { title?: string; stage?: string; startedAt?: number; difficulty?: string };
+    // endedAtStage: the stage the candidate was in when the interview ended
+    interview: { title?: string; stage?: string; startedAt?: number; difficulty?: string; endedAtStage?: string };
     transcript?: { role: string; content: string }[];
     graph?: { nodes?: Node[]; edges?: Edge[]; analysis?: { components?: { name: string }[] } | null };
 }
@@ -43,6 +44,14 @@ export function stageIndex(stage?: string) {
     if (stage === "Scaling") return 3;
     if (["Tradeoffs", "Wrap-up"].includes(stage ?? "")) return 4;
     return -1;
+}
+// Steps to show as completed. Normally every step before the active one;
+// after an early wrap-up, only the steps up to where the candidate ended.
+export function completedStepIndexes(stage?: string, endedAtStage?: string) {
+    const current = stageIndex(stage);
+    const reached = endedAtStage === undefined ? current - 1 : stageIndex(endedAtStage);
+    const last = Math.min(reached, current - 1);
+    return Array.from({ length: Math.max(0, last + 1) }, (_, index) => index);
 }
 export function editableTarget(target: EventTarget | null) {
     return target instanceof Element && Boolean(target.closest('input, textarea, select, [contenteditable="true"]'));

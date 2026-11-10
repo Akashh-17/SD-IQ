@@ -5,7 +5,7 @@ import LogoMark from "./branding/LogoMark";
 import { endInterview } from "../services/endInterview.service";
 import { getInterviewState } from "../services/interviewState.service";
 import { Badge, Button, Dialog, Stepper, Tooltip } from "./ui";
-import { ROOM_STEPS, stageIndex, useRoom, type RoomSnapshot } from "./chat/room.context";
+import { ROOM_STEPS, completedStepIndexes, stageIndex, useRoom, type RoomSnapshot } from "./chat/room.context";
 import ElapsedTimer from "./chat/ElapsedTimer";
 
 export default function InterviewTopbar() {
@@ -29,6 +29,7 @@ export default function InterviewTopbar() {
     const snapshot = room?.snapshot ?? local;
     const stage = snapshot?.interview?.stage;
     const current = stageIndex(stage);
+    const completedSteps = completedStepIndexes(stage, snapshot?.interview?.endedAtStage);
     useEffect(() => {
         const active = steps.current?.querySelector<HTMLElement>('[aria-current="step"]');
         if (active && steps.current) steps.current.scrollLeft = Math.max(0, active.offsetLeft - steps.current.clientWidth / 2 + active.clientWidth / 2);
@@ -55,7 +56,7 @@ export default function InterviewTopbar() {
                 <Button variant="danger" size="sm" loading={loading} onClick={() => setConfirm(true)}><LogOut size={13} aria-hidden="true" />End interview</Button>
             </div>
         </div>
-        <div className="flex min-w-0 flex-wrap items-center justify-between gap-3 border-t border-border/60 px-4 py-2.5 sm:px-5"><div ref={steps} tabIndex={0} aria-label="Interview stage progress" className="room-stage-scroll min-w-0 flex-1 overflow-x-auto"><div className="min-w-[570px]"><Stepper steps={ROOM_STEPS.map(label => ({ id: label, label }))} activeStep={current} label="Interview stages" /></div></div><span className="hidden max-w-36 truncate font-mono text-[9px] text-muted lg:inline">{stage || "Connecting…"}</span></div>
+        <div className="flex min-w-0 flex-wrap items-center justify-between gap-3 border-t border-border/60 px-4 py-2.5 sm:px-5"><div ref={steps} tabIndex={0} aria-label="Interview stage progress" className="room-stage-scroll min-w-0 flex-1 overflow-x-auto"><div className="min-w-[570px]"><Stepper steps={ROOM_STEPS.map(label => ({ id: label, label }))} activeStep={current} completedSteps={completedSteps} label="Interview stages" /></div></div><span className="hidden max-w-36 truncate font-mono text-[9px] text-muted lg:inline">{stage || "Connecting…"}</span></div>
         {error && !confirm && <p role="alert" className="px-5 pb-3 text-xs text-danger">{error}</p>}
         <Dialog open={confirm} onClose={() => { if (!loading) setConfirm(false); }} title="End this interview?" description="We’ll save your latest diagram and prepare your report. You’ll be taken to the report page right away." footer={<><Button variant="secondary" disabled={loading} onClick={() => setConfirm(false)}>Keep practicing</Button><Button variant="danger" loading={loading} onClick={() => void finish()}>End interview</Button></>}>
             <p className="text-sm leading-relaxed text-muted">Ready to turn this conversation into your next step?</p>{error && <p role="alert" className="mt-4 text-sm text-danger">{error}</p>}

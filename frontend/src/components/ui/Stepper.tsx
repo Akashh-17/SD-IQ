@@ -13,9 +13,11 @@ export interface StepperProps {
     playing?: boolean;
     onPlayingChange?: (playing: boolean) => void;
     label?: string;
+    // Indexes to show with a check mark. Defaults to every step before activeStep.
+    completedSteps?: number[];
 }
 
-export function Stepper({ steps, activeStep, onStepChange, playing = false, onPlayingChange, label = "Interview steps" }: StepperProps) {
+export function Stepper({ steps, activeStep, onStepChange, playing = false, onPlayingChange, label = "Interview steps", completedSteps }: StepperProps) {
     const id = useId();
     const reduced = useReducedMotion();
     return <div>
@@ -23,10 +25,11 @@ export function Stepper({ steps, activeStep, onStepChange, playing = false, onPl
             <ol aria-label={label} className="flex min-w-0 flex-1 flex-wrap gap-x-5 gap-y-4">
                 {steps.map((step, index) => {
                     const active = index === activeStep;
+                    const done = !active && (completedSteps ? completedSteps.includes(index) : index < activeStep);
                     const content = <>
                         <span className={clsx("relative flex h-8 w-8 shrink-0 items-center justify-center rounded-full border font-mono text-[11px]", active ? "border-accent text-accent" : "border-border text-muted")}>
                             {active && <motion.span layoutId={`${id}-step`} aria-hidden="true" className="absolute inset-0 rounded-full bg-accent/10" transition={{ duration: reduced ? 0 : 0.3 }} />}
-                            {index < activeStep ? <><Check size={13} aria-hidden="true" /><span className="sr-only">{String(index + 1).padStart(2, "0")}</span></> : String(index + 1).padStart(2, "0")}
+                            {done ? <><Check size={13} aria-hidden="true" /><span className="sr-only">{String(index + 1).padStart(2, "0")}</span></> : String(index + 1).padStart(2, "0")}
                         </span>
                         <span className="text-left"><span className={clsx("block text-xs font-medium", active ? "text-text" : "text-muted")}>{step.label}</span>{step.description && <span className="mt-0.5 block font-mono text-[10px] text-muted">{step.description}</span>}</span>
                     </>;

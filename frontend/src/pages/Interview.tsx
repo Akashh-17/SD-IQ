@@ -49,7 +49,9 @@ function InterviewRoom({ interviewId }: { interviewId: string }) {
     }, [interviewId]);
     const publishReply = useCallback((text: string, completed = false) => {
         if (highlight.current) clearTimeout(highlight.current);
-        if (completed) { setSnapshot(previous => ({ ...previous, interview: { ...previous?.interview, stage: "Wrap-up" } })); setReferences([]); return; }
+        // Show Wrap-up as active, but remember the stage the candidate actually
+        // reached so stages they never got to aren't checked off as done
+        if (completed) { setSnapshot(previous => ({ ...previous, interview: { ...previous?.interview, stage: "Wrap-up", endedAtStage: previous?.interview?.endedAtStage ?? previous?.interview?.stage } })); setReferences([]); return; }
         void refresh().then(data => {
             if (!alive.current) return;
             setReferences(diagramReferences(text, data?.graph));
