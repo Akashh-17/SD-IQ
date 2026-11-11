@@ -4,7 +4,7 @@ import { Check, HelpCircle, LoaderCircle, LogOut, PanelRightClose, PanelRightOpe
 import LogoMark from "./branding/LogoMark";
 import { endInterview } from "../services/endInterview.service";
 import { getInterviewState } from "../services/interviewState.service";
-import { Badge, Button, Dialog, Stepper, Tooltip } from "./ui";
+import { Badge, Button, Dialog, Stepper, ThemeToggle, Tooltip } from "./ui";
 import { ROOM_STEPS, completedStepIndexes, stageIndex, useRoom, type RoomSnapshot } from "./chat/room.context";
 import ElapsedTimer from "./chat/ElapsedTimer";
 
@@ -52,6 +52,7 @@ export default function InterviewTopbar() {
             <div className="flex shrink-0 items-center gap-2"><span role="status" aria-label={save === "saved" ? "Diagram saved" : save === "saving" ? "Saving diagram" : save === "error" ? "Diagram save failed" : "Loading diagram"} className={`inline-flex items-center gap-1.5 font-mono text-[9px] ${save === "error" ? "text-danger" : "text-muted"}`}>{save === "saved" ? <Check size={12} className="text-success" aria-hidden="true" /> : save !== "error" ? <LoaderCircle size={12} className="motion-safe:animate-spin" aria-hidden="true" /> : null}<span className="hidden sm:inline">{save === "saved" ? "Saved" : save === "saving" ? "Saving…" : save === "error" ? "Save failed" : "Loading…"}</span></span>
                 <ElapsedTimer startedAt={snapshot?.interview?.startedAt} onDeadline={deadline} />
                 {room && <Tooltip content={room.collapsed ? "Show chat" : "Collapse chat"}><Button variant="ghost" size="icon" className="!h-8 !w-8" aria-label={room.collapsed ? "Show chat" : "Collapse chat"} aria-expanded={!room.collapsed} onClick={room.toggleChat}>{room.collapsed ? <PanelRightOpen size={15} aria-hidden="true" /> : <PanelRightClose size={15} aria-hidden="true" />}</Button></Tooltip>}
+                <ThemeToggle className="!h-8 !w-8" />
                 {room && <Tooltip content="Keyboard shortcuts · ?"><Button variant="ghost" size="icon" className="hidden !h-8 !w-8 sm:inline-flex" aria-label="Keyboard shortcuts" onClick={room.showHelp}><HelpCircle size={15} aria-hidden="true" /></Button></Tooltip>}
                 <Button variant="danger" size="sm" loading={loading} onClick={() => setConfirm(true)}><LogOut size={13} aria-hidden="true" />End interview</Button>
             </div>

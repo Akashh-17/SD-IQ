@@ -21,3 +21,4 @@ export { StatCard } from "./StatCard";
 export type { StatCardProps } from "./StatCard";
 export { EmptyState } from "./EmptyState";
 export { Kbd } from "./Kbd";
+export { ThemeToggle } from "./ThemeToggle";

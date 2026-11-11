@@ -1,4 +1,4 @@
-.room-shell { color-scheme: dark; }
+.room-shell { color-scheme: inherit; }
 .room-shell .room-separator { position: relative; flex-shrink: 0; background: rgb(var(--color-border)); transition: background .15s ease; }
 .room-shell [data-group][data-orientation="horizontal"] > .room-separator { width: 5px; cursor: col-resize; }
 .room-shell [data-group][data-orientation="vertical"] > .room-separator { height: 5px; cursor: row-resize; }

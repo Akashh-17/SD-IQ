@@ -1,5 +1,8 @@
 /* Excalidraw inside the interview room: keep its own UI, but match our
-   surfaces, borders and accent so it feels part of the app. */
+   surfaces, borders and accent so it feels part of the app. The tokens
+   switch with the app theme, so one rule covers light and dark (Excalidraw
+   only adds a class for dark; its light theme is the base). */
+.room-canvas .excalidraw,
 .room-canvas .excalidraw.theme--dark {
     --island-bg-color: rgb(var(--color-surface));
     --default-bg-color: rgb(var(--color-bg));

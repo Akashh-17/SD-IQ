@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Button, Dialog } from "../ui";
+import { Button, Dialog, ThemeToggle } from "../ui";
 import Glyph, { LandingBrand } from "./Glyph";
 
 const links = [{ label: "How it works", href: "#how-it-works" }, { label: "Live preview", href: "#live-interview" }, { label: "Problems", href: "#problems" }, { label: "FAQ", href: "#faq" }];
@@ -13,8 +13,8 @@ export default function Navbar() {
             <div className="landing-container flex h-20 items-center justify-between gap-6">
                 <a href="/" aria-label="SystemIQ home"><LandingBrand /></a>
                 <nav aria-label="Main navigation" className="landing-nav hidden items-center text-xs text-muted lg:flex">{links.map(link => <a key={link.href} href={link.href} className="inline-flex items-center hover:text-text">{link.label}</a>)}</nav>
-                <div className="hidden items-center gap-2 sm:flex"><Button variant="ghost" size="sm" onClick={() => navigate("/login")}>Sign in</Button><Button size="sm" onClick={() => navigate("/login")}>Start practicing<Glyph name="diagonal" size={13} /></Button></div>
-                <Button variant="ghost" size="icon" className="lg:hidden" aria-label="Open navigation" aria-expanded={open} aria-haspopup="dialog" onClick={() => setOpen(true)}><Glyph name="menu" size={20} /></Button>
+                <div className="hidden items-center gap-2 sm:flex"><ThemeToggle /><Button variant="ghost" size="sm" onClick={() => navigate("/login")}>Sign in</Button><Button size="sm" onClick={() => navigate("/login")}>Start practicing<Glyph name="diagonal" size={13} /></Button></div>
+                <div className="flex items-center gap-1 lg:hidden"><span className="sm:hidden"><ThemeToggle /></span><Button variant="ghost" size="icon" aria-label="Open navigation" aria-expanded={open} aria-haspopup="dialog" onClick={() => setOpen(true)}><Glyph name="menu" size={20} /></Button></div>
             </div>
         </header>
         <Dialog open={open} onClose={() => setOpen(false)} title="Explore SystemIQ">

@@ -29,8 +29,8 @@ export default function ComparisonTable() {
           instead of an absolutely-positioned guess.
         */}
         <div className="card grid grid-cols-3 overflow-hidden">
-          <div className="border-b border-white/[0.06] px-6 py-4 text-sm font-semibold text-white/50">Feature</div>
-          <div className="border-b border-white/[0.06] px-6 py-4 text-sm font-semibold text-white/50">
+          <div className="border-b border-border px-6 py-4 text-sm font-semibold text-muted">Feature</div>
+          <div className="border-b border-border px-6 py-4 text-sm font-semibold text-muted">
             Traditional Practice
           </div>
           <div className="rounded-t-xl border-b border-l-2 border-amber-400/50 bg-amber-400/[0.06] px-6 py-4 text-sm font-semibold text-amber-400">
@@ -44,8 +44,8 @@ export default function ComparisonTable() {
               whileInView={{ opacity: 1 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.08 }}
-              className={`flex items-center px-6 py-4 text-sm font-medium text-white/85 ${
-                i !== lastRow ? 'border-b border-white/[0.05]' : ''
+              className={`flex items-center px-6 py-4 text-sm font-medium text-text ${
+                i !== lastRow ? 'border-b border-border/70' : ''
               }`}
             >
               {r.feature}
@@ -59,8 +59,8 @@ export default function ComparisonTable() {
               whileInView={{ opacity: 1 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.08 + 0.03 }}
-              className={`flex items-center gap-2 px-6 py-4 text-sm text-white/45 ${
-                i !== lastRow ? 'border-b border-white/[0.05]' : ''
+              className={`flex items-center gap-2 px-6 py-4 text-sm text-muted ${
+                i !== lastRow ? 'border-b border-border/70' : ''
               }`}
             >
               <X size={14} className="shrink-0 text-rose-500" />
@@ -75,8 +75,8 @@ export default function ComparisonTable() {
               whileInView={{ opacity: 1 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.08 + 0.06 }}
-              className={`flex items-center gap-2 border-l-2 border-amber-400/50 bg-amber-400/[0.06] px-6 py-4 text-sm font-medium text-white ${
-                i !== lastRow ? 'border-b border-white/[0.05]' : 'rounded-b-xl'
+              className={`flex items-center gap-2 border-l-2 border-amber-400/50 bg-amber-400/[0.06] px-6 py-4 text-sm font-medium text-text ${
+                i !== lastRow ? 'border-b border-border/70' : 'rounded-b-xl'
               }`}
             >
               <Check size={14} className="shrink-0 text-emerald-400" />

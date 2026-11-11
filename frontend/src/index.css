@@ -24,6 +24,7 @@
     --shadow-card: 0 1px 0 rgb(255 255 255 / 0.025) inset;
     --shadow-glow: 0 0 0 1px rgb(var(--color-accent) / 0.2), 0 8px 30px -12px rgb(var(--color-accent) / 0.2);
     --shadow-floating: 0 24px 80px rgb(0 0 0 / 0.45);
+    --scrim: rgb(0 0 0 / 0.75);
     --type-display: clamp(3.4rem, 5.7vw, 6.4rem);
     --type-h1: clamp(2.5rem, 4vw, 4.25rem);
     --type-h2: clamp(1.9rem, 3vw, 3rem);
@@ -31,6 +32,36 @@
     --type-h4: 1.125rem;
     --type-body: 0.9375rem;
     --type-mono: 0.75rem;
+  }
+
+  /* Light theme: the same green-tinted neutrals and lime identity, re-balanced
+     for a light canvas. The accent deepens to a forest green so it stays
+     readable as text and still reads as "SystemIQ green" on buttons.
+     Every pair is checked by components/ui/theme.test.ts (WCAG AA). */
+  :root[data-theme='light'] {
+    color-scheme: light;
+    --color-bg: 246 248 244;
+    --color-surface: 255 255 255;
+    --color-elevated: 237 242 234;
+    --color-border: 218 226 215;
+    --color-control-border: 124 140 128;
+    --color-text: 19 29 23;
+    --color-muted: 82 98 87;
+    --color-accent: 56 112 24;
+    --color-accent-hover: 45 93 18;
+    --color-on-accent: 255 255 255;
+    --color-success: 21 120 69;
+    --color-warning: 148 90 6;
+    --color-danger: 188 45 45;
+    --shadow-card: 0 1px 2px rgb(19 29 23 / 0.05), 0 1px 0 rgb(255 255 255 / 0.6) inset;
+    --shadow-glow: 0 0 0 1px rgb(var(--color-accent) / 0.22), 0 10px 30px -14px rgb(var(--color-accent) / 0.35);
+    --shadow-floating: 0 24px 64px rgb(19 29 23 / 0.16);
+    --scrim: rgb(19 29 23 / 0.4);
+  }
+
+  /* Smooth colour change when the theme is switched (not on first paint) */
+  :root.theme-transition, :root.theme-transition *, :root.theme-transition *::before, :root.theme-transition *::after {
+    transition: background-color .25s ease, border-color .25s ease, color .25s ease, fill .25s ease, stroke .25s ease !important;
   }
 
   * { box-sizing: border-box; }

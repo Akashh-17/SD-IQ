@@ -46,7 +46,7 @@ export function Modal({ open, onClose, title, description, children, footer }: M
             else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first?.focus(); }
         }}
         onClick={event => { if (event.target === event.currentTarget) closeRef.current(); }}
-        className="fixed inset-0 m-auto max-h-[85dvh] w-[calc(100%-2rem)] max-w-lg overflow-y-auto rounded-card border border-border bg-surface p-0 text-text shadow-floating backdrop:bg-black/75 backdrop:backdrop-blur-sm">
+        className="fixed inset-0 m-auto max-h-[85dvh] w-[calc(100%-2rem)] max-w-lg overflow-y-auto rounded-card border border-border bg-surface p-0 text-text shadow-floating backdrop:bg-[var(--scrim)] backdrop:backdrop-blur-sm">
         <motion.div initial={reduced ? false : { opacity: 0, y: 12, scale: 0.98 }} animate={{ opacity: 1, y: 0, scale: 1 }} transition={{ duration: reduced ? 0 : 0.18 }}>
             <div className="flex items-start justify-between gap-5 border-b border-border p-6">
                 <div><h2 id={`${id}-title`} className="text-h3">{title}</h2>{description && <p id={`${id}-description`} className="mt-2 text-sm text-muted">{description}</p>}</div>

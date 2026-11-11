@@ -11,7 +11,9 @@ export default {
         accent: color('accent'), success: color('success'), warning: color('warning'), danger: color('danger'),
         'on-accent': color('on-accent'),
         // Compatibility for existing pages as they migrate to semantic tokens.
-        base: { DEFAULT: color('bg'), 950: color('bg'), 900: color('surface'), 850: color('surface'), 800: color('elevated'), 700: color('border'), 600: color('control-border') },
+        // No DEFAULT here: it would make `text-base` (a font size) also set the
+        // text colour to the page background, hiding those headings.
+        base: { 950: color('bg'), 900: color('surface'), 850: color('surface'), 800: color('elevated'), 700: color('border'), 600: color('control-border') },
         amber: { 400: color('accent'), 500: color('accent-hover'), 600: color('accent-hover') },
       },
       fontFamily: {

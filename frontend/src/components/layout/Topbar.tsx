@@ -3,6 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import Button from "../ui/Button";
 import Badge from "../ui/Badge";
 import Tooltip from "../ui/Tooltip";
+import ThemeToggle from "../ui/ThemeToggle";
 
 interface TopbarProps {
     title?: string;
@@ -22,7 +23,8 @@ export default function Topbar({ title, collapsed, onCollapse, onOpenMobile, pre
             <span className="hidden md:inline-flex"><Tooltip content={collapsed ? "Expand sidebar" : "Collapse sidebar"} side="bottom"><Button variant="ghost" size="icon" aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"} aria-expanded={!collapsed} aria-controls="workspace-sidebar" onClick={onCollapse}>{collapsed ? <PanelLeftOpen size={17} aria-hidden="true" /> : <PanelLeftClose size={17} aria-hidden="true" />}</Button></Tooltip></span>
             <div className="flex min-w-0 items-center gap-2 text-xs"><span className="hidden text-muted sm:inline">Workspace</span><ChevronRight size={12} aria-hidden="true" className="hidden text-muted sm:block" /><span className="truncate text-text">{pageTitle}</span></div>
         </div>
-        <div className="flex shrink-0 items-center gap-4">
+        <div className="flex shrink-0 items-center gap-2 sm:gap-4">
+            <ThemeToggle />
             {preview ? <Badge mono dot tone="accent">Dev preview</Badge> : <Link to="/problems" className="inline-flex min-h-11 items-center gap-2 text-xs text-muted hover:text-text">Practice a problem<ArrowUpRight size={14} aria-hidden="true" /></Link>}
         </div>
     </header>;

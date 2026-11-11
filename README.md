@@ -328,6 +328,7 @@ It runs on `http://localhost:5173`.
 - 📈 **Progress tracking.** History and score trends across sessions.
 - 💾 **Resumable sessions.** Interview state is checkpointed in Postgres and cached in Redis.
 - 🔐 **Authentication.** Supabase auth on the frontend, with JWT verification on the backend.
+- 🌗 **Light and dark mode.** A toggle on every page; the choice is remembered and applied before first paint, and the whiteboard and report follow it. Both palettes are checked for WCAG AA contrast in tests.
 
 ---
 

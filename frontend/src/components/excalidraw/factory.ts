@@ -5,9 +5,10 @@ import type { Graph, SceneElement } from "./types";
 // The board passes them through Excalidraw's restoreElements() at runtime,
 // which fills any remaining defaults.
 
-// Colours are picked for Excalidraw's dark mode, which renders the canvas
-// through an invert filter: these come out as a soft green card, a bright
-// green outline and near-white text on the dark background.
+// Colours work in both app themes. In light mode they render as-is (pale
+// green card, green outline, near-black text). Excalidraw's dark mode renders
+// the canvas through an invert filter, so the same values come out as a dark
+// green card, a bright green outline and near-white text.
 export const COMPONENT_STYLE = { stroke: "#2f9e44", background: "#ebfbee", text: "#1e1e1e" } as const;
 export const COMPONENT_SIZE = { width: 184, height: 96, icon: 30 } as const;
 const EXCALIFONT = 5;

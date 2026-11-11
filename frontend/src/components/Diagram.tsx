@@ -9,6 +9,7 @@ import DiagramHeader from "./diagram/DiagramHeader";
 import { useGraphAutosave, type WhiteboardDocument } from "./diagram/useGraphAutosave";
 import { NODE_CATALOG } from "./diagram/nodeCatalog";
 import { labelKey, useRoom, type SaveStatus } from "./chat/room.context";
+import { useTheme } from "../theme/context";
 import { getInterviewState } from "../services/interviewState.service";
 import { sceneToGraph, sceneVersion } from "./excalidraw/converter";
 import { COMPONENT_SIZE, componentElements } from "./excalidraw/factory";
@@ -41,6 +42,7 @@ function download(blob: Blob, name: string) {
 function Diagram() {
     const { interviewId } = useParams();
     const room = useRoom();
+    const { theme } = useTheme();
     const loadInitial = room?.loadInitial, registerFlush = room?.registerFlush, roomSave = room?.setSaveStatus;
     const [initial, setInitial] = useState<ExcalidrawInitialDataState | null>(null);
     const [doc, setDoc] = useState({ graph: EMPTY, revision: 0 });
@@ -142,7 +144,7 @@ function Diagram() {
         <div className="flex min-h-0 flex-1">{palette && !room?.compact && <div className="w-44 shrink-0 border-r border-border xl:w-48"><Sidebar onAdd={add} onDragStart={dragStart} disabled={!api} /></div>}
             <div className="room-canvas relative min-h-0 min-w-0 flex-1" aria-label="Diagram canvas">
                 {!loaded ? failure ? <div className="flex h-full items-center justify-center p-6"><Card role="alert" className="max-w-sm p-6"><h3 className="text-h4">Your diagram couldn’t load.</h3><p className="my-4 text-sm text-muted">Retry before editing so your saved work stays safe.</p><Button variant="secondary" onClick={() => { setFailure(false); setAttempt(value => value + 1); }}><RefreshCw size={14} aria-hidden="true" />Retry diagram</Button></Card></div> : <div role="status" aria-label="Loading diagram" className="space-y-5 p-8"><Skeleton className="h-24 w-44" /><Skeleton className="ml-24 h-24 w-44" /></div>
-                    : <div className="absolute inset-0"><Excalidraw excalidrawAPI={setApi} initialData={initial} onChange={change} theme="dark" UIOptions={UI_OPTIONS} name="SystemIQ whiteboard" /></div>}
+                    : <div className="absolute inset-0"><Excalidraw excalidrawAPI={setApi} initialData={initial} onChange={change} theme={theme} UIOptions={UI_OPTIONS} name="SystemIQ whiteboard" /></div>}
                 {loaded && !doc.graph.scene?.elements.length && <div className="pointer-events-none absolute inset-x-0 top-1/3 z-10 flex justify-center p-5"><div className="max-w-xs text-center"><GitBranch size={34} strokeWidth={1} className="mx-auto mb-4 text-accent" aria-hidden="true" /><h3 className="text-base font-medium">A blank canvas. A clear start.</h3><p className="mt-2 text-xs leading-relaxed text-muted">Add components, draw arrows between them, sketch zones and notes. Explain the choices behind them.</p><Button variant="secondary" size="sm" className="pointer-events-auto mt-5" disabled={!api} onClick={() => add("webclient")}>Add a client</Button></div></div>}
             </div>
         </div>
