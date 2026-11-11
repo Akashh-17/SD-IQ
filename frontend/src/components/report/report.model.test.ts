@@ -16,8 +16,13 @@ it("normalizes a read-only snapshot without mutating saved positions or acceptin
     const original = structuredClone(input);
     const graph = parseDiagram(input)!;
     expect(graph.nodes).toHaveLength(1); expect(graph.edges).toHaveLength(0);
-    expect(graph.nodes[0]).toMatchObject({ position: { x: 32, y: 64 }, draggable: false, connectable: false, selectable: false, focusable: false });
+    expect(graph.nodes[0]).toEqual({ id: "api", position: { x: 32, y: 64 }, data: { label: "Payment API", kind: "service", subtype: "" } });
+    expect(graph.scene).toBeNull();
     expect(graph.analysis?.missingComponents).toEqual(["Queue"]); expect(input).toEqual(original);
+});
+it("keeps the saved Excalidraw drawing and drops malformed elements", () => {
+    const graph = parseDiagram({ graph: { nodes: [], edges: [], scene: { elements: [{ id: "pen", type: "freedraw" }, null, { type: "text" }] } } })!;
+    expect(graph.scene).toEqual({ elements: [{ id: "pen", type: "freedraw" }] });
 });
 it("uses recorded timing and falls back honestly for older reports", () => {
     const payload = { interview: { started_at: "2026-11-08T12:00:00Z", completed_at: "2026-11-08T12:20:15Z" }, report: { summary: "Ready" } };

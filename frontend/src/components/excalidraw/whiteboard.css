@@ -1,0 +1,19 @@
+/* Excalidraw inside the interview room: keep its own UI, but match our
+   surfaces, borders and accent so it feels part of the app. */
+.room-canvas .excalidraw.theme--dark {
+    --island-bg-color: rgb(var(--color-surface));
+    --default-bg-color: rgb(var(--color-bg));
+    --input-bg-color: rgb(var(--color-elevated));
+    --popup-bg-color: rgb(var(--color-surface));
+    --sidebar-bg-color: rgb(var(--color-surface));
+    --sidebar-border-color: rgb(var(--color-border));
+    --dialog-border-color: rgb(var(--color-border));
+    --color-primary: rgb(var(--color-accent));
+    --color-primary-darker: rgb(var(--color-accent) / .85);
+    --color-primary-darkest: rgb(var(--color-accent) / .7);
+    --color-primary-light: rgb(var(--color-accent) / .18);
+    --color-surface-primary-container: rgb(var(--color-accent) / .18);
+    --button-hover-bg: rgb(var(--color-elevated));
+    --ui-font: Geist, ui-sans-serif, system-ui, sans-serif;
+}
+.room-canvas .excalidraw .App-menu_top .App-menu_top__left { gap: 6px; }

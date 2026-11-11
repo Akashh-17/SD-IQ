@@ -39,7 +39,7 @@ export default defineConfig(({ mode }) => {
             groups: [
               { name: 'react-runtime', test: /node_modules[\\/](react|react-dom|scheduler)[\\/]/, priority: 50 },
               { name: 'motion-features', test: /node_modules[\\/](framer-motion|motion-dom|motion-utils)[\\/]/, priority: 40, entriesAware: true },
-              { name: 'reactflow', test: /node_modules[\\/](@reactflow[\\/]|reactflow[\\/])/, priority: 30, entriesAware: true },
+              { name: 'excalidraw', test: /node_modules[\\/]@excalidraw[\\/]/, priority: 30, entriesAware: true },
               { name: 'recharts', test: /node_modules[\\/](recharts|victory-vendor)[\\/]/, priority: 20, entriesAware: true }
             ]
           }

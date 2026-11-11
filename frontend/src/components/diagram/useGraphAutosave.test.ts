@@ -2,9 +2,9 @@ import { act, cleanup, renderHook } from "@testing-library/react";
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
 import { useGraphAutosave } from "./useGraphAutosave";
 import { saveGraph } from "../../services/graph.service";
-import type { GraphDocument } from "./document";
+import type { WhiteboardDocument } from "./useGraphAutosave";
 vi.mock("../../services/graph.service", () => ({ saveGraph: vi.fn() }));
-const graph = (x = 0): GraphDocument => ({ nodes: [{ id: "api", position: { x, y: 0 }, data: { label: "API" } }], edges: [] });
+const graph = (x = 0): WhiteboardDocument => ({ nodes: [{ id: "api", type: "service", position: { x, y: 0 }, data: { label: "API" } }], edges: [] });
 beforeEach(() => { vi.useFakeTimers(); vi.mocked(saveGraph).mockResolvedValue(undefined); });
 afterEach(() => { cleanup(); vi.useRealTimers(); vi.resetAllMocks(); });
 it("never saves an empty canvas before restore, and debounces edits", async () => {

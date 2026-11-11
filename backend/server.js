@@ -28,7 +28,8 @@ app.use(cors({
   credentials: true,
   exposedHeaders: ["X-Request-Id"]
 }));
-app.use(express.json());
+// 1MB: room for a full whiteboard drawing (Upstash also caps requests at 1MB)
+app.use(express.json({ limit: "1mb" }));
 app.get("/metrics", metricsEndpoint);
 app.use("/health", healthRoutes);
 app.use("/api/voice", voiceRoutes);

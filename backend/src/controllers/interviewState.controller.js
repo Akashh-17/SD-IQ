@@ -35,6 +35,9 @@ export async function getInterviewState(req, res) {
 
             graph: session.graph,
 
+            // Full whiteboard drawing, so the canvas restores exactly on reload
+            scene: session.scene ?? null,
+
             report: session.report
 
         });

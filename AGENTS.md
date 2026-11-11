@@ -2,18 +2,19 @@
 
 ## What this is
 AI system design mock-interview PRACTICE platform. Candidates pick a problem, answer by text or voice,
-draw their architecture on a React Flow whiteboard, and get scored stage by stage.
+draw their architecture on an Excalidraw whiteboard, and get scored stage by stage.
 
 ## Stack
 - backend/: Node 20+ (LangChain 1.x; Vite 8 requires Node 20.19+ or 22.12+) ESM JavaScript (NOT TypeScript), Express 5, LangGraph (@langchain/langgraph),
   @langchain/openai pointed at OpenRouter, Upstash Redis (REST), Postgres checkpointer, Supabase (auth + tables), Zod, Groq Whisper.
-- frontend/: React 19 + TypeScript + Vite, Tailwind 3, React Flow 11, framer-motion, Recharts, lucide-react, Supabase JS.
+- frontend/: React 19 + TypeScript + Vite, Tailwind 3, Excalidraw 0.18 (whiteboard), framer-motion, Recharts, lucide-react, Supabase JS.
 
 ## Key architecture (read before changing anything)
 - backend/agent.js: LangGraph graph: START -> greeting -> interviewer -> END for the initial greeting, or greeting -> input -> graphAnalyzer -> intent -> orchestrator -> optional evaluator -> conversationManager -> interviewer -> END.
 - Session state: Redis keys interview:<id>, :transcript (RPUSH list), :graph, :analysis (see backend/src/services/interview/session.service.js). Never go back to read-modify-write on one key.
 - Report generation is idempotent (Redis SET NX EX lock at lock:report:<id> + interview upsert + graph/report delete-and-insert, report row written last). Don't weaken this.
 - Scores come from code (computeStageScores in backend/src/services/report/reportGenerator.js; overallScore is also overridden in code), not from the LLM.
+- Whiteboard: Excalidraw. frontend/src/components/excalidraw/converter.ts turns the drawing into { nodes, edges } (library components via customData.componentType, labelled shapes, arrows bound at both ends); that graph is what the backend/AI reads. The full drawing is saved separately in Redis key interview:<id>:scene and never enters agent state.
 - Diagram analysis reuses successful analysis for unchanged structure (backend/src/utils/graphSignature.js); missing/failed analysis can retry. Graph-edit analysis is debounced for 2 seconds by backend/src/services/graph/graph.service.js.
 - Intent labels: IntentType in backend/src/models/InterviewEnums.js (ANSWER, QUESTION, ACKNOWLEDGEMENT, SMALL_TALK, CLARIFICATION, WRAP_UP, UNKNOWN), the single source of truth.
 - Security: /message, /graph and /end = auth -> rateLimit -> validate (Zod) -> ownsInterview; /initialize and /state/:interviewId omit rateLimit; /start = auth -> rateLimit -> validate, then creates the owned session. Ownership failures return 404, not 403.

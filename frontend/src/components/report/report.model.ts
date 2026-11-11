@@ -1,4 +1,4 @@
-import type { Node, Edge } from "reactflow";
+import type { SceneElement, StoredScene } from "../excalidraw/types";
 
 export const object = (value: unknown): Record<string, unknown> => value !== null && typeof value === "object" && !Array.isArray(value) ? value as Record<string, unknown> : {};
 export const text = (value: unknown) => typeof value === "string" ? value.trim() : "";
@@ -11,7 +11,11 @@ export function validScore(value: unknown): number | null {
 export interface StageResult { name: string; score: number | null; feedback: string; }
 export interface TranscriptMessage { role: "assistant" | "user" | "system"; content: string; }
 export interface DiagramAnalysis { summary: string; issues: string[]; missingComponents: string[]; strengths: string[]; }
-export interface DiagramSnapshot { nodes: Node[]; edges: Edge[]; analysis: DiagramAnalysis | null; }
+export interface SnapshotNode { id: string; position: { x: number; y: number }; data: { label: string; kind: string; subtype: string } }
+export interface SnapshotEdge { id: string; source: string; target: string; data: { label: string } }
+// nodes/edges: the graph the AI analysed. scene: the full Excalidraw drawing
+// (null for interviews saved before the whiteboard switched to Excalidraw).
+export interface DiagramSnapshot { nodes: SnapshotNode[]; edges: SnapshotEdge[]; scene: StoredScene | null; analysis: DiagramAnalysis | null; }
 export interface ReportView {
     title: string; level: string; difficulty: string; candidateLevel: string;
     problemId: string; date: string | null; durationMs: number | null; score: number | null;
@@ -30,18 +34,20 @@ export function parseStages(value: unknown): StageResult[] {
 export function parseDiagram(value: unknown): DiagramSnapshot | null {
     if (value === null || typeof value !== "object") return null;
     const input = object(value), raw = object(input.graph ?? input), analysis = object(input.analysis);
-    const nodes: Node[] = [], ids = new Set<string>();
+    const nodes: SnapshotNode[] = [], ids = new Set<string>();
     for (const item of Array.isArray(raw.nodes) ? raw.nodes : []) {
         const node = object(item), position = object(node.position), data = object(node.data), id = text(node.id);
         if (!id || ids.has(id) || typeof position.x !== "number" || typeof position.y !== "number" || !Number.isFinite(position.x) || !Number.isFinite(position.y)) continue;
         ids.add(id);
-        nodes.push({ id, type: "snapshot", position: { x: position.x, y: position.y }, draggable: false, selectable: false, connectable: false, focusable: false, data: { label: text(data.label) || text(node.type) || "Component", kind: text(node.type), subtype: text(data.subtype) } });
+        nodes.push({ id, position: { x: position.x, y: position.y }, data: { label: text(data.label) || text(node.type) || "Component", kind: text(node.type), subtype: text(data.subtype) } });
     }
-    const edges: Edge[] = (Array.isArray(raw.edges) ? raw.edges : []).map((item, index) => {
+    const edges: SnapshotEdge[] = (Array.isArray(raw.edges) ? raw.edges : []).map((item, index) => {
         const edge = object(item);
-        return { id: text(edge.id) || "connection-" + index, source: text(edge.source), target: text(edge.target), type: "snapshot", selectable: false, focusable: false, data: { label: text(object(edge.data).label ?? edge.label) } };
+        return { id: text(edge.id) || "connection-" + index, source: text(edge.source), target: text(edge.target), data: { label: text(object(edge.data).label ?? edge.label) } };
     }).filter(edge => ids.has(edge.source) && ids.has(edge.target));
-    return { nodes, edges, analysis: Object.keys(analysis).length ? { summary: text(analysis.summary), issues: strings(analysis.issues), missingComponents: strings(analysis.missingComponents), strengths: strings(analysis.strengths) } : null };
+    const sceneElements = object(raw.scene).elements;
+    const scene = Array.isArray(sceneElements) ? { elements: sceneElements.filter((element): element is SceneElement => Boolean(element) && typeof element === "object" && typeof (element as SceneElement).id === "string") } : null;
+    return { nodes, edges, scene, analysis: Object.keys(analysis).length ? { summary: text(analysis.summary), issues: strings(analysis.issues), missingComponents: strings(analysis.missingComponents), strengths: strings(analysis.strengths) } : null };
 }
 export function normalizeReport(payload: unknown): ReportView {
     const input = object(payload), interview = object(input.interview), report = object(input.report);

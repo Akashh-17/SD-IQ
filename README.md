@@ -25,7 +25,7 @@ SystemIQ is a full-stack web app that simulates a system design interview. You p
 **How a session works:**
 1. **Pick a problem and level.** Choose from TinyURL, Instagram, Uber, Google Drive or a Chat App, at SDE1 or SDE2 difficulty.
 2. **The interview runs in stages.** The AI interviewer moves through requirements, high-level design, deep dive, scaling and trade-offs, then wraps up.
-3. **Draw your architecture.** Drag clients, load balancers, services, caches, queues, databases, storage, search and CDNs onto a React Flow canvas and connect them.
+3. **Draw your architecture.** Sketch on an Excalidraw whiteboard: drag in clients, load balancers, services, caches, queues, databases, storage, search and CDNs, connect them with arrows, and add your own shapes, zones and notes.
 4. **The AI cross-checks you.** Every answer is scored against a per-problem rubric, and your diagram is compared with what you said. It flags components you mentioned but didn't draw, and the reverse.
 5. **Get your report.** You see an overall score, a breakdown by stage, your strengths and weaknesses, and recommendations. Reports are saved to your history so you can track progress.
 
@@ -50,7 +50,7 @@ SystemIQ is a full-stack web app that simulates a system design interview. You p
 | Technology | Role |
 |---|---|
 | **React 19** + **TypeScript** + **Vite** | UI framework and build tool |
-| **React Flow** | Drag-and-drop architecture whiteboard |
+| **Excalidraw** | Hand-drawn architecture whiteboard (component library, arrows, shapes, pen, PNG/SVG export) |
 | **react-resizable-panels** | Split-pane interview layout (chat and diagram) |
 | **Recharts** | Score-trend and progress charts |
 | **Framer Motion** | Animations and transitions |
@@ -124,8 +124,7 @@ SystemIQ/
 │
 └── frontend/
     └── src/
-        ├── architecture/           # React Flow canvas, inspector, sidebar, node and edge types
-        ├── nodes/                  # Diagram node components (Client, Service, Cache, DB, Queue, ...)
+        ├── components/excalidraw/  # Whiteboard: component library, drawing -> graph converter, icons
         ├── components/             # Landing, dashboard, history, report, analytics, UI kit
         ├── pages/                  # Landing, Login, Signup, Dashboard, Problems, Interview, Report, History, Progress
         ├── services/               # API clients that mirror the backend routes
@@ -321,7 +320,7 @@ It runs on `http://localhost:5173`.
 
 - 🎙️ **Voice or text input.** Record your answer in the browser and Groq Whisper transcribes it.
 - 🔊 **Spoken replies.** The interviewer's questions can be read aloud with the Web Speech API.
-- 🖼️ **Live architecture whiteboard.** A React Flow canvas with typed system-design components and labeled edges.
+- 🖼️ **Live architecture whiteboard.** An Excalidraw canvas with 31 system-design components, labeled arrows, freehand drawing, zones and notes. The AI reads the components and connections.
 - 🔍 **Diagram consistency check.** Flags concepts you mentioned but didn't draw, and the reverse.
 - 📊 **Stage-based progression.** A structured flow with clear objectives for each stage.
 - 🧠 **Adaptive interviewer.** Adjusts follow-ups, hints and focus based on how you're doing.

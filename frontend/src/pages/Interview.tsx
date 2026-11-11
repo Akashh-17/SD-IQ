@@ -79,7 +79,8 @@ function InterviewRoom({ interviewId }: { interviewId: string }) {
     const showHelp = useCallback(() => setHelp(true), []);
     useEffect(() => {
         function keys(event: KeyboardEvent) {
-            if (editableTarget(event.target)) return;
+            // Inside the whiteboard, Excalidraw's own shortcuts (incl. its "?" help) apply
+            if (editableTarget(event.target) || (event.target instanceof Element && event.target.closest(".excalidraw"))) return;
             if (event.key === "?" && !(event.target instanceof Element && event.target.closest("dialog"))) { event.preventDefault(); setHelp(true); }
             if (event.key === "Escape" && fullscreen && !help) leaveFocus();
         }
@@ -96,7 +97,7 @@ function InterviewRoom({ interviewId }: { interviewId: string }) {
             <Panel id="conversation" panelRef={chat} defaultSize={compact ? "60%" : "35%"} minSize={compact ? "45%" : "26%"} collapsible collapsedSize="0%" onResize={size => setCollapsed(size.asPercentage < 0.1)} aria-hidden={collapsed} inert={collapsed} className="min-h-0 min-w-0 overflow-hidden"><ChatPanel /></Panel>
         </Group>
         <Dialog open={help} onClose={() => setHelp(false)} title="A few keys. More flow." description="Shortcuts work on the whiteboard. While typing, your normal text shortcuts stay intact.">
-            <dl className="space-y-4 text-sm">{[{ label: "Send your answer", keys: ["Enter"] }, { label: "New line in chat", keys: ["Shift", "Enter"] }, { label: "Undo a diagram edit", keys: ["Ctrl / ⌘", "Z"] }, { label: "Redo a diagram edit", keys: ["Ctrl / ⌘", "Shift", "Z"] }, { label: "Delete selected nodes or edges", keys: ["Delete"] }, { label: "Rename a node", keys: ["Double-click"] }, { label: "Exit full-screen whiteboard", keys: ["Esc"] }, { label: "Show this help", keys: ["?"] }].map(item => <div key={item.label} className="flex flex-wrap items-center justify-between gap-3"><dt className="text-xs text-muted">{item.label}</dt><dd className="flex flex-wrap gap-1">{item.keys.map(key => <Kbd key={key}>{key}</Kbd>)}</dd></div>)}</dl>
+            <dl className="space-y-4 text-sm">{[{ label: "Send your answer", keys: ["Enter"] }, { label: "New line in chat", keys: ["Shift", "Enter"] }, { label: "Select / hand (pan)", keys: ["V", "H"] }, { label: "Rectangle, ellipse, diamond", keys: ["R", "O", "D"] }, { label: "Arrow (drag between components to connect)", keys: ["A"] }, { label: "Text note / free-draw pen", keys: ["T", "P"] }, { label: "Undo / redo a whiteboard edit", keys: ["Ctrl / ⌘", "Z", "Shift"] }, { label: "Delete the selection", keys: ["Delete"] }, { label: "Rename a component", keys: ["Double-click"] }, { label: "Exit full-screen whiteboard", keys: ["Esc"] }, { label: "Show this help (outside the whiteboard)", keys: ["?"] }].map(item => <div key={item.label} className="flex flex-wrap items-center justify-between gap-3"><dt className="text-xs text-muted">{item.label}</dt><dd className="flex flex-wrap gap-1">{item.keys.map(key => <Kbd key={key}>{key}</Kbd>)}</dd></div>)}</dl>
         </Dialog>
     </div></RoomContext.Provider>;
 }

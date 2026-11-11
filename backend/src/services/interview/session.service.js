@@ -12,10 +12,12 @@ export const SESSION_TTL_SECONDS = 24 * 60 * 60;
 //
 //   interview:<id>             interview metadata + report
 //   interview:<id>:transcript  Redis list, one message per item (RPUSH)
-//   interview:<id>:graph       latest whiteboard { nodes, edges }
+//   interview:<id>:graph       latest whiteboard { nodes, edges } (what the AI reads)
 //   interview:<id>:analysis    { analysis, signature } for that graph
+//   interview:<id>:scene       full Excalidraw drawing { elements }, kept apart
+//                              so it never enters the agent's state/checkpoints
 //
-// `get()` assembles them into the same session shape as before.
+// `get()` assembles them into the same session shape as before, plus `scene`.
 // =====================================================
 
 const parse = (value) =>
@@ -42,7 +44,9 @@ export class SessionService {
 
             graph: `${base}:graph`,
 
-            analysis: `${base}:analysis`
+            analysis: `${base}:analysis`,
+
+            scene: `${base}:scene`
 
         };
 
@@ -110,7 +114,7 @@ export class SessionService {
 
         };
 
-        await redis.del(keys.transcript, keys.analysis);
+        await redis.del(keys.transcript, keys.analysis, keys.scene);
 
         await redis.set(keys.meta, meta, { ex: SESSION_TTL_SECONDS });
 
@@ -140,7 +144,7 @@ export class SessionService {
 
         const keys = this.keys(interviewId);
 
-        const [meta, transcript, graph, analysis] = await Promise.all([
+        const [meta, transcript, graph, analysis, scene] = await Promise.all([
 
             redis.get(keys.meta),
 
@@ -148,7 +152,9 @@ export class SessionService {
 
             redis.get(keys.graph),
 
-            redis.get(keys.analysis)
+            redis.get(keys.analysis),
+
+            redis.get(keys.scene)
 
         ]);
 
@@ -170,7 +176,9 @@ export class SessionService {
 
                 analysisSignature: analysis?.signature ?? null
 
-            }
+            },
+
+            scene: scene ?? null
 
         };
 
@@ -214,7 +222,9 @@ export class SessionService {
 
             keys.graph,
 
-            keys.analysis
+            keys.analysis,
+
+            keys.scene
 
         );
 
@@ -321,6 +331,22 @@ export class SessionService {
             { ex: SESSION_TTL_SECONDS }
 
         );
+
+        // The full drawing, when sent. A save without one (e.g. a drawing
+        // too large to send) keeps the last stored drawing.
+        if (graph?.scene) {
+
+            await redis.set(
+
+                this.keys(interviewId).scene,
+
+                graph.scene,
+
+                { ex: SESSION_TTL_SECONDS }
+
+            );
+
+        }
 
         await this.touch(interviewId);
 

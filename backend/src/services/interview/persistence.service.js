@@ -83,7 +83,10 @@ export class PersistenceService {
 
                 edges:
 
-                    session.graph?.edges ?? []
+                    session.graph?.edges ?? [],
+
+                // Full drawing for the report's read-only whiteboard
+                ...(session.scene ? { scene: session.scene } : {})
 
             },
 

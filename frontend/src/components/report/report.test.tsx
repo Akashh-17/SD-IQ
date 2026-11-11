@@ -120,7 +120,7 @@ it("waits for the lazy whiteboard before opening PDF printing", async () => {
     const print = vi.spyOn(window, "print").mockImplementation(() => {});
     let ready!: () => void;
     vi.mocked(prepareReportPrint).mockImplementationOnce(() => new Promise(resolve => { ready = resolve; }));
-    actions({ ...view, graph: { nodes: [{ id: "api", position: { x: 0, y: 0 }, data: { label: "API" } }], edges: [], analysis: null } });
+    actions({ ...view, graph: { nodes: [{ id: "api", position: { x: 0, y: 0 }, data: { label: "API", kind: "service", subtype: "" } }], edges: [], scene: null, analysis: null } });
     fireEvent.click(screen.getByRole("button", { name: "Download PDF" }));
     expect(print).not.toHaveBeenCalled();
     expect(screen.getByRole("button", { name: "Download PDF" })).toBeDisabled();

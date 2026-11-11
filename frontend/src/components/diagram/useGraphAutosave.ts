@@ -1,9 +1,12 @@
 import { useCallback, useEffect, useRef } from "react";
 import { saveGraph } from "../../services/graph.service";
-import type { GraphDocument } from "./document";
+import type { Graph, StoredScene } from "../excalidraw/types";
 import type { SaveStatus } from "../chat/room.context";
 
-export function useGraphAutosave(id: string | undefined, graph: GraphDocument, revision: number, loaded: boolean, onStatus: (status: SaveStatus) => void) {
+// What gets saved: the converted graph (for the AI) plus the full drawing
+export type WhiteboardDocument = Graph & { scene?: StoredScene };
+
+export function useGraphAutosave(id: string | undefined, graph: WhiteboardDocument, revision: number, loaded: boolean, onStatus: (status: SaveStatus) => void) {
     const latest = useRef({ graph, revision, loaded });
     const saved = useRef(0);
     const scheduled = useRef(0);

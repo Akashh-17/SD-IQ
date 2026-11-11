@@ -129,7 +129,19 @@ export const Schemas = {
 
                 }).passthrough()
 
-            ).max(400)
+            ).max(400),
+
+            // Full Excalidraw drawing (shapes, arrows, text, freehand), saved
+            // so it restores exactly. The AI only reads nodes/edges above.
+            scene: z.object({
+
+                elements: z.array(
+
+                    z.object({ id: z.string(), type: z.string() }).passthrough()
+
+                ).max(3000)
+
+            }).optional()
 
         })
 

@@ -4,22 +4,8 @@
 .room-shell [data-group][data-orientation="vertical"] > .room-separator { height: 5px; cursor: row-resize; }
 .room-shell .room-separator:hover, .room-shell .room-separator:focus-visible { background: rgb(var(--color-accent) / .65); }
 .room-shell .room-separator::after { content: ''; position: absolute; inset: -4px; }
-.room-node { width: 196px; padding: 12px; border-color: rgb(var(--color-border)); background: rgb(var(--color-surface)); box-shadow: 0 4px 14px rgb(0 0 0 / .15); transition: border-color .18s ease, box-shadow .18s ease; }
-.room-node-selected, .room-node-referenced { border-color: rgb(var(--color-accent) / .7) !important; box-shadow: 0 0 0 1px rgb(var(--color-accent) / .15), 0 0 24px rgb(var(--color-accent) / .1); }
-.room-canvas .react-flow__handle { width: 8px; height: 8px; border: 1px solid rgb(var(--color-muted)); background: rgb(var(--color-surface)); }
-.room-canvas .react-flow__handle:hover { border-color: rgb(var(--color-accent)); background: rgb(var(--color-accent)); }
-.room-canvas .react-flow__controls { overflow: hidden; border: 1px solid rgb(var(--color-border)); border-radius: var(--radius-card, 12px); box-shadow: none; }
-.room-canvas .react-flow__controls-button { width: 30px; height: 30px; border-color: rgb(var(--color-border)); background: rgb(var(--color-surface)); color: rgb(var(--color-text)); fill: currentColor; }
-.room-canvas .react-flow__controls-button:hover { background: rgb(var(--color-elevated)); }
-.room-canvas .react-flow__controls-button svg { fill: currentColor; }
-.room-canvas .react-flow__minimap { overflow: hidden; width: 140px; height: 88px; border: 1px solid rgb(var(--color-border)); border-radius: 10px; background: rgb(var(--color-surface)); box-shadow: none; }
-.room-canvas .react-flow__attribution { background: rgb(var(--color-surface)); color: rgb(var(--color-muted)); font-size: 8px; }
-.room-canvas .react-flow__node:focus-visible { outline: 2px solid rgb(var(--color-accent)); outline-offset: 4px; }
-.room-flowing-edge { stroke-dasharray: 6 6; animation: room-edge-flow 1.2s linear infinite; }
 .room-stream-cursor { display: inline-block; width: 2px; height: 1em; margin-left: 3px; vertical-align: -.1em; background: rgb(var(--color-accent)); animation: room-cursor-blink .9s steps(2, start) infinite; }
 .room-focus .room-topbar { display: none; }
 .room-stage-scroll { scrollbar-width: thin; scrollbar-color: rgb(var(--color-border)) transparent; }
-@keyframes room-edge-flow { to { stroke-dashoffset: -24; } }
 @keyframes room-cursor-blink { to { opacity: 0; } }
-@media (max-width: 900px) { .room-canvas .react-flow__minimap { display: none; } }
-@media (prefers-reduced-motion: reduce) { .room-flowing-edge, .room-stream-cursor { animation: none; } .room-node, .room-separator { transition: none; } }
+@media (prefers-reduced-motion: reduce) { .room-stream-cursor { animation: none; } .room-separator { transition: none; } }

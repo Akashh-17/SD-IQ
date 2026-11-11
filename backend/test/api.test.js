@@ -79,3 +79,24 @@ it("runs a full interview through real routes and LangGraph, including wrap-up",
     expect(report.body.report.transcript.at(-1).content).toBe("let's wrap up");
     expect((await get(`/api/report/${interviewId}`, "b")).status).toBe(404);
 });
+it("stores the full whiteboard drawing apart from the AI graph and keeps it in the report", async () => {
+    const { GraphService } = await import("../src/services/graph/graph.service.js");
+    const interviewId = await start();
+    await post("initialize", { interviewId });
+    const scene = { elements: [{ id: "api", type: "rectangle", customData: { componentType: "service" } }, { id: "note", type: "freedraw", points: [[0, 0], [4, 9]] }] };
+    const graph = { nodes: [{ id: "api", type: "service", data: { label: "API" }, position: { x: 0, y: 0 } }], edges: [], scene };
+    expect((await post("graph", { interviewId, graph })).status).toBe(200);
+    const state = await get(`/api/interview/state/${interviewId}`);
+    expect(state.body.scene).toEqual(scene);
+    expect(state.body.graph.scene).toBeUndefined();
+    // The agent reads the graph only: the drawing never reaches its state/checkpoints
+    expect(Object.keys(await GraphService.get(interviewId))).not.toContain("scene");
+    // A save without a drawing (too large to send) keeps the last stored one
+    expect((await post("graph", { interviewId, graph: { nodes: graph.nodes, edges: [] } })).status).toBe(200);
+    expect((await get(`/api/interview/state/${interviewId}`)).body.scene).toEqual(scene);
+    expect((await post("graph", { interviewId, graph: { ...graph, scene: { elements: [{ id: "x" }] } } })).status).toBe(400);
+    await post("message", { interviewId, message: "let's wrap up" });
+    const report = await get(`/api/report/${interviewId}`);
+    expect(report.status).toBe(200);
+    expect(report.body.graph.scene).toEqual(scene);
+});

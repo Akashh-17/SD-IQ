@@ -47,7 +47,7 @@ varied between runs; a build passing does not guarantee a Lighthouse score.
   guard download concurrently; private content still waits for authentication.
 - The public landing page stays in the entry bundle. Making that critical hero
   another lazy boundary introduced a first-paint download waterfall in trials.
-- React Flow, Recharts and Framer Motion have separate vendor chunks, using
+- Excalidraw, Recharts and Framer Motion have separate vendor chunks, using
   Vite 8's native Rolldown splitting. The chunk warning threshold was not raised
   or disabled. Shared tiny utilities can carry a vendor-derived chunk name;
   that does not mean the chart engine is loaded on the landing page.

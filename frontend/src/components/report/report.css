@@ -1,12 +1,7 @@
 .report-page { color: rgb(var(--color-text)); color-scheme: dark; }
 .report-score-arc { animation: report-score-in 1.05s cubic-bezier(.2,.8,.2,1) both; }
 .report-stage-animate .report-stage-fill [role="progressbar"] > div { transform-origin: left; animation: report-bar-in .65s cubic-bezier(.2,.8,.2,1) var(--report-delay,0ms) both; }
-.report-diagram .react-flow__controls { overflow: hidden; border: 1px solid rgb(var(--color-border)); border-radius: var(--radius-control); box-shadow: none; }
-.report-diagram .react-flow__controls-button { width: 28px; height: 28px; color: rgb(var(--color-text)); fill: currentColor; background: rgb(var(--color-surface)); border-color: rgb(var(--color-border)); }
-.report-diagram .react-flow__controls-button:hover { background: rgb(var(--color-elevated)); }
-.report-diagram .react-flow__attribution { font-size: 8px; background: rgb(var(--color-surface)); color: rgb(var(--color-muted)); }
-.report-diagram .react-flow__handle { width: 6px; height: 6px; border-color: rgb(var(--color-muted)); background: rgb(var(--color-surface)); }
-.report-snapshot-node { border-color: rgb(var(--color-border)); background: rgb(var(--color-surface)); box-shadow: 0 3px 12px rgb(0 0 0 / .12); }
+.report-whiteboard-svg { max-width: 100%; max-height: 100%; width: 100%; height: 100%; border-radius: var(--radius-control); }
 @keyframes report-score-in { from { stroke-dashoffset: 100; } to { stroke-dashoffset: var(--score-offset); } }
 @keyframes report-bar-in { from { transform: scaleX(0); } to { transform: scaleX(1); } }
 @media (prefers-reduced-motion: reduce) { .report-score-arc, .report-stage-fill [role="progressbar"] > div { animation: none; } }

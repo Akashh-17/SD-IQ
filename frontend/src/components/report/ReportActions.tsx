@@ -42,7 +42,7 @@ export default function ReportActions({ report, interviewId }: { report: ReportV
     }
     async function print() {
         if (printing) return;
-        if (!report.graph?.nodes.length) { window.print(); return; }
+        if (!report.graph?.nodes.length && !report.graph?.scene?.elements.length) { window.print(); return; }
         setPrinting(true); setError("");
         try { await prepareReportPrint(); if (alive.current) window.print(); }
         catch { if (alive.current) setError("The whiteboard couldn’t load for printing. Please try again."); }

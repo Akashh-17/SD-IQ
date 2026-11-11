@@ -1,12 +1,15 @@
 import { createContext, useContext } from "react";
-import type { Node, Edge } from "reactflow";
+import type { GraphEdge, GraphNode, StoredScene } from "../excalidraw/types";
 
 export type SaveStatus = "loading" | "saved" | "saving" | "error";
 export interface RoomSnapshot {
     // endedAtStage: the stage the candidate was in when the interview ended
     interview: { title?: string; stage?: string; startedAt?: number; difficulty?: string; endedAtStage?: string };
     transcript?: { role: string; content: string }[];
-    graph?: { nodes?: Node[]; edges?: Edge[]; analysis?: { components?: { name: string }[] } | null };
+    // graph: what the AI reads (converted from the drawing); scene: the full
+    // Excalidraw drawing. Older interviews have a graph but no scene.
+    graph?: { nodes?: GraphNode[]; edges?: GraphEdge[]; analysis?: { components?: { name: string }[] } | null };
+    scene?: StoredScene | null;
 }
 export interface RoomState {
     snapshot: RoomSnapshot | null;

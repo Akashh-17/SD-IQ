@@ -14,6 +14,7 @@
     "type-check": "tsc -b"
   },
   "dependencies": {
+    "@excalidraw/excalidraw": "0.18.1",
     "@supabase/supabase-js": "^2.110.2",
     "axios": "^1.18.1",
     "clsx": "^2.1.1",
@@ -25,7 +26,6 @@
     "react-resizable-panels": "^4.12.2",
     "react-router-dom": "^7.18.1",
     "react-simple-typewriter": "^5.0.1",
-    "reactflow": "^11.11.4",
     "recharts": "^3.9.2"
   },
   "devDependencies": {
