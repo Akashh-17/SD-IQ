@@ -12,7 +12,8 @@
     "type-check": "node test/check-syntax.js",
     "build": "node test/check-syntax.js",
     "validate:knowledge": "node scripts/validate-knowledge.js",
-    "eval": "node evals/run.js"
+    "eval": "node evals/run.js",
+    "bench:graph": "vitest run --config bench/vitest.config.js"
   },
   "keywords": [],
   "author": "",
